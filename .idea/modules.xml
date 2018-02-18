@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Spotd.iml" filepath="$PROJECT_DIR$/Spotd.iml" />
+      <module fileurl="file://E:\Capstone\UWF-CIS495C-Spotd\Spotd.iml" filepath="E:\Capstone\UWF-CIS495C-Spotd\Spotd.iml" />
+      <module fileurl="file://$PROJECT_DIR$/UWF-CIS495C-Spotd.iml" filepath="$PROJECT_DIR$/UWF-CIS495C-Spotd.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://E:\Capstone\UWF-CIS495C-Spotd\app\app.iml" filepath="E:\Capstone\UWF-CIS495C-Spotd\app\app.iml" />
     </modules>
   </component>
 </project>
