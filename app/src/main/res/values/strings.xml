@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Spot\'d</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
+    <string name="facebook_application_id" translatable="false">150913652261880</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb150913652261880</string>
+    <string name="title_activity_main">MainActivity</string>
+
+
 </resources>
