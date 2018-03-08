@@ -22,6 +22,10 @@
         <activity
             android:name=".StartMenu"
             android:label="@string/title_activity_startup"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DebugActivity"
+            android:label="@string/title_activity_debug"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
