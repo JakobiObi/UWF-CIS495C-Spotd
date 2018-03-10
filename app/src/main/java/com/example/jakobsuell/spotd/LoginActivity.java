@@ -17,15 +17,13 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class StartupActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
-    private String TAG = "StartupActivity";
-
+    FirebaseAuth auth;
+    private String TAG = "LoginActivity";
     private TextView tvMessage;
     private Button btSignIn;
-
-    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +151,7 @@ public class StartupActivity extends AppCompatActivity {
     }
 
     /**
-     * Inform the user that an error has occured while logging in.
+     * Inform the user that an error has occurred while logging in.
      * @param msg   The error message to display to the user.
      */
 

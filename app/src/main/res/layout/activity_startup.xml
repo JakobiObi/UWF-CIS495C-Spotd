@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.jakobsuell.spotd.StartupActivity">
+    tools:context="com.example.jakobsuell.spotd.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
 
         <ImageView
@@ -43,8 +43,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="64dp"
-            android:text="@string/signin_btn_signin"
             android:onClick="clickSignIn"
+            android:text="@string/signin_btn_signin"
             />
 
 
