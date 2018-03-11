@@ -28,5 +28,5 @@
             android:label="@string/title_activity_found_apet"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
-
+//test
 </manifest>
