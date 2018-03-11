@@ -6,6 +6,6 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.jakobsuell.spotd.LoginActivity"
-    tools:showIn="@layout/activity_startup">
+    tools:showIn="@layout/activity_login">
 
 </android.support.constraint.ConstraintLayout>

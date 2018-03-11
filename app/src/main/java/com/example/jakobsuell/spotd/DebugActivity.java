@@ -1,6 +1,5 @@
 package com.example.jakobsuell.spotd;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -19,20 +18,34 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+import controllers.LoginController;
+
+
 public class DebugActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth auth = FirebaseAuth.getInstance();
     private String TAG = "DebugActivity";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
 
         Log.d(TAG, "entering");
 
-        // TODO: Better sign in check here, to help debug
+        LoginController.enforceSignIn(this);
+        logUserInfo();
+
+    }
+
+
+    /**
+     * pull user information from authentication object and log it
+     */
+    private void logUserInfo() {
 
         String displayName;
         try {
@@ -40,13 +53,11 @@ public class DebugActivity extends AppCompatActivity {
         } catch (NullPointerException e) {
             displayName = "null";
         }
-
-        // pull user id and log
         Log.d(TAG, "username: " + displayName);
         Log.d(TAG, "user id: " + auth.getCurrentUser().getUid());
         Log.d(TAG, "email: " + auth.getCurrentUser().getEmail());
-
     }
+
 
     /***
      * Sign the current user out of the app, using the built-in FirebaseUI
@@ -61,12 +72,13 @@ public class DebugActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         // user is now signed out
                         Log.d(TAG, "User is now signed out.");
-                        goLoginActivity();
+                        LoginController.signUserIn(getApplication().getApplicationContext());
                         finish();
                     }
                 });
 
     }
+
 
     public void createUser(View view) {
 
@@ -92,19 +104,6 @@ public class DebugActivity extends AppCompatActivity {
                     }
                 });
 
-    }
-
-    private void goLoginActivity() {
-
-        // launch the next activity
-        Intent login = new Intent(this, LoginActivity.class);
-
-        // don't allow user to return to login screen
-        login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        this.startActivity(login);
     }
 
 }
