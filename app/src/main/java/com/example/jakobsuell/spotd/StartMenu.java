@@ -34,7 +34,8 @@ public class StartMenu extends AppCompatActivity {
                 Toast.makeText(StartMenu.this, "Clicked 'Lost My Pet'.", Toast.LENGTH_SHORT).show();
 
                 //Launch lost_my_pet activitiy
-                Intent intent = new Intent(StartMenu.this, LostMyPetActivity.class);
+//                Intent intent = new Intent(StartMenu.this, LostMyPetActivity.class);
+                Intent intent = LostMyPetActivity.makeLostMyPetIntent(StartMenu.this);
                 startActivity(intent);
             }
         });
@@ -50,7 +51,8 @@ public class StartMenu extends AppCompatActivity {
                 Toast.makeText(StartMenu.this, "Clicked 'Found a Pet'.", Toast.LENGTH_SHORT).show();
 
                 //Launch found_a_pet activitiy
-                Intent intent = new Intent(StartMenu.this, FoundAPet.class);
+//                Intent intent = new Intent(StartMenu.this, FoundAPet.class);
+                Intent intent = FoundAPet.makeFoundAPetIntent(StartMenu.this);
                 startActivity(intent);
             }
         });
