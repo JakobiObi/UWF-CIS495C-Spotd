@@ -16,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Arrays;
 import java.util.List;
 
+import controllers.LoginController;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -29,15 +31,16 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_startup);
+        setContentView(R.layout.activity_login);
 
         // assign views
         tvMessage = findViewById(R.id.txtMessage);
         btSignIn = findViewById(R.id.btnSignIn);
 
+        // if already logged in, don't do anything
         auth = FirebaseAuth.getInstance();
 
-        if (!isUserSignedIn(auth)) {
+        if (!LoginController.isUserSignedIn(auth)) {
             Log.d(TAG, "no signed in user.");
             signUserIn();
         } else {
@@ -121,22 +124,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Checks the Firebase authentication object instance to see if a user is currently
-     * signed in and authenticated.
-     *
-     * @return Boolean true if a user is logged in, false otherwise.
-     */
-    private boolean isUserSignedIn(FirebaseAuth auth) {
-
-        if (auth == null) {
-            auth = FirebaseAuth.getInstance();
-        }
-        Log.d(TAG, "checking for signed in user");
-        return (auth.getCurrentUser() != null);
-
-    }
-
-    /**
      * Perform post-sign-in actions.
      */
     private void onSignIn() {
@@ -167,6 +154,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void goDebugActivity() {
 
+        // TODO: Replace this with a call to the Navigation controller
+
         // launch debug activity
         Intent nextActivity = new Intent(this, DebugActivity.class);
 
@@ -179,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void clickSignIn(View view) {
+    public void signInUser_click(View view) {
         signUserIn();
     }
 }

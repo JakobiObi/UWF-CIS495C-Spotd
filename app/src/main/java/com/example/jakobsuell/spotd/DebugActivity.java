@@ -20,6 +20,10 @@ import java.util.Map;
 
 import controllers.LoginController;
 
+/**
+ * This activity is merely a placeholder for the Homescreen/Main menu UI to allow for
+ * triggering of code by the developer to perform debugging.
+ */
 
 public class DebugActivity extends AppCompatActivity {
 
@@ -70,19 +74,18 @@ public class DebugActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        // user is now signed out
                         Log.d(TAG, "User is now signed out.");
-                        LoginController.signUserIn(getApplication().getApplicationContext());
-                        finish();
+                        LoginController.redirectToLoginActivity(getApplication().getApplicationContext());
+                        finish(); // allow this callback to kill itself after starting activity
                     }
                 });
-
     }
 
 
     public void createUser(View view) {
 
-        // create user hashmap object
+        // create user hashmap object.
+
         Map<String, Object> user = new HashMap<>();
         user.put("first", "Joe");
         user.put("last", "Smith");

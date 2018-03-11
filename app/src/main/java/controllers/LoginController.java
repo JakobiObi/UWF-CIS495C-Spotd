@@ -1,25 +1,33 @@
-package com.example.jakobsuell.spotd;
+package controllers;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.example.jakobsuell.spotd.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * Implements a wrapper class for the LoginActivity.
+ * <p>
+ * To enforce authentication for an activity, simply put a call to
+ * LoginController.enforceSignIn() in the OnCreate method of the activity.
+ * <p>
+ * This class will check if the user is authenticated, and if not, redirect them
+ * to the login activity automatically.
+ */
+public class LoginController {
 
-public class AccountController {
-
-    private static String TAG = "AccountController";
+    private static String TAG = "LoginController";
 
 
     public static void enforceSignIn(Activity context) {
 
-        if (!AccountController.isUserSignedIn(null)) {
+        if (!LoginController.isUserSignedIn(null)) {
             Log.d(TAG, "no signed in user. sending to login");
-            signUserIn(context);
+            redirectToLoginActivity(context);
         }
-
     }
 
     /**
@@ -43,7 +51,7 @@ public class AccountController {
      *
      * @param context An activity context to use to start another activity.
      */
-    public static void signUserIn(Context context) {
+    public static void redirectToLoginActivity(Context context) {
 
         // TODO: Replace this nonsense with a call to the Navigation controller's method to go to LoginActivity
 
@@ -58,5 +66,6 @@ public class AccountController {
         context.startActivity(login);
 
     }
+
 
 }
