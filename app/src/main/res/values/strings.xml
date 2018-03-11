@@ -6,6 +6,8 @@
     <string name="facebook_application_id" translatable="false">150913652261880</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb150913652261880</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_lost_my_pet">LostMyPetActivity</string>
+    <string name="title_activity_found_apet">FoundAPet</string>
 
 
 </resources>

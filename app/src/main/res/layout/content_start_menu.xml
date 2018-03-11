@@ -24,6 +24,7 @@
        android:layout_height="wrap_content"
        android:layout_marginBottom="13dp"
        android:backgroundTint="@android:color/holo_red_dark"
+       android:onClick="lostMyPetButtonClick"
        android:text="I LOST MY PET!"
        android:textColor="@android:color/background_light"
        app:layout_constraintBottom_toTopOf="@+id/foundPetButton"
