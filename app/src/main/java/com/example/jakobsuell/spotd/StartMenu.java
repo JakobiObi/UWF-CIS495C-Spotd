@@ -1,5 +1,6 @@
 package com.example.jakobsuell.spotd;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class StartMenu extends AppCompatActivity {
 
@@ -17,6 +20,42 @@ public class StartMenu extends AppCompatActivity {
         setContentView(R.layout.activity_start_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        setupLostMyPetButton();
+        setupFoundAPetButton();
+    }
+
+    //Do something when "Lost My Pet" button is clicked
+    private void setupLostMyPetButton() {
+        Button btn = (Button) findViewById(R.id.lostPetButton);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StartMenu.this, "Clicked 'Lost My Pet'.", Toast.LENGTH_SHORT).show();
+
+                //Launch lost_my_pet activitiy
+//                Intent intent = new Intent(StartMenu.this, LostMyPetActivity.class);
+                Intent intent = LostMyPetActivity.makeLostMyPetIntent(StartMenu.this);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    //Do something when "Found a Pet" button is clicked
+    private void setupFoundAPetButton() {
+        Button btn = (Button) findViewById(R.id.foundPetButton);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(StartMenu.this, "Clicked 'Found a Pet'.", Toast.LENGTH_SHORT).show();
+
+                //Launch found_a_pet activitiy
+//                Intent intent = new Intent(StartMenu.this, FoundAPet.class);
+                Intent intent = FoundAPet.makeFoundAPetIntent(StartMenu.this);
+                startActivity(intent);
+            }
+        });
 
     }
 
