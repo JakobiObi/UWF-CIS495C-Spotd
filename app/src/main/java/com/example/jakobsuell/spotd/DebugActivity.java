@@ -1,6 +1,5 @@
 package com.example.jakobsuell.spotd;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -15,13 +14,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import controllers.ImageController;
 import controllers.LoginController;
 
 /**
@@ -115,17 +111,18 @@ public class DebugActivity extends AppCompatActivity {
 
     public void saveTestImage(View view) {
 
+
         // Save a test image to firebase storage.
-        File imageFile = new File("dubdub.gif");
+ /*       File imageFile = new File("dubdub.gif");
         if (imageFile.exists()) {
             Log.d("TAG", "image file exists");
         } else {
             Log.d(TAG, "image file doesn't exist");
             return;
-        }
+        }*/
 
 
-        Uri fileUri = Uri.fromFile(new File("dubdub.gif"));
+/*        Uri fileUri = Uri.fromFile(new File("/dubdub.gif"));
 
         UploadTask upTask = ImageController.storeImageFromFile("12345", fileUri);
 
@@ -139,7 +136,7 @@ public class DebugActivity extends AppCompatActivity {
             public void onFailure(@NonNull Exception e) {
                 Log.e(TAG, "upload failed " + e);
             }
-        });
+        });*/
 
     }
 
