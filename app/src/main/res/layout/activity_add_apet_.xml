@@ -4,23 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.jakobsuell.spotd.MyPets_Activity">
+    tools:context="com.example.jakobsuell.spotd.AddAPet_Activity">
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/editText5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="My Pets Activity"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
-
-    <Button
-        android:id="@+id/btn_addAPet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add a Pet"
-        tools:layout_editor_absoluteX="274dp"
-        tools:layout_editor_absoluteY="120dp" />
+        android:text="Add a Pet Activity"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="5dp" />
 </android.support.constraint.ConstraintLayout>
