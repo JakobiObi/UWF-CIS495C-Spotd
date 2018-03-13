@@ -26,7 +26,8 @@
         <activity
             android:name=".FoundAPet"
             android:label="@string/title_activity_found_apet"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MyPets_Activity"></activity>
     </application>
 //test
 </manifest>

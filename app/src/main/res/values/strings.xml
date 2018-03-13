@@ -8,6 +8,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_lost_my_pet">LostMyPetActivity</string>
     <string name="title_activity_found_apet">FoundAPet</string>
+    <string name="title_activity_my_pets_">MyPets_Activity</string>
 
 
 </resources>
