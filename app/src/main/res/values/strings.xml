@@ -6,9 +6,12 @@
     <string name="facebook_application_id" translatable="false">150913652261880</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb150913652261880</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_startup">StartupActivity</string>
+    <string name="title_activity_start_menu">Dashboard</string>
     <string name="title_activity_debug">DebugActivity</string>
+    <string name="title_activity_foundapet">Found Pet</string>
+    <string name="title_activity_lostpet">Lost Pet</string>
     <string name="debug_btn_signout">Sign Out</string>
+    <string name="signin_in_progress">Signing in...</string>
     <string name="signin_fail_generic">Sign in unsuccessful.</string>
     <string name="signin_fail_network">It appears there is no network connection. Please check your network settings and try again.</string>
     <string name="signin_fail_cancelled">"Spot'd needs to know who you are to work!  Please sign in. "</string>

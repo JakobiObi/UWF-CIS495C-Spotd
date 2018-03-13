@@ -36,9 +36,9 @@ public class ImageController {
      * Fetches an image from Firestorage and places it directly into a specified imageView.
      * This uses the Glide framework.
      *
-     * @param id
-     * @param imageView
-     * @param context
+     * @param id        The id of the image to fetch.
+     * @param imageView The ImageView to place the image into.
+     * @param context   The context of the activity owning the ImageView
      */
 
     public static void getImageIntoView(String id, ImageView imageView, Context context) {
@@ -106,8 +106,7 @@ public class ImageController {
     private static StorageReference getRefToImage(String newFile) {
 
         String path = imagePath + "/" + newFile;
-        StorageReference imageRef = fbStorage.getReference(path);
-        return imageRef;
+        return fbStorage.getReference(path);
 
     }
 

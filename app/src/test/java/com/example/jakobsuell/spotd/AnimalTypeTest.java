@@ -6,9 +6,6 @@ import enums.AnimalType;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by Anthony Dwyer on 3/10/2018.
- */
 public class AnimalTypeTest {
 
     @Test

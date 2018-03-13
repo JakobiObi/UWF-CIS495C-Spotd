@@ -19,6 +19,7 @@
             android:layout_height="210dp"
             android:layout_marginTop="64dp"
             android:adjustViewBounds="false"
+            android:contentDescription="TODO"
             android:cropToPadding="false"
             app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +36,7 @@
             android:autoSizeMinTextSize="12sp"
             android:autoSizeStepGranularity="2sp"
             android:autoSizeTextType="uniform"
-            android:text="Signing in..."
+            android:text="@string/signin_in_progress"
             android:textAlignment="center" />
 
         <Button

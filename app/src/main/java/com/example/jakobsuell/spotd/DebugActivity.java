@@ -8,17 +8,11 @@ import android.view.View;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import controllers.LoginController;
+import models.User;
 
 /**
  * This activity is merely a placeholder for the Homescreen/Main menu UI to allow for
@@ -27,8 +21,8 @@ import controllers.LoginController;
 
 public class DebugActivity extends AppCompatActivity {
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseAuth auth;
+
     private String TAG = "DebugActivity";
 
 
@@ -37,6 +31,8 @@ public class DebugActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
+
+        auth = FirebaseAuth.getInstance();
 
         Log.d(TAG, "entering");
 
@@ -51,15 +47,17 @@ public class DebugActivity extends AppCompatActivity {
      */
     private void logUserInfo() {
 
-        String displayName;
-        try {
-            displayName = auth.getCurrentUser().getDisplayName();
-        } catch (NullPointerException e) {
-            displayName = "null";
+        if (auth.getCurrentUser() != null) {
+            String displayName;
+            try {
+                displayName = auth.getCurrentUser().getDisplayName();
+            } catch (NullPointerException e) {
+                displayName = "null";
+            }
+            Log.d(TAG, "username: " + displayName);
+            Log.d(TAG, "user id: " + auth.getCurrentUser().getUid());
+            Log.d(TAG, "email: " + auth.getCurrentUser().getEmail());
         }
-        Log.d(TAG, "username: " + displayName);
-        Log.d(TAG, "user id: " + auth.getCurrentUser().getUid());
-        Log.d(TAG, "email: " + auth.getCurrentUser().getEmail());
     }
 
 
@@ -84,59 +82,20 @@ public class DebugActivity extends AppCompatActivity {
 
     public void createUser(View view) {
 
-        // create user hashmap object.
+        // create user from the auth object
+        User user = new User().fromAuth();
 
-        Map<String, Object> user = new HashMap<>();
-        user.put("first", "Joe");
-        user.put("last", "Smith");
-        user.put("userid", 123456);
+        user.dumpUserData();
 
-        //store it
-        db.collection("users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "added user");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "error adding user", e);
-                    }
-                });
+
 
     }
 
     public void saveTestImage(View view) {
 
-
-        // Save a test image to firebase storage.
- /*       File imageFile = new File("dubdub.gif");
-        if (imageFile.exists()) {
-            Log.d("TAG", "image file exists");
-        } else {
-            Log.d(TAG, "image file doesn't exist");
-            return;
-        }*/
-
-
-/*        Uri fileUri = Uri.fromFile(new File("/dubdub.gif"));
-
-        UploadTask upTask = ImageController.storeImageFromFile("12345", fileUri);
-
-        upTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.d(TAG, "upload success, image was saved");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "upload failed " + e);
-            }
-        });*/
+        // TODO: Use a ContentProvider to find a test image to use with the ImageController
+        // This will be done when I figure out how to use ContentProviders to find an image
+        // on the device.
 
     }
 

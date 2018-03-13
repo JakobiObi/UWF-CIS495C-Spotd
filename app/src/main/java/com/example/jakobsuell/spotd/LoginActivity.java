@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
      * Callback for Firebase pre-built login UI.
      * @param requestCode   Indicates what action was performed. Should always be RC_SIGN_IN
      * @param resultCode    Returned by Firebase and indicates whether sign-in was successful.
-     * @param data
+     * @param data          The intent returned by the login activity.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successful sign in
+
                 onSignIn();
 
             } else {
@@ -76,22 +77,22 @@ public class LoginActivity extends AppCompatActivity {
                     // User pressed back button
                     Log.d(TAG, "user cancelled sign-in");
                     msg = msg + " " + getString(R.string.signin_fail_cancelled);
-                }
+                } else {
 
-                try {
-                    if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
-                        Log.d(TAG, "network unavailable");
-                        msg = msg + " " + getString(R.string.signin_fail_network);
-                    } else {
-                        Log.e(TAG, "Unhandled sign-in error: " + response.getErrorCode());
+                    try {
+                        if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
+                            Log.d(TAG, "network unavailable");
+                            msg = msg + " " + getString(R.string.signin_fail_network);
+                        } else {
+                            Log.e(TAG, "Unhandled sign-in error: " + response.getErrorCode());
+                        }
+                    } catch (NullPointerException ex) {
+                        // something here
+                    } finally {
+                        // no worries. we just won't have a network message
+                        onSignInFail(msg);
                     }
-                } catch (NullPointerException ex) {
-
-                } finally {
-                    // no worries. we just won't have a network message
-                    onSignInFail(msg);
                 }
-
             }
         }
     }
@@ -132,8 +133,10 @@ public class LoginActivity extends AppCompatActivity {
             auth = FirebaseAuth.getInstance();
         }
 
-        Log.d(TAG, "user signed in: " + auth.getCurrentUser().getDisplayName());
-        goDebugActivity();
+        if (auth.getCurrentUser() != null) {
+            Log.d(TAG, "user signed in: " + auth.getCurrentUser().getDisplayName());
+            goDebugActivity();
+        }
 
     }
 
