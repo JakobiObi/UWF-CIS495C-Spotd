@@ -59,6 +59,18 @@ public class StartMenu extends AppCompatActivity {
 
     }
 
+    /**
+     * This method is invoked when the user clicks the My Pets menu option.
+     * @param menuItem
+     */
+    public void myPetsClicked(MenuItem menuItem) {
+
+        Toast.makeText(StartMenu.this, "Clicked 'My Pets'.", Toast.LENGTH_SHORT).show();
+
+        Intent intent = MyPets_Activity.makeMyPetsIntent(StartMenu.this);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
