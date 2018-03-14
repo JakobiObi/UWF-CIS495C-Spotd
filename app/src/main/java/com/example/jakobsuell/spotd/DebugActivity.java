@@ -8,9 +8,14 @@ import android.view.View;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import controllers.AccountController;
 import controllers.LoginController;
 import models.User;
 
@@ -85,8 +90,54 @@ public class DebugActivity extends AppCompatActivity {
         // create user from the auth object
         User user = new User().fromAuth();
 
+        // show all the user info in logcat
         user.dumpUserData();
 
+        // attempt to write the info to the firestore
+        AccountController.saveUser(FirebaseFirestore.getInstance(), user).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                Log.d(TAG, "user write successful");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "user write failed: " + e);
+            }
+        });
+
+    }
+
+    /**
+     * Attempt to read the currently logged in user's data.
+     *
+     * @param view This is required if this is called by a button.
+     */
+    public void readUser(View view) {
+
+        Log.d(TAG, "attempting to read current user account...");
+
+        // create user from the auth object
+        User user = new User().fromAuth();
+
+        AccountController.getUserByEmail(FirebaseFirestore.getInstance(), user.getEmailAddress()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    User user = documentSnapshot.toObject(User.class);
+                    Log.d(TAG, "user read success:");
+                    user.dumpUserData();
+                } else {
+                    // there is no user stored here.
+                    Log.d(TAG, "no user found. probably a new account.");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "could not read user information. error: " + e);
+            }
+        });
 
 
     }
