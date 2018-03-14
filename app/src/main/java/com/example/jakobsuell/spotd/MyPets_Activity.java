@@ -18,7 +18,7 @@ public class MyPets_Activity extends AppCompatActivity {
         setupAddAPetButton();
     }
 
-    //Do something when "Lost My Pet" button is clicked
+    //Do something when "Add a Pet" button is clicked
     private void setupAddAPetButton() {
         Button btn = (Button) findViewById(R.id.btn_addAPet);
         btn.setOnClickListener(new View.OnClickListener() {
