@@ -1,4 +1,4 @@
-package com.example.jakobsuell.navigation;
+package com.example.jakobsuell.navigate;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

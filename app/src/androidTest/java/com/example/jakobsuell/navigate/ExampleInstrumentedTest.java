@@ -1,4 +1,4 @@
-package com.example.jakobsuell.navigation;
+package com.example.jakobsuell.navigate;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.jakobsuell.navigation", appContext.getPackageName());
+        assertEquals("com.example.jakobsuell.navigate", appContext.getPackageName());
     }
 }
