@@ -15,12 +15,18 @@ public class AccountController {
     private static final String petDirectory = "pets";
 
     /**
-     * Writes a supplied user to the firestore. The method will return a task object which
-     * can be attached with observers to detect success or failure of the write operation.
+     * Writes a user object to the firestore.  The user is saved using the email as a key.
+     * Subsequent calls to this method with the same email address will overwrite existing
+     * data, and functions the same as you would expect an update method to work.
      *
-     * @param fb
-     * @param user
-     * @return A Task object.
+     * The object is automatically serialized by Firebase.
+     *
+     * The method will return a task object which can be attached with observers to detect
+     * success or failure of the write operation.
+     *
+     * @param fb    A reference to the Firestore instance.
+     * @param user  The user object to store.
+     * @return A Task object, onto which you may attach observer methods.
      */
     public static Task saveUser(FirebaseFirestore fb, User user) {
 
@@ -34,21 +40,48 @@ public class AccountController {
 
     }
 
-    public static Task<DocumentSnapshot> getUserByEmail(FirebaseFirestore fb, String email) {
+    /**
+     * Reads a user from firestore.
+     * <p>
+     * The object is automatically de-serialized by Firebase, but you must cast it back to an
+     * object of the appropriate class manually, as it is returned in a documentSnapshot.
+     * <p>
+     * To use this, attach an OnSuccessListener to the task that is returned by this method.
+     * A documentSnapshot object will be returned through this listener, which you MUST test
+     * with the .exists() method prior to casting the object to a user class object. If
+     * the .exists() method returns false, this means that the user's information could not
+     * be found in firestore.
+     * <p>
+     * An example usage:
+     * <p>
+     * User user = new User().fromAuth();
+     * AccountController.getUserByEmail(FirebaseFirestore.getInstance(), user.getEmailAddress()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+     *
+     * @param fs    A reference to the Firestore instance.
+     * @param email String. The email of the user whose data to retrieve.
+     * @return A Task object, onto which you may attach observer methods.
+     * @Override public void onSuccess(DocumentSnapshot documentSnapshot) {
+     * if (documentSnapshot.exists()) {
+     * User user = documentSnapshot.toObject(User.class);
+     * } else {
+     * // no user found, perhaps the user is new
+     * // do something for a new user
+     * }
+     * }
+     * }).addOnFailureListener(new OnFailureListener() {
+     * @Override public void onFailure(@NonNull Exception e) {
+     * Log.d(TAG, "could not read user information. error: " + e);
+     * }
+     * });
+     */
+    public static Task<DocumentSnapshot> getUserByEmail(FirebaseFirestore fs, String email) {
 
         // create a reference
-        DocumentReference userDoc = fb.collection(userDirectory).document(email);
+        DocumentReference userDoc = fs.collection(userDirectory).document(email);
 
         return userDoc.get();
 
     }
-    /* TODO:  Write getUser(String email)
-        Method will attempt to read the corresponding user object indicated by email parameter.
-        Hopefully, will return an object that can be attached with observers. It should be noted
-        that the failure of this method could be used to detect if dealing with a new user (and
-        thus kick into the account creation process)
-    */
-
 
 
 }
