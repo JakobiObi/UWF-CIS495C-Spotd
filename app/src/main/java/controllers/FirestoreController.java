@@ -9,7 +9,7 @@ import java.security.InvalidParameterException;
 
 import models.User;
 
-public class AccountController {
+public class FirestoreController {
 
     private static final String userDirectory = "users";
     private static final String petDirectory = "pets";
@@ -55,7 +55,7 @@ public class AccountController {
      * An example usage:
      * <p>
      * User user = new User().fromAuth();
-     * AccountController.getUserByEmail(FirebaseFirestore.getInstance(), user.getEmailAddress()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+     * FirestoreController.getUserByEmail(FirebaseFirestore.getInstance(), user.getEmailAddress()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
      *
      * @param fs    A reference to the Firestore instance.
      * @param email String. The email of the user whose data to retrieve.

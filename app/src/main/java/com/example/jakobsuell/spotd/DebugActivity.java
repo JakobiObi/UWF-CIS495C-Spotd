@@ -15,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import controllers.AccountController;
+import controllers.FirestoreController;
 import controllers.LoginController;
 import models.User;
 
@@ -94,7 +94,7 @@ public class DebugActivity extends AppCompatActivity {
         user.dumpUserData();
 
         // attempt to write the info to the firestore
-        AccountController.saveUser(FirebaseFirestore.getInstance(), user).addOnSuccessListener(new OnSuccessListener() {
+        FirestoreController.saveUser(FirebaseFirestore.getInstance(), user).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
                 Log.d(TAG, "user write successful");
@@ -120,7 +120,7 @@ public class DebugActivity extends AppCompatActivity {
         // create user from the auth object
         User user = new User().fromAuth();
 
-        AccountController.getUserByEmail(FirebaseFirestore.getInstance(), user.getEmailAddress()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        FirestoreController.getUserByEmail(FirebaseFirestore.getInstance(), user.getEmailAddress()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
