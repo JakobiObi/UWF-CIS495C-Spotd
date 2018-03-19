@@ -15,8 +15,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import controllers.FirestoreController;
 import controllers.LoginController;
+import enums.AnimalStatus;
+import enums.AnimalType;
+import models.Pet;
 import models.User;
 
 /**
@@ -65,7 +71,6 @@ public class DebugActivity extends AppCompatActivity {
         }
     }
 
-
     /***
      * Sign the current user out of the app, using the built-in FirebaseUI
      */
@@ -84,7 +89,11 @@ public class DebugActivity extends AppCompatActivity {
                 });
     }
 
-
+    /**
+     * Save the current user to the Firestore.
+     *
+     * @param view Required parameter to call this method from a button.
+     */
     public void createUser(View view) {
 
         // create user from the auth object
@@ -147,6 +156,63 @@ public class DebugActivity extends AppCompatActivity {
         // TODO: Use a ContentProvider to find a test image to use with the ImageController
         // This will be done when I figure out how to use ContentProviders to find an image
         // on the device.
+
+    }
+
+    public void savePet(View view) {
+
+        // save a test pet to the firestore
+        FirestoreController.savePet(FirebaseFirestore.getInstance(), getDummyPet()).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                Log.d(TAG, "pet write successful");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "pet write failed: " + e);
+            }
+        });
+    }
+
+    public void savePetList(View view) {
+
+        // save a test pet to the firestore
+        FirestoreController.savePet(FirebaseFirestore.getInstance(), getDummyPetList()).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                Log.d(TAG, "pet list write successful");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "pet list write failed: " + e);
+            }
+        });
+    }
+
+
+    public Pet getDummyPet() {
+
+        return new Pet("Fluffy", AnimalType.Cat, new String[]{"long haired", "black", "white"}, AnimalStatus.Home, null, null);
+
+    }
+
+    public List<Pet> getDummyPetList() {
+
+        ArrayList<Pet> pets = new ArrayList<>();
+
+        pets.add(
+                new Pet("Bella", AnimalType.Cat, new String[]{"tuxedo", "black", "white"}, AnimalStatus.Home, null, null)
+        );
+        pets.add(
+                new Pet("Tiger", AnimalType.Cat, new String[]{"tabby", "orange", "white"}, AnimalStatus.Home, null, null)
+        );
+        pets.add(
+                new Pet("Cujo", AnimalType.Dog, new String[]{"st. bernard", "white", "brown", "large"}, AnimalStatus.Lost, null, null)
+        );
+
+        return pets;
 
     }
 

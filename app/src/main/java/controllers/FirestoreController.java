@@ -4,9 +4,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 
+import models.Pet;
 import models.User;
 
 public class FirestoreController {
@@ -82,6 +85,45 @@ public class FirestoreController {
         return userDoc.get();
 
     }
+
+    // TODO: Change User accounts so they are saved by an accountID rather than email.
+    /*
+        There should be a look-up table that maps email addresses to a accountID.
+        This will allow for the following scenarios:
+        - A person logs in with two diff providers, each provider has a diff email address associated
+        - Multiple family members
+     */
+
+    public static Task savePet(FirebaseFirestore fb, Pet pet) {
+
+        // parameter checks
+        if (fb == null || pet == null) {
+            String err = (fb == null) ? "firestore reference cannot be null" : "pet cannot be null";
+            throw new InvalidParameterException(err);
+        }
+
+        return fb.collection(petDirectory).document(pet.getOwnerID()).set(pet);
+
+    }
+
+    public static Task savePet(FirebaseFirestore fb, List<Pet> pets) {
+
+        // perform this as a batch write
+        WriteBatch batch = fb.batch();
+
+        for (Pet pet : pets) {
+            batch.set(fb.collection(petDirectory).document(pet.getOwnerID()), pet);
+        }
+
+        return batch.commit();
+    }
+
+
+    // TODO: Write petSave
+    /*
+        This method will save a list of pet objects to Firestore, attached to the specified
+     */
+
 
 
 }
