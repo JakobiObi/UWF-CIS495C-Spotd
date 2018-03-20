@@ -77,18 +77,22 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.home) {
-            Toast.makeText(MainActivity.this, "Clicked 'Home'.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Clicked 'Home'.\nNo Action tied to this button.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.profile) {
             Toast.makeText(MainActivity.this, "Clicked 'My Profile'.", Toast.LENGTH_SHORT).show();
+            loadMyProfileActivity();
         } else if (id == R.id.found) {
             Toast.makeText(MainActivity.this, "Clicked 'Report Found'.", Toast.LENGTH_SHORT).show();
             loadFoundPetActivity();
         } else if (id == R.id.lost) {
             Toast.makeText(MainActivity.this, "Clicked 'Report Lost'.", Toast.LENGTH_SHORT).show();
+            loadReportLostAnimalActivity();
         } else if (id == R.id.log) {
-            Toast.makeText(MainActivity.this, "Clicked 'Logout'.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Clicked 'Logout'.\nNo Action tied to this button.", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.quit) {
             Toast.makeText(MainActivity.this, "Clicked 'Quit'.", Toast.LENGTH_SHORT).show();
+            finish();
+            System.exit(0);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -151,8 +155,8 @@ public class MainActivity extends AppCompatActivity
 
         Toast.makeText(MainActivity.this, "Clicked 'Settings'.", Toast.LENGTH_SHORT).show();
 
-//        Intent intent = MyPets_Activity.makeMyPetsIntent(MainActivity.this);
-//        startActivity(intent);
+        Intent intent = Settings_Activity.makeSettingsActivityIntent(MainActivity.this);
+        startActivity(intent);
     }
 
     /**
@@ -163,8 +167,8 @@ public class MainActivity extends AppCompatActivity
 
         Toast.makeText(MainActivity.this, "Clicked 'About'.", Toast.LENGTH_SHORT).show();
 
-//        Intent intent = MyPets_Activity.makeMyPetsIntent(MainActivity.this);
-//        startActivity(intent);
+        Intent intent = About_Activity.makeAboutActivityIntent(MainActivity.this);
+        startActivity(intent);
     }
 
     /**
@@ -175,13 +179,31 @@ public class MainActivity extends AppCompatActivity
 
         Toast.makeText(MainActivity.this, "Clicked 'Help'.", Toast.LENGTH_SHORT).show();
 
-//        Intent intent = MyPets_Activity.makeMyPetsIntent(MainActivity.this);
-//        startActivity(intent);
+        Intent intent = Help_Activity.makeHelpActivityIntent(MainActivity.this);
+        startActivity(intent);
     }
+
+
+    /*********************************************************
+     * Helper Functions
+     * *******************************************************
+     */
 
     private void loadFoundPetActivity() {
 
         Intent intent = FoundAPet.makeFoundAPetIntent(MainActivity.this);
+        startActivity(intent);
+    }
+
+    private void loadMyProfileActivity() {
+
+        Intent intent = MyProfile_Activity.makeMyProfileIntent(MainActivity.this);
+        startActivity(intent);
+    }
+
+    private void loadReportLostAnimalActivity() {
+
+        Intent intent = ReportLostAnimal_Activity.makeReportLostAnimalActivityIntent(MainActivity.this);
         startActivity(intent);
     }
 }
