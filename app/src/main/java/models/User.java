@@ -120,9 +120,9 @@ public class User {
     }
 
     /**
-     * Used for debugging. Logs all user data.
+     * Writes this user objects data to the debugging log.
      */
-    public void dumpUserData() {
+    public void show() {
 
         String logMsg = "name: " + this.displayName
                 + " " + "email: " + this.emailAddress

@@ -9,21 +9,19 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="top|center">
 
         <Button
             android:id="@+id/btn_save_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="64dp"
-            android:layout_weight="1"
             android:onClick="createUser"
             android:text="Save User"
-            app:layout_constraintBottom_toTopOf="@+id/btn_read_user"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+
             tools:ignore="HardcodedText" />
 
         <Button
@@ -32,9 +30,9 @@
             android:layout_height="wrap_content"
             android:onClick="readUser"
             android:text="Read User"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_save_user" />
+            app:layout_constraintStart_toEndOf="@+id/btn_save_user"
+            tools:ignore="HardcodedText,MissingConstraints"
+            tools:layout_editor_absoluteY="0dp" />
 
         <Button
             android:id="@+id/btn_save_pet"
@@ -43,8 +41,10 @@
             android:onClick="savePet"
             android:text="Save Pet"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_read_user" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_save_user"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btn_save_petlist"
@@ -53,9 +53,10 @@
             android:onClick="savePetList"
             android:text="Save Petlist"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_save_pet" />
-
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/btn_save_pet"
+            app:layout_constraintTop_toBottomOf="@+id/btn_read_user"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btn_save_image"
@@ -64,9 +65,11 @@
             android:onClick="saveTestImage"
             android:text="Save Image"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_save_petlist"
             tools:ignore="HardcodedText" />
+
 
         <Button
             android:id="@+id/button5"
@@ -76,12 +79,16 @@
             android:onClick="signOut"
             android:text="Sign Out"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_save_image" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_save_image"
+            tools:ignore="HardcodedText" />
 
     </android.support.constraint.ConstraintLayout>
 
 
-    <include layout="@layout/content_debug" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_debug" />
 
 </android.support.design.widget.CoordinatorLayout>

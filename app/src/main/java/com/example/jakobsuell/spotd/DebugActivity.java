@@ -36,6 +36,10 @@ public class DebugActivity extends AppCompatActivity {
 
     private String TAG = "DebugActivity";
 
+    // these needs to persist across several saves
+    private Pet testPet;
+    private List<Pet> pets;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +104,7 @@ public class DebugActivity extends AppCompatActivity {
         User user = new User().fromAuth();
 
         // show all the user info in logcat
-        user.dumpUserData();
+        user.show();
 
         // attempt to write the info to the firestore
         FirestoreController.saveUser(FirebaseFirestore.getInstance(), user).addOnSuccessListener(new OnSuccessListener() {
@@ -135,7 +139,7 @@ public class DebugActivity extends AppCompatActivity {
                 if (documentSnapshot.exists()) {
                     User user = documentSnapshot.toObject(User.class);
                     Log.d(TAG, "user read success:");
-                    user.dumpUserData();
+                    user.show();
                 } else {
                     // there is no user stored here.
                     Log.d(TAG, "no user found. probably a new account.");
@@ -162,7 +166,14 @@ public class DebugActivity extends AppCompatActivity {
     public void savePet(View view) {
 
         // save a test pet to the firestore
-        FirestoreController.savePet(FirebaseFirestore.getInstance(), getDummyPet()).addOnSuccessListener(new OnSuccessListener() {
+        if (testPet == null) {
+            testPet = getDummyPet();
+        } else {
+            // change something about the pet
+            testPet.setName("Second");
+        }
+
+        FirestoreController.savePet(FirebaseFirestore.getInstance(), testPet).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
                 Log.d(TAG, "pet write successful");
@@ -177,8 +188,13 @@ public class DebugActivity extends AppCompatActivity {
 
     public void savePetList(View view) {
 
-        // save a test pet to the firestore
-        FirestoreController.savePet(FirebaseFirestore.getInstance(), getDummyPetList()).addOnSuccessListener(new OnSuccessListener() {
+        // save a test list of pets to the firestore
+        if (pets == null) {
+            pets = getDummyPetList();
+        }
+
+
+        FirestoreController.savePet(FirebaseFirestore.getInstance(), pets).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
                 Log.d(TAG, "pet list write successful");
@@ -192,6 +208,12 @@ public class DebugActivity extends AppCompatActivity {
     }
 
 
+    private void showPet(Pet pet) {
+
+        pet.show();
+
+    }
+
     public Pet getDummyPet() {
 
         ArrayList<String> keywords = new ArrayList<>();
@@ -199,7 +221,7 @@ public class DebugActivity extends AppCompatActivity {
         keywords.add("black");
         keywords.add("white");
 
-        return new Pet("Fluffy", AnimalType.Cat, keywords, AnimalStatus.Home, null, null);
+        return new Pet("Fluffy", AnimalType.Cat, keywords, AnimalStatus.Home, null, null, null);
 
     }
 
@@ -212,7 +234,7 @@ public class DebugActivity extends AppCompatActivity {
         keywords.add("black");
         keywords.add("white");
         pets.add(
-                new Pet("Bella", AnimalType.Cat, keywords, AnimalStatus.Home, null, null)
+                new Pet("Bella", AnimalType.Cat, keywords, AnimalStatus.Home, null, null, null)
         );
 
         keywords.clear();
@@ -220,7 +242,7 @@ public class DebugActivity extends AppCompatActivity {
         keywords.add("orange");
         keywords.add("white");
         pets.add(
-                new Pet("Tiger", AnimalType.Cat, keywords, AnimalStatus.Home, null, null)
+                new Pet("Tiger", AnimalType.Cat, keywords, AnimalStatus.Home, null, null, null)
         );
 
         keywords.clear();
@@ -229,7 +251,7 @@ public class DebugActivity extends AppCompatActivity {
         keywords.add("brown");
         keywords.add("large");
         pets.add(
-                new Pet("Cujo", AnimalType.Dog, keywords, AnimalStatus.Lost, null, null)
+                new Pet("Cujo", AnimalType.Dog, keywords, AnimalStatus.Lost, null, null, null)
         );
 
         return pets;

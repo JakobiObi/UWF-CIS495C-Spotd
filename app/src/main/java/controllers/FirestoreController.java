@@ -86,14 +86,15 @@ public class FirestoreController {
 
     }
 
-    // TODO: Change User accounts so they are saved by an accountID rather than email.
-    /*
-        There should be a look-up table that maps email addresses to a accountID.
-        This will allow for the following scenarios:
-        - A person logs in with two diff providers, each provider has a diff email address associated
-        - Multiple family members
+    /**
+     * Saves a pet object to Firestore.
+     *
+     * The pet will be saved under either the petID (if it already has one) or an auto-generated ID.
+     *
+     * @param fb    A reference to the Firestore instance.
+     * @param pet   The pet object to store.
+     * @return A Task object, onto which you may attach observer methods.
      */
-
     public static Task savePet(FirebaseFirestore fb, Pet pet) {
 
         // parameter checks
@@ -102,28 +103,58 @@ public class FirestoreController {
             throw new InvalidParameterException(err);
         }
 
-        return fb.collection(petDirectory).document().set(pet);
+        DocumentReference docRef;
+
+        // check if this pet has an associated id already, if not, generate one
+        if (pet.getPetID() == null) {
+            // create an auto-generated id and set on pet object
+            docRef = fb.collection(petDirectory).document();
+            pet.setPetID(docRef.getId());
+        } else {
+            docRef = fb.collection(petDirectory).document(pet.getPetID());
+        }
+
+        return docRef.set(pet);
 
     }
 
+    /**
+     * Saves a list of pets to Firestore. This method will enumerate through each pet in the list,
+     * saving each one to Firestore.
+     * <p>
+     * A batch write is used to enhance performance, and minimize the amount of network traffic
+     * required for the transaction.
+     *
+     * @param fb   A reference to the Firestore instance.
+     * @param pets A List of pets to be stored.
+     * @return A Task object, onto which you may attach observer methods.
+     */
     public static Task savePet(FirebaseFirestore fb, List<Pet> pets) {
 
         // perform this as a batch write
         WriteBatch batch = fb.batch();
+        DocumentReference docRef;
 
         for (Pet pet : pets) {
-            batch.set(fb.collection(petDirectory).document(), pet);
+            // check if this pet has an associated id already, if not, generate one
+            if (pet.getPetID() == null) {
+                // create an auto-generated id and set on pet object
+                docRef = fb.collection(petDirectory).document();
+                pet.setPetID(docRef.getId());
+            } else {
+                docRef = fb.collection(petDirectory).document(pet.getPetID());
+            }
+            batch.set(docRef, pet);
         }
 
         return batch.commit();
     }
 
-
-    // TODO: Write petSave
+    // TODO: Change User accounts so they are saved by an accountID rather than email.
     /*
-        This method will save a list of pet objects to Firestore, attached to the specified
+        There should be a look-up table that maps email addresses to a accountID.
+        This will allow for the following scenarios:
+        - A person logs in with two diff providers, each provider has a diff email address associated
+        - Multiple family members
      */
-
-
-
 }
