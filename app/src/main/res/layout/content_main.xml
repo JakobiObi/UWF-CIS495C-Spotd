@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:layout_editor_absoluteY="81dp">
+
+    <!-- <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Hello World!"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintLeft_toLeftOf="parent"
+         app:layout_constraintRight_toRightOf="parent"
+         app:layout_constraintTop_toTopOf="parent" />
+ -->
+    <Button
+        android:id="@+id/lostPetButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="13dp"
+        android:backgroundTint="@android:color/holo_red_dark"
+        android:onClick="lostMyPetButtonClick"
+        android:text="I LOST MY PET!"
+        android:textColor="@android:color/background_light"
+        app:layout_constraintBottom_toTopOf="@+id/foundPetButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/locationField"
+        tools:targetApi="lollipop" />
+
+    <Button
+        android:id="@+id/foundPetButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="68dp"
+        android:backgroundTint="@android:color/holo_green_dark"
+        android:text="I FOUND A PET"
+        android:textColor="@android:color/background_light"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lostPetButton" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginStart="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/usernameField"
+        app:layout_constraintStart_toStartOf="@+id/usernameField"
+        app:layout_constraintTop_toBottomOf="@+id/reportedLostField"
+        app:srcCompat="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/usernameField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="9dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:text="First Last"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/locationField"
+        app:layout_constraintEnd_toEndOf="@+id/lostPetButton"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/locationField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="11dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginStart="13dp"
+        android:text="TextView"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/lostPetButton"
+        app:layout_constraintStart_toStartOf="@+id/usernameField"
+        app:layout_constraintTop_toBottomOf="@+id/usernameField" />
+
+    <TextView
+        android:id="@+id/reportedLostField"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="126dp"
+        android:layout_marginTop="2dp"
+        android:text="87 lost animals reports in your area"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="48dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginRight="7dp"
+        android:background="@drawable/ic_chevron_right_black_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/reportedLostField"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/reportedLostField"
+        app:layout_constraintTop_toTopOf="@+id/reportedLostField"
+        app:layout_constraintVertical_bias="0.0" />
+
+</android.support.constraint.ConstraintLayout>
