@@ -9,13 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".StartMenu"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -28,7 +28,7 @@
             android:label="@string/title_activity_found_apet"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MyPets_Activity" />
-        <activity android:name=".AddAPet_Activity"></activity>
+        <activity android:name=".AddAPet_Activity" />
     </application>
-//test
+
 </manifest>
