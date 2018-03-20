@@ -1,6 +1,8 @@
 package models;
 
 
+import java.util.List;
+
 import enums.AnimalStatus;
 import enums.AnimalType;
 
@@ -12,7 +14,7 @@ public class Pet {
 
     private String name;            // the name of the animal, as provided by user
     private AnimalType animalType;  // type of animal (dog, cat, etc) enumerated type
-    private String[] keywords;      // a string array of keywords, as provided by the user
+    private List<String> keywords;      // a string array of keywords, as provided by the user
     private AnimalStatus status;    // lost/found.etc, enumerated type
     private String ownerID;         // the unique id of the pet's owner (if applicable)
     private String pictureUID;      // the unique ID of the picture associated with this animal
@@ -22,7 +24,7 @@ public class Pet {
     public Pet() {
     }
 
-    public Pet(String name, AnimalType animalType, String[] keywords, AnimalStatus status, String ownerID, String pictureUID) {
+    public Pet(String name, AnimalType animalType, List<String> keywords, AnimalStatus status, String ownerID, String pictureUID) {
         this.name = name;
         this.animalType = animalType;
         this.keywords = keywords;
@@ -41,7 +43,7 @@ public class Pet {
         return animalType;
     }
 
-    public String[] getKeywords() {
+    public List<String> getKeywords() {
         return keywords;
     }
 

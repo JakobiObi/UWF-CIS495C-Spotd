@@ -194,22 +194,42 @@ public class DebugActivity extends AppCompatActivity {
 
     public Pet getDummyPet() {
 
-        return new Pet("Fluffy", AnimalType.Cat, new String[]{"long haired", "black", "white"}, AnimalStatus.Home, null, null);
+        ArrayList<String> keywords = new ArrayList<>();
+        keywords.add("tuxedo");
+        keywords.add("black");
+        keywords.add("white");
+
+        return new Pet("Fluffy", AnimalType.Cat, keywords, AnimalStatus.Home, null, null);
 
     }
 
     public List<Pet> getDummyPetList() {
 
         ArrayList<Pet> pets = new ArrayList<>();
+        ArrayList<String> keywords = new ArrayList<>();
 
+        keywords.add("tuxedo");
+        keywords.add("black");
+        keywords.add("white");
         pets.add(
-                new Pet("Bella", AnimalType.Cat, new String[]{"tuxedo", "black", "white"}, AnimalStatus.Home, null, null)
+                new Pet("Bella", AnimalType.Cat, keywords, AnimalStatus.Home, null, null)
         );
+
+        keywords.clear();
+        keywords.add("tabby");
+        keywords.add("orange");
+        keywords.add("white");
         pets.add(
-                new Pet("Tiger", AnimalType.Cat, new String[]{"tabby", "orange", "white"}, AnimalStatus.Home, null, null)
+                new Pet("Tiger", AnimalType.Cat, keywords, AnimalStatus.Home, null, null)
         );
+
+        keywords.clear();
+        keywords.add("st. bernard");
+        keywords.add("white");
+        keywords.add("brown");
+        keywords.add("large");
         pets.add(
-                new Pet("Cujo", AnimalType.Dog, new String[]{"st. bernard", "white", "brown", "large"}, AnimalStatus.Lost, null, null)
+                new Pet("Cujo", AnimalType.Dog, keywords, AnimalStatus.Lost, null, null)
         );
 
         return pets;

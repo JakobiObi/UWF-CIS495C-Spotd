@@ -102,7 +102,7 @@ public class FirestoreController {
             throw new InvalidParameterException(err);
         }
 
-        return fb.collection(petDirectory).document(pet.getOwnerID()).set(pet);
+        return fb.collection(petDirectory).document().set(pet);
 
     }
 
@@ -112,7 +112,7 @@ public class FirestoreController {
         WriteBatch batch = fb.batch();
 
         for (Pet pet : pets) {
-            batch.set(fb.collection(petDirectory).document(pet.getOwnerID()), pet);
+            batch.set(fb.collection(petDirectory).document(), pet);
         }
 
         return batch.commit();
