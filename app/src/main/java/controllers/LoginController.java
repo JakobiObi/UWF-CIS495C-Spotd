@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.example.jakobsuell.spotd.LoginActivity;
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
@@ -28,6 +30,13 @@ public class LoginController {
             Log.d(TAG, "no signed in user. sending to login");
             redirectToLoginActivity(context);
         }
+    }
+
+    public static Task signOut(Activity context) {
+
+        Log.d(TAG, "Signing user out");
+        return AuthUI.getInstance().signOut(context);
+
     }
 
     /**
