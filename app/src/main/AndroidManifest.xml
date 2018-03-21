@@ -41,11 +41,13 @@
             android:name=".LostMyPetActivity"
             android:label="@string/title_activity_lostpet"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".StartupActivity"
-            android:label="@string/title_activity_start_menu"
-            android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity android:name=".MyPets_Activity" />
+        <activity android:name=".AddAPet_Activity" />
+        <activity android:name=".MyProfile_Activity" />
+        <activity android:name=".ReportLostAnimal_Activity" />
+        <activity android:name=".Settings_Activity" />
+        <activity android:name=".About_Activity" />
+        <activity android:name=".Help_Activity" />
     </application>
 
 </manifest>
