@@ -136,7 +136,8 @@ public class LoginActivity extends AppCompatActivity {
 
         if (auth.getCurrentUser() != null) {
             Log.d(TAG, "user signed in: " + auth.getCurrentUser().getDisplayName());
-            goDebugActivity();
+            // goDebugActivity();
+            goMainActivity();
         }
 
     }
@@ -162,6 +163,22 @@ public class LoginActivity extends AppCompatActivity {
 
         // launch debug activity
         Intent nextActivity = new Intent(this, DebugActivity.class);
+
+        // don't allow user to return to login screen
+        nextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        this.startActivity(nextActivity);
+
+    }
+
+    private void goMainActivity() {
+
+        // TODO: Replace this with a call to the Navigation controller
+
+        // launch the main activity
+        Intent nextActivity = new Intent(this, MainActivity.class);
 
         // don't allow user to return to login screen
         nextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
