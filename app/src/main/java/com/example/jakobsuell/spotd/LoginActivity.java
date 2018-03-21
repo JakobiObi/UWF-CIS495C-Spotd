@@ -137,7 +137,9 @@ public class LoginActivity extends AppCompatActivity {
         if (auth.getCurrentUser() != null) {
             Log.d(TAG, "user signed in: " + auth.getCurrentUser().getDisplayName());
             // goDebugActivity();
+            logUserInfo();
             goMainActivity();
+
         }
 
     }
@@ -171,6 +173,24 @@ public class LoginActivity extends AppCompatActivity {
 
         this.startActivity(nextActivity);
 
+    }
+
+    /**
+     * pull user information from authentication object and log it
+     */
+    private void logUserInfo() {
+
+        if (auth.getCurrentUser() != null) {
+            String displayName;
+            try {
+                displayName = auth.getCurrentUser().getDisplayName();
+            } catch (NullPointerException e) {
+                displayName = "null";
+            }
+            Log.d(TAG, "username: " + displayName);
+            Log.d(TAG, "user id: " + auth.getCurrentUser().getUid());
+            Log.d(TAG, "email: " + auth.getCurrentUser().getEmail());
+        }
     }
 
     private void goMainActivity() {

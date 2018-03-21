@@ -52,28 +52,11 @@ public class DebugActivity extends AppCompatActivity {
         Log.d(TAG, "entering");
 
         LoginController.enforceSignIn(this);
-        logUserInfo();
 
     }
 
 
-    /**
-     * pull user information from authentication object and log it
-     */
-    private void logUserInfo() {
 
-        if (auth.getCurrentUser() != null) {
-            String displayName;
-            try {
-                displayName = auth.getCurrentUser().getDisplayName();
-            } catch (NullPointerException e) {
-                displayName = "null";
-            }
-            Log.d(TAG, "username: " + displayName);
-            Log.d(TAG, "user id: " + auth.getCurrentUser().getUid());
-            Log.d(TAG, "email: " + auth.getCurrentUser().getEmail());
-        }
-    }
 
     /***
      * Sign the current user out of the app, using the built-in FirebaseUI

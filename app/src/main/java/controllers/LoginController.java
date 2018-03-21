@@ -26,6 +26,7 @@ public class LoginController {
 
     public static void enforceSignIn(Activity context) {
 
+        Log.d(TAG, "enforcing login on " + context.getComponentName());
         if (!LoginController.isUserSignedIn(null)) {
             Log.d(TAG, "no signed in user. sending to login");
             redirectToLoginActivity(context);
@@ -50,7 +51,8 @@ public class LoginController {
         if (auth == null) {
             auth = FirebaseAuth.getInstance();
         }
-        Log.d(TAG, "checking for signed in user");
+        String userFound = auth.getCurrentUser() != null ? "found" : "none";
+        Log.d(TAG, "checking for signed in user: " + userFound);
         return (auth.getCurrentUser() != null);
 
     }
@@ -63,7 +65,7 @@ public class LoginController {
     public static void redirectToLoginActivity(Context context) {
 
         // TODO: Replace this nonsense with a call to the Navigation controller's method to go to LoginActivity
-
+        Log.d(TAG, "sending to LoginActivity");
         // launch the next activity
         Intent login = new Intent(context, LoginActivity.class);
 
