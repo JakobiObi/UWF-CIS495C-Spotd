@@ -8,19 +8,33 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import controllers.LoginController;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private String TAG = "MainActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.d(TAG, "entered MainActivity");
+
+        // make sure user is logged in
+        LoginController.enforceSignIn(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -88,7 +102,16 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "Clicked 'Report Lost'.", Toast.LENGTH_SHORT).show();
             loadReportLostAnimalActivity();
         } else if (id == R.id.log) {
-            Toast.makeText(MainActivity.this, "Clicked 'Logout'.\nNo Action tied to this button.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Signing you out...", Toast.LENGTH_SHORT).show();
+            LoginController.signOut(this).addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+                    // TODO:  Replace with a call to the NavigationController.
+                    loadLoginActivity();
+                }
+            });
+
+
         } else if (id == R.id.quit) {
             Toast.makeText(MainActivity.this, "Clicked 'Quit'.", Toast.LENGTH_SHORT).show();
             finish();
@@ -206,4 +229,18 @@ public class MainActivity extends AppCompatActivity
         Intent intent = ReportLostAnimal_Activity.makeReportLostAnimalActivityIntent(MainActivity.this);
         startActivity(intent);
     }
+
+    private void loadLoginActivity() {
+
+        // launch login activity
+        Intent nextActivity = new Intent(this, LoginActivity.class);
+
+        // don't allow user to return to login screen
+        nextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        this.startActivity(nextActivity);
+    }
+
 }
