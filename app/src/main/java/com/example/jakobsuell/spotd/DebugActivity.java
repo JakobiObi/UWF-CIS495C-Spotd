@@ -177,7 +177,7 @@ public class DebugActivity extends AppCompatActivity {
         }
 
 
-        FirestoreController.savePet(FirebaseFirestore.getInstance(), pets).addOnSuccessListener(new OnSuccessListener() {
+        FirestoreController.savePetList(FirebaseFirestore.getInstance(), pets).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
                 Log.d(TAG, "pet list write successful");

@@ -129,7 +129,7 @@ public class FirestoreController {
      * @param pets A List of pets to be stored.
      * @return A Task object, onto which you may attach observer methods.
      */
-    public static Task savePet(FirebaseFirestore fb, List<Pet> pets) {
+    public static Task savePetList(FirebaseFirestore fb, List<Pet> pets) {
 
         // perform this as a batch write
         WriteBatch batch = fb.batch();
