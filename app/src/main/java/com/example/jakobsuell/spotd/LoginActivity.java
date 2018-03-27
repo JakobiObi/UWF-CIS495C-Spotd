@@ -22,7 +22,8 @@ import controllers.LoginController;
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
-    FirebaseAuth auth;
+    private final boolean GO_DEBUG_ACTIVITY = true;     // shows debug activity instead of main
+    private FirebaseAuth auth;
     private String TAG = "LoginActivity";
     private TextView tvMessage;
     private Button btSignIn;
@@ -136,9 +137,12 @@ public class LoginActivity extends AppCompatActivity {
 
         if (auth.getCurrentUser() != null) {
             Log.d(TAG, "user signed in: " + auth.getCurrentUser().getDisplayName());
-            // goDebugActivity();
             logUserInfo();
-            goMainActivity();
+            if (GO_DEBUG_ACTIVITY) {
+                goDebugActivity();
+            } else {
+                goMainActivity();
+            }
 
         }
 
