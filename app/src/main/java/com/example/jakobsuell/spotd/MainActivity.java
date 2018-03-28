@@ -2,6 +2,7 @@ package com.example.jakobsuell.spotd;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private String TAG = "MainActivity";
+    private NavigationView navigationView;
 
 
     @Override
@@ -45,8 +47,33 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+            navigationView.bringToFront();
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
 
         setupLostMyPetButton();
         setupFoundAPetButton();
@@ -84,24 +111,27 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+    private void displaySelectedFragment(int id) {
+        android.support.v4.app.Fragment fragment = null;
 
-        if (id == R.id.home) {
-            Toast.makeText(MainActivity.this, "Clicked 'Home'.\nNo Action tied to this button.", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.profile) {
-            Toast.makeText(MainActivity.this, "Clicked 'My Profile'.", Toast.LENGTH_SHORT).show();
-            loadMyProfileActivity();
-        } else if (id == R.id.found) {
-            Toast.makeText(MainActivity.this, "Clicked 'Report Found'.", Toast.LENGTH_SHORT).show();
-            loadFoundPetActivity();
-        } else if (id == R.id.lost) {
-            Toast.makeText(MainActivity.this, "Clicked 'Report Lost'.", Toast.LENGTH_SHORT).show();
-            loadReportLostAnimalActivity();
-        } else if (id == R.id.log) {
+        switch(id){
+            case R.id.home:
+//                Toast.makeText(MainActivity.this, "Clicked 'Home'.", Toast.LENGTH_SHORT).show();
+                fragment = new HomeFragment();
+                break;
+            case R.id.profile:
+//                Toast.makeText(MainActivity.this, "Clicked 'My Profile'.", Toast.LENGTH_SHORT).show();
+                fragment = new MyProfileFragment();
+                break;
+            case R.id.found:
+//                Toast.makeText(MainActivity.this, "Clicked 'Report Found'.", Toast.LENGTH_SHORT).show();
+                fragment = new FoundAPetFragment();
+                break;
+            case R.id.lost:
+//                Toast.makeText(MainActivity.this, "Report Lost'.", Toast.LENGTH_SHORT).show();
+                fragment = new LostAPetFragment();
+                break;
+            case R.id.log:
             Toast.makeText(MainActivity.this, "Signing you out...", Toast.LENGTH_SHORT).show();
             LoginController.signOut(this).addOnSuccessListener(new OnSuccessListener() {
                 @Override
@@ -110,16 +140,30 @@ public class MainActivity extends AppCompatActivity
                     loadLoginActivity();
                 }
             });
+            case R.id.quit:
+//                Toast.makeText(MainActivity.this, "Clicked 'Quit'.", Toast.LENGTH_SHORT).show();
+                finish();
+                System.exit(0);
+        }
 
-
-        } else if (id == R.id.quit) {
-            Toast.makeText(MainActivity.this, "Clicked 'Quit'.", Toast.LENGTH_SHORT).show();
-            finish();
-            System.exit(0);
+        if(fragment != null) {
+            android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_main, fragment);
+            ft.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        displaySelectedFragment(id);
+
         return true;
     }
 
@@ -129,12 +173,16 @@ public class MainActivity extends AppCompatActivity
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Clicked 'Lost My Pet'.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Clicked 'Lost My Pet'.", Toast.LENGTH_SHORT).show();
 
-                //Launch lost_my_pet activitiy
-//                Intent intent = new Intent(StartMenu.this, LostMyPetActivity.class);
-                Intent intent = LostMyPetActivity.makeLostMyPetIntent(MainActivity.this);
-                startActivity(intent);
+                android.support.v4.app.Fragment fragment = null;
+                fragment = new LostAPetFragment();
+
+                if(fragment != null) {
+                    android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_main, fragment);
+                    ft.commit();
+                }
             }
         });
 
@@ -146,29 +194,21 @@ public class MainActivity extends AppCompatActivity
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Clicked 'Found a Pet'.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Clicked 'Found a Pet'.", Toast.LENGTH_SHORT).show();
 
-                //Launch found_a_pet activitiy
-//                Intent intent = new Intent(StartMenu.this, FoundAPet.class);
-//                Intent intent = FoundAPet.makeFoundAPetIntent(MainActivity.this);
-//                startActivity(intent);
-                loadFoundPetActivity();
+                android.support.v4.app.Fragment fragment = null;
+                fragment = new FoundAPetFragment();
+
+                if(fragment != null) {
+                    android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.content_main, fragment);
+                    ft.commit();
+                }
             }
         });
 
     }
 
-//    /**
-//     * This method is invoked when the user clicks the My Pets menu option.
-//     * @param menuItem
-//     */
-//    public void myPetsClicked(MenuItem menuItem) {
-//
-//        Toast.makeText(MainActivity.this, "Clicked 'My Pets'.", Toast.LENGTH_SHORT).show();
-//
-//        Intent intent = MyPets_Activity.makeMyPetsIntent(MainActivity.this);
-//        startActivity(intent);
-//    }
 
     /**
      * This method is invoked when the user clicks the Settings menu option.
@@ -212,23 +252,23 @@ public class MainActivity extends AppCompatActivity
      * *******************************************************
      */
 
-    private void loadFoundPetActivity() {
-
-        Intent intent = FoundAPet.makeFoundAPetIntent(MainActivity.this);
-        startActivity(intent);
-    }
-
-    private void loadMyProfileActivity() {
-
-        Intent intent = MyProfile_Activity.makeMyProfileIntent(MainActivity.this);
-        startActivity(intent);
-    }
-
-    private void loadReportLostAnimalActivity() {
-
-        Intent intent = ReportLostAnimal_Activity.makeReportLostAnimalActivityIntent(MainActivity.this);
-        startActivity(intent);
-    }
+//    private void loadFoundPetActivity() {
+//
+//        Intent intent = FoundAPet.makeFoundAPetIntent(MainActivity.this);
+//        startActivity(intent);
+//    }
+//
+//    private void loadMyProfileActivity() {
+//
+//        Intent intent = MyProfile_Activity.makeMyProfileIntent(MainActivity.this);
+//        startActivity(intent);
+//    }
+//
+//    private void loadReportLostAnimalActivity() {
+//
+//        Intent intent = ReportLostAnimal_Activity.makeReportLostAnimalActivityIntent(MainActivity.this);
+//        startActivity(intent);
+//    }
 
     private void loadLoginActivity() {
 
