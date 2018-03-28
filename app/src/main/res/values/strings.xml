@@ -30,4 +30,8 @@
     <string name="nav_profile">My Profile</string>
     <string name="nav_log">Logout</string>
     <string name="nav_quit">Quit</string>
+    <string name="homeFragment">This is the "Home" fragment</string>
+    <string name="myProfileFragment">This is the "My Profile" fragment</string>
+    <string name="lostAPetFragment">This is the "Lost a Pet" fragment</string>
+    <string name="foundAPetFragment">This is the "Found a Pet" fragment</string>
 </resources>
