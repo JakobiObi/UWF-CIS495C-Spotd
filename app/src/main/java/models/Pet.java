@@ -108,8 +108,8 @@ public class Pet {
                 + " " + "type: " + this.animalType.description()
                 + " " + "status: " + this.status.description()
                 + " " + "petID: " + this.petID
-                + " " + "petID: " + this.ownerID
-                + " " + "petID: " + this.pictureUID
+                + " " + "ownerID: " + this.ownerID
+                + " " + "pictureID: " + this.pictureUID
                 + " " + "keywords:";
 
         for (String keyword : keywords) {

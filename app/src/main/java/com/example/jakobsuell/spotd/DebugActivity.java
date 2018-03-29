@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class DebugActivity extends AppCompatActivity {
 
     private String TAG = "DebugActivity";
 
-    // these needs to persist across several saves
+    // these need to persist across several saves
     private Pet testPet;
     private List<Pet> pets;
 
@@ -81,7 +82,7 @@ public class DebugActivity extends AppCompatActivity {
      *
      * @param view Required parameter to call this method from a button.
      */
-    public void createUser(View view) {
+    public void saveUser(View view) {
 
         // create user from the auth object
         User user = new User().fromAuth();
@@ -138,6 +139,7 @@ public class DebugActivity extends AppCompatActivity {
 
     }
 
+
     public void saveTestImage(View view) {
 
         // TODO: Use a ContentProvider to find a test image to use with the ImageController
@@ -177,7 +179,7 @@ public class DebugActivity extends AppCompatActivity {
         }
 
 
-        FirestoreController.savePet(FirebaseFirestore.getInstance(), pets).addOnSuccessListener(new OnSuccessListener() {
+        FirestoreController.savePetList(FirebaseFirestore.getInstance(), pets).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
                 Log.d(TAG, "pet list write successful");
@@ -190,6 +192,84 @@ public class DebugActivity extends AppCompatActivity {
         });
     }
 
+    public void readPet(View view) {
+
+        // read the pet that we have saved
+
+        Log.d(TAG, "Attempting to read a test pet...");
+
+        if (testPet == null || testPet.getPetID() == null || testPet.getPetID().equals("")) {
+            // save a pet real quick, then re-call ourselves when it is done
+            Log.d(TAG, "no pet object created...creating...");
+            if (testPet == null)
+                testPet = getDummyPet();
+            FirestoreController.savePet(FirebaseFirestore.getInstance(), testPet).addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+                    // call ourselves again
+                    Log.d(TAG, "new pet object saved. recalling this...");
+                    readPet(null);
+                }
+            });
+            return;
+        }
+
+        FirestoreController.readPet(FirebaseFirestore.getInstance(), testPet.getPetID()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Pet pet;
+                if (documentSnapshot.exists()) {
+                    pet = documentSnapshot.toObject(Pet.class);
+                    Log.d(TAG, "pet read success:");
+                    pet.show();
+                } else {
+                    // this pet couldn't be found
+                    Log.d(TAG, "pet with id " + testPet.getPetID() + " could not be found");
+                    pet = null;
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // what to do when it fails
+                Log.d(TAG, "pet read failed:" + e);
+            }
+        });
+
+
+    }
+
+    public void readPetList(View view) {
+
+        Log.d(TAG, "Attempting to read a test pet...");
+
+        if (pets == null) {
+            pets = new ArrayList<>();
+        } else {
+            pets.clear();
+        }
+
+        // try getting all cats
+        FirestoreController.readPets(FirebaseFirestore.getInstance(), "animalType", AnimalType.Cat.description()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "got list of cats");
+                    for (DocumentSnapshot document : task.getResult()) {
+                        pets.add(document.toObject(Pet.class));
+                    }
+                    Log.d(TAG, "list has " + pets.size() + " items");
+                    for (Pet p : pets) {
+                        p.show();
+                    }
+                } else {
+                    Log.d(TAG, "Error getting pets: ", task.getException());
+                }
+            }
+        });
+
+    }
 
     private void showPet(Pet pet) {
 
