@@ -3,9 +3,12 @@ package controllers;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.security.InvalidParameterException;
@@ -190,9 +193,27 @@ public class FirestoreController {
 
     }
 
-    public static Task<DocumentSnapshot> readPets(FirebaseFirestore fb, String ownerID) {
-        throw new UnsupportedOperationException("readPets() is not yet implemented");
+    public static Task<QuerySnapshot> readPets(FirebaseFirestore fb, String fieldName, String fieldValue) {
+
+        // parameter checks
+        if (fb == null || fieldName == null || fieldName.equals("")) {
+            String err = (fb == null) ? "firestore reference cannot be null" : "fieldName cannot be null or empty";
+            throw new InvalidParameterException(err);
+        }
+
+        // TODO:  Add a check to make sure the given fieldname is correct.
+
+        // reference to collection
+        CollectionReference petsRef = fb.collection(petDirectory);
+
+        // query against collection
+        Query query = petsRef.whereEqualTo(fieldName, fieldValue);
+
+        return query.get();
     }
+
+
+
 
     // TODO: Change User accounts so they are saved by an accountID rather than email.
     /*

@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -240,6 +241,33 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     public void readPetList(View view) {
+
+        Log.d(TAG, "Attempting to read a test pet...");
+
+        if (pets == null) {
+            pets = new ArrayList<>();
+        } else {
+            pets.clear();
+        }
+
+        // try getting all cats
+        FirestoreController.readPets(FirebaseFirestore.getInstance(), "animalType", AnimalType.Cat.description()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "got list of cats");
+                    for (DocumentSnapshot document : task.getResult()) {
+                        pets.add(document.toObject(Pet.class));
+                    }
+                    Log.d(TAG, "list has " + pets.size() + " items");
+                    for (Pet p : pets) {
+                        p.show();
+                    }
+                } else {
+                    Log.d(TAG, "Error getting pets: ", task.getException());
+                }
+            }
+        });
 
     }
 
