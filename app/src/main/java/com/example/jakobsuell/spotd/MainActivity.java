@@ -56,22 +56,19 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-
             }
 
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
-            navigationView.bringToFront();
+                navigationView.bringToFront();
             }
 
             @Override
             public void onDrawerClosed(@NonNull View drawerView) {
-
             }
 
             @Override
             public void onDrawerStateChanged(int newState) {
-
             }
         });
 
@@ -114,39 +111,39 @@ public class MainActivity extends AppCompatActivity
     private void displaySelectedFragment(int id) {
         android.support.v4.app.Fragment fragment = null;
 
-        switch(id){
+        switch (id) {
             case R.id.home:
-//                Toast.makeText(MainActivity.this, "Clicked 'Home'.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "home clicked on nav menu");
                 fragment = new HomeFragment();
                 break;
             case R.id.profile:
-//                Toast.makeText(MainActivity.this, "Clicked 'My Profile'.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "profile clicked on nav menu");
                 fragment = new MyProfileFragment();
                 break;
             case R.id.found:
-//                Toast.makeText(MainActivity.this, "Clicked 'Report Found'.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "found clicked on nav menu");
                 fragment = new FoundAPetFragment();
                 break;
             case R.id.lost:
-//                Toast.makeText(MainActivity.this, "Report Lost'.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "lost clicked on nav menu");
                 fragment = new LostAPetFragment();
                 break;
             case R.id.log:
-            Toast.makeText(MainActivity.this, "Signing you out...", Toast.LENGTH_SHORT).show();
-            LoginController.signOut(this).addOnSuccessListener(new OnSuccessListener() {
-                @Override
-                public void onSuccess(Object o) {
-                    // TODO:  Replace with a call to the NavigationController.
-                    loadLoginActivity();
-                }
-            });
+                Toast.makeText(MainActivity.this, "Signing you out...", Toast.LENGTH_SHORT).show();
+                LoginController.signOut(this).addOnSuccessListener(new OnSuccessListener() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        // TODO:  Replace with a call to the NavigationController.
+                        loadLoginActivity();
+                    }
+                });
+                break;
             case R.id.quit:
-//                Toast.makeText(MainActivity.this, "Clicked 'Quit'.", Toast.LENGTH_SHORT).show();
                 finish();
                 System.exit(0);
         }
 
-        if(fragment != null) {
+        if (fragment != null) {
             android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_main, fragment);
             ft.commit();
@@ -178,7 +175,7 @@ public class MainActivity extends AppCompatActivity
                 android.support.v4.app.Fragment fragment = null;
                 fragment = new LostAPetFragment();
 
-                if(fragment != null) {
+                if (fragment != null) {
                     android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.content_main, fragment);
                     ft.commit();
@@ -199,7 +196,7 @@ public class MainActivity extends AppCompatActivity
                 android.support.v4.app.Fragment fragment = null;
                 fragment = new FoundAPetFragment();
 
-                if(fragment != null) {
+                if (fragment != null) {
                     android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.content_main, fragment);
                     ft.commit();
@@ -212,6 +209,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * This method is invoked when the user clicks the Settings menu option.
+     *
      * @param menuItem
      */
     public void settingsClicked(MenuItem menuItem) {
@@ -224,6 +222,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * This method is invoked when the user clicks the About menu option.
+     *
      * @param menuItem
      */
     public void aboutClicked(MenuItem menuItem) {
@@ -236,6 +235,7 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * This method is invoked when the user clicks the Help menu option.
+     *
      * @param menuItem
      */
     public void helpClicked(MenuItem menuItem) {
@@ -251,24 +251,6 @@ public class MainActivity extends AppCompatActivity
      * Helper Functions
      * *******************************************************
      */
-
-//    private void loadFoundPetActivity() {
-//
-//        Intent intent = FoundAPet.makeFoundAPetIntent(MainActivity.this);
-//        startActivity(intent);
-//    }
-//
-//    private void loadMyProfileActivity() {
-//
-//        Intent intent = MyProfile_Activity.makeMyProfileIntent(MainActivity.this);
-//        startActivity(intent);
-//    }
-//
-//    private void loadReportLostAnimalActivity() {
-//
-//        Intent intent = ReportLostAnimal_Activity.makeReportLostAnimalActivityIntent(MainActivity.this);
-//        startActivity(intent);
-//    }
 
     private void loadLoginActivity() {
 
