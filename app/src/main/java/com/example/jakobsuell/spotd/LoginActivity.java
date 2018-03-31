@@ -22,7 +22,7 @@ import controllers.LoginController;
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
-    private final boolean GO_DEBUG_ACTIVITY = false;     // shows debug activity instead of main
+    private final boolean GO_DEBUG_ACTIVITY = false;     // shows debug activity instead of toolbar_menu_selector
     private FirebaseAuth auth;
     private String TAG = "LoginActivity";
     private TextView tvMessage;
@@ -201,7 +201,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // TODO: Replace this with a call to the Navigation controller
 
-        // launch the main activity
+        // launch the toolbar_menu_selector activity
         Intent nextActivity = new Intent(this, MainActivity.class);
 
         // don't allow user to return to login screen

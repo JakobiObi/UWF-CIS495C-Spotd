@@ -5,22 +5,22 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/home"
+            android:id="@+id/tool_home"
             android:title="@string/nav_home" />
         <item
-            android:id="@+id/profile"
+            android:id="@+id/tool_profile"
             android:title="@string/nav_profile" />
         <item
-            android:id="@+id/found"
+            android:id="@+id/tool_found"
             android:title="@string/nav_found" />
         <item
-            android:id="@+id/lost"
+            android:id="@+id/tool_lost"
             android:title="@string/nav_lost" />
         <item
-            android:id="@+id/log"
+            android:id="@+id/tool_log"
             android:title="@string/nav_log" />
         <item
-            android:id="@+id/quit"
+            android:id="@+id/tool_quit"
             android:title="@string/nav_quit" />
     </group>
 

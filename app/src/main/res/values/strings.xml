@@ -34,4 +34,8 @@
     <string name="myProfileFragment">This is the "My Profile" fragment</string>
     <string name="lostAPetFragment">This is the "Lost a Pet" fragment</string>
     <string name="foundAPetFragment">This is the "Found a Pet" fragment</string>
+    <string name="title_activity_toolbar_menu_">ToolbarMenu_Activity</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
 </resources>

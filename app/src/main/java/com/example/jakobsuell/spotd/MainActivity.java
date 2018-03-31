@@ -1,5 +1,6 @@
 package com.example.jakobsuell.spotd;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu_selector, menu);
         return true;
     }
 
@@ -232,8 +233,9 @@ public class MainActivity extends AppCompatActivity
 
         Toast.makeText(MainActivity.this, "Clicked 'Settings'.", Toast.LENGTH_SHORT).show();
 
-        Intent intent = Settings_Activity.makeSettingsActivityIntent(MainActivity.this);
+        Intent intent = ToolbarMenu_Activity.makeToolbarMenuActivityIntent(MainActivity.this);
         startActivity(intent);
+        finish();
     }
 
     /**
@@ -245,8 +247,9 @@ public class MainActivity extends AppCompatActivity
 
         Toast.makeText(MainActivity.this, "Clicked 'About'.", Toast.LENGTH_SHORT).show();
 
-        Intent intent = About_Activity.makeAboutActivityIntent(MainActivity.this);
+        Intent intent = ToolbarMenu_Activity.makeToolbarMenuActivityIntent(MainActivity.this);
         startActivity(intent);
+        finish();
     }
 
     /**
@@ -258,10 +261,15 @@ public class MainActivity extends AppCompatActivity
 
         Toast.makeText(MainActivity.this, "Clicked 'Help'.", Toast.LENGTH_SHORT).show();
 
-        Intent intent = Help_Activity.makeHelpActivityIntent(MainActivity.this);
+        Intent intent = ToolbarMenu_Activity.makeToolbarMenuActivityIntent(MainActivity.this);
         startActivity(intent);
+        finish();
     }
 
+    //Encapsulates ability to create itself
+    public static Intent makeMainActivityIntent(Context context) {
+        return new Intent(context, MainActivity.class);
+    }
 
     /*********************************************************
      * Helper Functions
