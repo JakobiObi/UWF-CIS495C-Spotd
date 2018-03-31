@@ -14,9 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 
 import controllers.LoginController;
 
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity
 
     private String TAG = "MainActivity";
     private NavigationView navigationView;
+    private TextView textView;
 
 
     @Override
@@ -74,6 +77,19 @@ public class MainActivity extends AppCompatActivity
 
         setupLostMyPetButton();
         setupFoundAPetButton();
+        setHeaderViewOnNavDrawer();
+    }
+
+    public void setHeaderViewOnNavDrawer() {
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView userName = (TextView) headerView.findViewById(R.id.textView_NavUserName);
+        userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+
+        TextView emailAccount = (TextView)headerView.findViewById(R.id.textView_NavEmail);
+        emailAccount.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
     @Override
