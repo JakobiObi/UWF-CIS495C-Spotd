@@ -3,12 +3,18 @@ package controllers;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 
 import com.example.jakobsuell.spotd.LoginActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserInfo;
+
+import java.security.InvalidParameterException;
+
+import models.User;
 
 /**
  * Implements a wrapper class for the LoginActivity.
@@ -22,7 +28,10 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginController {
 
     private static String TAG = "LoginController";
-
+    private static final String PROVIDER_FACEBOOK_ID = "facebook.com";
+    private static final String PROVIDER_GOOGLE_ID = "google.com";
+    private static final String FACEBOOK_BASE_URL = "https://graph.facebook.com/";
+    private static final String FACEBOOK_PICTURE_DIRECTORY = "/picture?height=500";
 
     public static void enforceSignIn(Activity context) {
 
@@ -78,5 +87,26 @@ public class LoginController {
 
     }
 
+    public static Uri getUserPictureUri(FirebaseAuth auth) {
+
+        if (auth == null)
+            throw new InvalidParameterException("auth can't be null");
+
+        // ? this might pull from Google provider by default...
+        String photoURL = auth.getCurrentUser().getPhotoUrl().toString();
+
+        // look for facebook provider
+        for (UserInfo profile : auth.getCurrentUser().getProviderData()) {
+            if (profile.getProviderId().equals(PROVIDER_FACEBOOK_ID)) {
+                String facebookUserId = profile.getUid();
+                photoURL = FACEBOOK_BASE_URL + facebookUserId + FACEBOOK_PICTURE_DIRECTORY;
+            }
+        }
+
+        Log.d(TAG, "found user photoURL: " + photoURL);
+
+        return Uri.parse(photoURL);
+
+    }
 
 }
