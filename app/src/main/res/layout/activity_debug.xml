@@ -13,6 +13,14 @@
         app:layout_anchor="@+id/include"
         app:layout_anchorGravity="top|center">
 
+        <ImageView
+            android:id="@+id/iv_user_profile_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/com_facebook_profile_picture_blank_portrait"
+            app:layout_constraintTop_toBottomOf="@id/btn_sign_out"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
         <Button
             android:id="@+id/btn_save_user"
             android:layout_width="wrap_content"

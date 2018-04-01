@@ -14,8 +14,6 @@ import com.google.firebase.auth.UserInfo;
 
 import java.security.InvalidParameterException;
 
-import models.User;
-
 /**
  * Implements a wrapper class for the LoginActivity.
  * <p>
@@ -103,10 +101,11 @@ public class LoginController {
             }
         }
 
-        Log.d(TAG, "found user photoURL: " + photoURL);
+        Log.d(TAG, "user photo uri: " + photoURL);
 
         return Uri.parse(photoURL);
 
     }
+
 
 }

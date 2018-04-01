@@ -37,7 +37,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:4.27.0'
 
     // Glide
-    //  This is used to seamlessly load images from Storage and is required by
+    //  This is used to seamlessly load images from Storage and is required by ??
     implementation 'com.github.bumptech.glide:glide:4.6.1'
     implementation 'com.android.support:support-v4:26.1.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'

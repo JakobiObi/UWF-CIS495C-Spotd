@@ -38,9 +38,8 @@ public class LoginActivity extends AppCompatActivity {
         tvMessage = findViewById(R.id.txtMessage);
         btSignIn = findViewById(R.id.btnSignIn);
 
-        // if already logged in, don't do anything
+        // check if user signed in
         auth = FirebaseAuth.getInstance();
-
         if (!LoginController.isUserSignedIn(auth)) {
             Log.d(TAG, "no signed in user.");
             signUserIn();
@@ -52,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Callback for Firebase pre-built login UI.
+     *
      * @param requestCode   Indicates what action was performed. Should always be RC_SIGN_IN
      * @param resultCode    Returned by Firebase and indicates whether sign-in was successful.
      * @param data          The intent returned by the login activity.
@@ -65,9 +65,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successful sign in
-
                 onSignIn();
-
             } else {
                 // sign in failed, check reason and set message
                 Log.d(TAG, "sign-in failed.");
@@ -79,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "user cancelled sign-in");
                     msg = msg + " " + getString(R.string.signin_fail_cancelled);
                 } else {
-
                     try {
                         if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
                             Log.d(TAG, "network unavailable");
@@ -101,6 +98,9 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Signs users in using pre-built FirebaseUI.
+     *
+     * This is the only method that is possible to run when a new user is signing up.
+     *
      */
     private void signUserIn() {
 
