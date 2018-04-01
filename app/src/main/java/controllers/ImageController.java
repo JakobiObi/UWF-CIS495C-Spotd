@@ -2,6 +2,7 @@ package controllers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
@@ -12,6 +13,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.security.InvalidParameterException;
 
@@ -130,6 +135,25 @@ public class ImageController {
 
         return id + fileName.substring(fileName.indexOf('.'));
     }
+
+
+    public static Bitmap getBitmapFromURI(URI imageURI) {
+
+        URL url;
+        try {
+            url = new URL(imageURI.toString());
+            Bitmap image = BitmapFactory.decodeStream(url.openStream());
+            return image;
+        } catch (MalformedURLException ex) {
+            Log.e(TAG, "malformed URL from [" + imageURI.toString() + "]");
+            return null;
+        } catch (IOException ex) {
+            Log.e(TAG, "could not read from url");
+            return null;
+        }
+
+    }
+
 
     private static StorageReference getRefToImage(String newFile) {
 
