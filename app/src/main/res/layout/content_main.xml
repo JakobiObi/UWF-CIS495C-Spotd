@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/backtround"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:layout_editor_absoluteY="81dp">
 
@@ -21,7 +22,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="13dp"
-        android:backgroundTint="@android:color/holo_red_dark"
+        android:backgroundTint="@color/buttonRed"
         android:onClick="lostMyPetButtonClick"
         android:text="I LOST MY PET!"
         android:textColor="@android:color/background_light"
@@ -36,7 +37,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="68dp"
-        android:backgroundTint="@android:color/holo_green_dark"
+        android:background="@color/buttonBlue"
         android:text="I FOUND A PET"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -98,10 +99,9 @@
 
     <Button
         android:id="@+id/button3"
-        android:layout_width="48dp"
-        android:layout_height="30dp"
+        android:layout_width="50dp"
+        android:layout_height="47dp"
         android:layout_marginEnd="7dp"
-        android:layout_marginRight="7dp"
         android:background="@drawable/ic_chevron_right_black_24dp"
         app:layout_constraintBottom_toBottomOf="@+id/reportedLostField"
         app:layout_constraintEnd_toEndOf="parent"

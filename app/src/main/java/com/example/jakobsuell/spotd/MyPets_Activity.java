@@ -2,10 +2,13 @@ package com.example.jakobsuell.spotd;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class MyPets_Activity extends AppCompatActivity {
@@ -15,7 +18,18 @@ public class MyPets_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_pets_);
 
-        setupAddAPetButton();
+        ImageButton btn[] = new ImageButton[10];
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.petLinearLayout);
+
+        for(int i = 1; i < 5; i++){
+            Button testButton = new Button(this);
+            layout.addView(testButton);
+
+
+
+
+        }
     }
 
     //Do something when "Add a Pet" button is clicked
