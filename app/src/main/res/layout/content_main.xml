@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@+id/lostPetButton" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/image_home_fragment_profile_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
@@ -69,7 +69,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/locationField"
         app:layout_constraintEnd_toEndOf="@+id/lostPetButton"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/image_home_fragment_profile_photo" />
 
     <TextView
         android:id="@+id/locationField"
@@ -92,7 +92,7 @@
         android:layout_marginTop="2dp"
         android:text="87 lost animals reports in your area"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintBottom_toTopOf="@+id/image_home_fragment_profile_photo"
         app:layout_constraintEnd_toStartOf="@+id/button3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

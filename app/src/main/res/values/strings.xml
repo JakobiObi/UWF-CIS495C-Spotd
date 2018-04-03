@@ -18,6 +18,7 @@
     <string name="signin_btn_signin">Sign In</string>
     <string name="home_fragment_lost_button">I LOST MY PET</string>
     <string name="home_fragment_found_button">I FOUND A PET</string>
+    <string name="home_fragment_profile_photo_desc">Profile photo</string>
     <string name="title_activity_lost_my_pet">LostMyPetActivity</string>
     <string name="title_activity_found_apet">FoundAPet</string>
     <string name="title_activity_my_pets_">MyPets_Activity</string>
