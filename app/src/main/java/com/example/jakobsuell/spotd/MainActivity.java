@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,8 +76,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        setupLostMyPetButton();
-        setupFoundAPetButton();
         setHeaderViewOnNavDrawer();
     }
 
@@ -182,14 +179,14 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    //Do something when "Lost My Pet" button is clicked
+    // TODO: These methods need to be moved into the Home Fragment
+
+   /* //Do something when "Lost My Pet" button is clicked
     private void setupLostMyPetButton() {
         Button btn = (Button) findViewById(R.id.lostPetButton);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(MainActivity.this, "Clicked 'Lost My Pet'.", Toast.LENGTH_SHORT).show();
-
                 android.support.v4.app.Fragment fragment = null;
                 fragment = new LostAPetFragment();
 
@@ -200,7 +197,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-
     }
 
     //Do something when "Found a Pet" button is clicked
@@ -209,8 +205,6 @@ public class MainActivity extends AppCompatActivity
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(MainActivity.this, "Clicked 'Found a Pet'.", Toast.LENGTH_SHORT).show();
-
                 android.support.v4.app.Fragment fragment = null;
                 fragment = new FoundAPetFragment();
 
@@ -221,8 +215,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-
-    }
+    }*/
 
 
     /**
