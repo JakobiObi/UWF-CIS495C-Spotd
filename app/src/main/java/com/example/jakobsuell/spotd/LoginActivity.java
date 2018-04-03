@@ -77,19 +77,13 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "user cancelled sign-in");
                     msg = msg + " " + getString(R.string.signin_fail_cancelled);
                 } else {
-                    try {
-                        if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
-                            Log.d(TAG, "network unavailable");
-                            msg = msg + " " + getString(R.string.signin_fail_network);
-                        } else {
-                            Log.e(TAG, "Unhandled sign-in error: " + response.getErrorCode());
-                        }
-                    } catch (NullPointerException ex) {
-                        // something here
-                    } finally {
-                        // no worries. we just won't have a network message
-                        onSignInFail(msg);
+                    if (response.getError()!= null && response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                        Log.d(TAG, "network unavailable");
+                        msg = msg + " " + getString(R.string.signin_fail_network);
+                    } else {
+                        Log.e(TAG, "Unhandled sign-in error: " + response.getError().getMessage());
                     }
+
                 }
                 onSignInFail(msg);
             }
