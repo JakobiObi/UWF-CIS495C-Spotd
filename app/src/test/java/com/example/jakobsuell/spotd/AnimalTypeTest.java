@@ -51,8 +51,5 @@ public class AnimalTypeTest {
 
     }
 
-    @Test
-    public void getDescriptions() throws Exception {
-    }
 
 }
