@@ -11,11 +11,13 @@
     <string name="title_activity_foundapet">Found Pet</string>
     <string name="title_activity_lostpet">Lost Pet</string>
     <string name="debug_btn_signout">Sign Out</string>
-    <string name="signin_in_progress">Signing in...</string>
+    <string name="signin_in_progress">Signing in…</string>
     <string name="signin_fail_generic">Sign in unsuccessful.</string>
     <string name="signin_fail_network">There is no network connection. Please check your network settings and try again.</string>
     <string name="signin_fail_cancelled">"Spot'd needs to know who you are!  Please sign in. "</string>
     <string name="signin_btn_signin">Sign In</string>
+    <string name="home_fragment_lost_button">I LOST MY PET</string>
+    <string name="home_fragment_found_button">I FOUND A PET</string>
     <string name="title_activity_lost_my_pet">LostMyPetActivity</string>
     <string name="title_activity_found_apet">FoundAPet</string>
     <string name="title_activity_my_pets_">MyPets_Activity</string>

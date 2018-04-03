@@ -10,8 +10,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:layout_editor_absoluteY="81dp">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <Button
             android:id="@+id/lostPetButton"
@@ -19,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="13dp"
             android:backgroundTint="@android:color/holo_red_dark"
-            android:text="I LOST MY PET!"
+            android:text="@string/home_fragment_lost_button"
             android:textColor="@android:color/background_light"
             app:layout_constraintBottom_toTopOf="@+id/foundPetButton"
             app:layout_constraintEnd_toEndOf="parent"
@@ -33,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="68dp"
             android:backgroundTint="@android:color/holo_green_dark"
-            android:text="I FOUND A PET"
+            android:text="@string/home_fragment_found_button"
             android:textColor="@android:color/background_light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
