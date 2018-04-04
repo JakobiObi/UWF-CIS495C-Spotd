@@ -34,6 +34,7 @@ import models.User;
  * triggering of code by the developer to perform debugging.
  */
 
+@SuppressWarnings("unused")
 public class DebugActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;

@@ -49,9 +49,9 @@ public class MainActivity extends AppCompatActivity
             view from the id once.
         */
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        toolbar = findViewById(R.id.toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
 
         // create toolbar
         setSupportActionBar(toolbar);
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         // initial load of Home Fragment
-        displayFragment(R.id.fragment_container, new HomeFragment());
+        displayFragment(new HomeFragment());
 
     }
 
@@ -137,24 +137,23 @@ public class MainActivity extends AppCompatActivity
      * Loads the specified fragment into the specified container.  Tries to be smart about using
      * the correct transaction call depending on whether this is an initial call or not.
      *
-     * @param containerID This is the ID of the container which will hold the fragment.
      * @param fragment The fragment to display.
      */
-    private void displayFragment(int containerID, Fragment fragment) {
+    private void displayFragment(Fragment fragment) {
 
         FragmentManager fragmentManager = getFragmentManager();
 
-        Log.d(TAG, "loading fragment " + fragment.toString() + " to " + containerID);
+        Log.d(TAG, "loading fragment " + fragment.toString() + " to " + R.id.fragment_container);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // check if there is already a fragment
         if (fragmentManager.getFragments().size() > 0) {
             // use replace to remove previous fragment
             Log.d(TAG, "replacing current fragment");
-            fragmentTransaction.replace(containerID, fragment);
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
         } else {
             Log.d(TAG, "adding initial fragment");
-            fragmentTransaction.add(containerID, fragment);
+            fragmentTransaction.add(R.id.fragment_container, fragment);
         }
 
         fragmentTransaction.commit();
@@ -162,24 +161,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.home:
                 Log.d(TAG, "home clicked on nav menu");
-                displayFragment(R.id.fragment_container, new HomeFragment());
+                displayFragment(new HomeFragment());
                 break;
             case R.id.profile:
                 Log.d(TAG, "profile clicked on nav menu");
-                displayFragment(R.id.fragment_container, new MyProfileFragment());
+                displayFragment(new MyProfileFragment());
                 break;
             case R.id.found:
                 Log.d(TAG, "found clicked on nav menu");
-                displayFragment(R.id.fragment_container, new FoundAPetFragment());
+                displayFragment(new FoundAPetFragment());
                 break;
             case R.id.lost:
                 Log.d(TAG, "lost clicked on nav menu");
-                displayFragment(R.id.fragment_container, new LostAPetFragment());
+                displayFragment(new LostAPetFragment());
                 break;
             case R.id.log:
                 signOut();
