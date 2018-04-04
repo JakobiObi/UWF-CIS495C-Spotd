@@ -2,21 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/settings"
+        android:id="@+id/action_bar_menu_settings"
         android:orderInCategory="100"
         android:title="@string/menu_settings"
         app:showAsAction="never"
-        android:onClick="settingsClicked"/>
+        android:onClick="actionBarClicked"/>
     <item
-        android:id="@+id/about"
+        android:id="@+id/action_bar_menu_about"
         android:orderInCategory="100"
         android:title="@string/menu_about"
         app:showAsAction="never"
-        android:onClick="aboutClicked"/>
+        android:onClick="actionBarClicked"/>
     <item
-        android:id="@+id/help"
+        android:id="@+id/action_bar_menu_help"
         android:orderInCategory="100"
         android:title="@string/menu_help"
         app:showAsAction="never"
-        android:onClick="helpClicked"/>
+        android:onClick="actionBarClicked"/>
 </menu>

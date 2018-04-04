@@ -22,4 +22,11 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
+    <!-- This fragment layout is the area that is used to swap fragments around in -->
+    <!-- TODO: Figure out how to get this layout not to go under the action bar -->
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </android.support.v4.widget.DrawerLayout>

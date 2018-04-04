@@ -41,10 +41,8 @@ public class LoginController {
     }
 
     public static Task signOut(Activity context) {
-
         Log.d(TAG, "Signing user out");
         return AuthUI.getInstance().signOut(context);
-
     }
 
     /**
