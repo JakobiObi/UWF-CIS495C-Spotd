@@ -56,33 +56,15 @@ public class FirestoreController {
      * The object is automatically de-serialized by Firebase, but you must cast it back to an
      * object of the appropriate class manually, as it is returned in a documentSnapshot.
      * <p>
-     * To use this, attach an OnSuccessListener to the task that is returned by this method.
-     * A documentSnapshot object will be returned through this listener, which you MUST test
-     * with the .exists() method prior to casting the object to a user class object. If
-     * the .exists() method returns false, this means that the user's information could not
-     * be found in firestore.
-     * <p>
-     * An example usage:
-     * <p>
-     * User user = new User().fromAuth();
-     * FirestoreController.getUserByEmail(FirebaseFirestore.getInstance(), user.getEmailAddress()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+     * To use this, attach an OnSuccessListener to the task returned by this method.
+     * A documentSnapshot is returned, which you MUST test with the .exists() method prior
+     * to casting the object to a user class object. If the .exists() method returns
+     * false, this means that the user's information could not be found in firestore.
      *
+     * <p>
      * @param fb    A reference to the Firestore instance.
      * @param email String. The email of the user whose data to retrieve.
      * @return A Task object, onto which you may attach observer methods.
-     * @Override public void onSuccess(DocumentSnapshot documentSnapshot) {
-     * if (documentSnapshot.exists()) {
-     * User user = documentSnapshot.toObject(User.class);
-     * } else {
-     * // no user found, perhaps the user is new
-     * // do something for a new user
-     * }
-     * }
-     * }).addOnFailureListener(new OnFailureListener() {
-     * @Override public void onFailure(@NonNull Exception e) {
-     * Log.d(TAG, "could not read user information. error: " + e);
-     * }
-     * });
      */
     public static Task<DocumentSnapshot> getUserByEmail(FirebaseFirestore fb, String email) {
 

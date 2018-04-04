@@ -137,8 +137,8 @@ public class MainActivity extends AppCompatActivity
      * Loads the specified fragment into the specified container.  Tries to be smart about using
      * the correct transaction call depending on whether this is an initial call or not.
      *
-     * @param containerID
-     * @param fragment
+     * @param containerID This is the ID of the container which will hold the fragment.
+     * @param fragment The fragment to display.
      */
     private void displayFragment(int containerID, Fragment fragment) {
 
