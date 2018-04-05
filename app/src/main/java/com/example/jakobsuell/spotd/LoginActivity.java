@@ -22,7 +22,8 @@ import controllers.LoginController;
 public class LoginActivity extends AppCompatActivity {
 
     private static final int RC_SIGN_IN = 123;
-    FirebaseAuth auth;
+    private final boolean GO_DEBUG_ACTIVITY = false;     // shows debug activity instead of toolbar_menu_selector
+    private FirebaseAuth auth;
     private String TAG = "LoginActivity";
     private TextView tvMessage;
     private Button btSignIn;
@@ -37,9 +38,8 @@ public class LoginActivity extends AppCompatActivity {
         tvMessage = findViewById(R.id.txtMessage);
         btSignIn = findViewById(R.id.btnSignIn);
 
-        // if already logged in, don't do anything
+        // check if user signed in
         auth = FirebaseAuth.getInstance();
-
         if (!LoginController.isUserSignedIn(auth)) {
             Log.d(TAG, "no signed in user.");
             signUserIn();
@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Callback for Firebase pre-built login UI.
+     *
      * @param requestCode   Indicates what action was performed. Should always be RC_SIGN_IN
      * @param resultCode    Returned by Firebase and indicates whether sign-in was successful.
      * @param data          The intent returned by the login activity.
@@ -64,9 +65,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 // Successful sign in
-
                 onSignIn();
-
             } else {
                 // sign in failed, check reason and set message
                 Log.d(TAG, "sign-in failed.");
@@ -78,20 +77,13 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d(TAG, "user cancelled sign-in");
                     msg = msg + " " + getString(R.string.signin_fail_cancelled);
                 } else {
-
-                    try {
-                        if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
-                            Log.d(TAG, "network unavailable");
-                            msg = msg + " " + getString(R.string.signin_fail_network);
-                        } else {
-                            Log.e(TAG, "Unhandled sign-in error: " + response.getErrorCode());
-                        }
-                    } catch (NullPointerException ex) {
-                        // something here
-                    } finally {
-                        // no worries. we just won't have a network message
-                        onSignInFail(msg);
+                    if (response.getError()!= null && response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                        Log.d(TAG, "network unavailable");
+                        msg = msg + " " + getString(R.string.signin_fail_network);
+                    } else {
+                        Log.e(TAG, "Unhandled sign-in error: " + response.getError().getMessage());
                     }
+
                 }
                 onSignInFail(msg);
             }
@@ -100,6 +92,9 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Signs users in using pre-built FirebaseUI.
+     *
+     * This is the only method that is possible to run when a new user is signing up.
+     *
      */
     private void signUserIn() {
 
@@ -136,9 +131,12 @@ public class LoginActivity extends AppCompatActivity {
 
         if (auth.getCurrentUser() != null) {
             Log.d(TAG, "user signed in: " + auth.getCurrentUser().getDisplayName());
-            // goDebugActivity();
             logUserInfo();
-            goMainActivity();
+            if (GO_DEBUG_ACTIVITY) {
+                goDebugActivity();
+            } else {
+                goMainActivity();
+            }
 
         }
 
@@ -197,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // TODO: Replace this with a call to the Navigation controller
 
-        // launch the main activity
+        // launch the toolbar_menu_selector activity
         Intent nextActivity = new Intent(this, MainActivity.class);
 
         // don't allow user to return to login screen

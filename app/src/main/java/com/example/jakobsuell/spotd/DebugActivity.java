@@ -1,10 +1,12 @@
 package com.example.jakobsuell.spotd;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -14,9 +16,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.CRC32;
 
 import controllers.FirestoreController;
 import controllers.LoginController;
@@ -30,16 +34,21 @@ import models.User;
  * triggering of code by the developer to perform debugging.
  */
 
+@SuppressWarnings("unused")
 public class DebugActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
 
     private String TAG = "DebugActivity";
 
-    // these needs to persist across several saves
+    private ImageView profile_pic;
+    private Uri userPicture;
+
+    // these need to persist across several saves
     private Pet testPet;
     private List<Pet> pets;
 
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +56,15 @@ public class DebugActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
 
+        // set views
+        profile_pic = findViewById(R.id.iv_user_profile_picture);
+
         auth = FirebaseAuth.getInstance();
 
-        Log.d(TAG, "entering");
-
         LoginController.enforceSignIn(this);
+        userPicture = LoginController.getUserPictureUri(auth);
 
     }
-
-
 
 
     /***
@@ -77,19 +86,29 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     /**
-     * Save the current user to the Firestore.
+     * Save the current user to Firestore.
      *
      * @param view Required parameter to call this method from a button.
      */
-    public void createUser(View view) {
+    public void saveUser(View view) {
 
         // create user from the auth object
-        User user = new User().fromAuth();
+        user = new User().fromAuth();
 
         // show all the user info in logcat
         user.show();
 
-        // attempt to write the info to the firestore
+        // attempt to write user photo to storage
+        // the picture id is the crc32 of the user's email address
+        CRC32 pictureUID = new CRC32();
+        pictureUID.update(user.getEmailAddress().getBytes());
+
+        Log.d(TAG, "user profile pic uid is: " + pictureUID.getValue());
+
+        // determine user's profile picture URI.
+        Uri userProfilePictureUri = LoginController.getUserPictureUri(auth);
+
+        // attempt to write user info to the firestore
         FirestoreController.saveUser(FirebaseFirestore.getInstance(), user).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
@@ -101,6 +120,7 @@ public class DebugActivity extends AppCompatActivity {
                 Log.d(TAG, "user write failed: " + e);
             }
         });
+
 
     }
 
@@ -137,6 +157,7 @@ public class DebugActivity extends AppCompatActivity {
 
 
     }
+
 
     public void saveTestImage(View view) {
 
@@ -177,7 +198,7 @@ public class DebugActivity extends AppCompatActivity {
         }
 
 
-        FirestoreController.savePet(FirebaseFirestore.getInstance(), pets).addOnSuccessListener(new OnSuccessListener() {
+        FirestoreController.savePetList(FirebaseFirestore.getInstance(), pets).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
                 Log.d(TAG, "pet list write successful");
@@ -190,6 +211,84 @@ public class DebugActivity extends AppCompatActivity {
         });
     }
 
+    public void readPet(View view) {
+
+        // read the pet that we have saved
+
+        Log.d(TAG, "Attempting to read a test pet...");
+
+        if (testPet == null || testPet.getPetID() == null || testPet.getPetID().equals("")) {
+            // save a pet real quick, then re-call ourselves when it is done
+            Log.d(TAG, "no pet object created...creating...");
+            if (testPet == null)
+                testPet = getDummyPet();
+            FirestoreController.savePet(FirebaseFirestore.getInstance(), testPet).addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+                    // call ourselves again
+                    Log.d(TAG, "new pet object saved. recalling this...");
+                    readPet(null);
+                }
+            });
+            return;
+        }
+
+        FirestoreController.readPet(FirebaseFirestore.getInstance(), testPet.getPetID()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Pet pet;
+                if (documentSnapshot.exists()) {
+                    pet = documentSnapshot.toObject(Pet.class);
+                    Log.d(TAG, "pet read success:");
+                    pet.show();
+                } else {
+                    // this pet couldn't be found
+                    Log.d(TAG, "pet with id " + testPet.getPetID() + " could not be found");
+                    pet = null;
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // what to do when it fails
+                Log.d(TAG, "pet read failed:" + e);
+            }
+        });
+
+
+    }
+
+    public void readPetList(View view) {
+
+        Log.d(TAG, "Attempting to read a test pet...");
+
+        if (pets == null) {
+            pets = new ArrayList<>();
+        } else {
+            pets.clear();
+        }
+
+        // try getting all cats
+        FirestoreController.readPets(FirebaseFirestore.getInstance(), "animalType", AnimalType.Cat.description()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "got list of cats");
+                    for (DocumentSnapshot document : task.getResult()) {
+                        pets.add(document.toObject(Pet.class));
+                    }
+                    Log.d(TAG, "list has " + pets.size() + " items");
+                    for (Pet p : pets) {
+                        p.show();
+                    }
+                } else {
+                    Log.d(TAG, "Error getting pets: ", task.getException());
+                }
+            }
+        });
+
+    }
 
     private void showPet(Pet pet) {
 

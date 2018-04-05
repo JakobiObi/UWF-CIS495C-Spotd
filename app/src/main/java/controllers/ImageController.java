@@ -1,6 +1,7 @@
 package controllers;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
@@ -9,6 +10,9 @@ import com.example.jakobsuell.spotd.GlideApp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.nio.ByteBuffer;
+import java.security.InvalidParameterException;
 
 /**
  * Used to manage images
@@ -23,13 +27,10 @@ public class ImageController {
 
 
     private static void initialize() {
-        fbStorage = FirebaseStorage.getInstance();
-        isInitialized = true;
-    }
-
-    private static void setup() {
-        if (!isInitialized)
-            initialize();
+        if (!isInitialized) {
+            fbStorage = FirebaseStorage.getInstance();
+            isInitialized = true;
+        }
     }
 
     /**
@@ -43,7 +44,7 @@ public class ImageController {
 
     public static void getImageIntoView(String id, ImageView imageView, Context context) {
 
-        setup();
+        initialize();
 
         Log.d(TAG, "sending image [" + id + "] to view [" + imageView.toString() + "]");
         // Build reference to image file in storage
@@ -56,8 +57,6 @@ public class ImageController {
                 .into(imageView);
 
     }
-
-
 
     /**
      * This saves a local file (from the device) into the cloud store (Firebase storage).
@@ -73,7 +72,12 @@ public class ImageController {
      */
     public static UploadTask storeImageFromFile(String id, Uri file) {
 
-        setup();
+        initialize();
+
+        if (id == null || id.equals(""))
+            throw new InvalidParameterException("id can't be null");
+        if (file == null)
+            throw new InvalidParameterException("file can't be null");
 
         Log.d(TAG, "storing image with id: [" + id + "] from file: [" + file.getPath() + "]");
 
@@ -87,7 +91,28 @@ public class ImageController {
 
     }
 
-    // TODO: Write storeImageFromBitmap
+    public static UploadTask storeImageFromBitmap(String id, Bitmap image) {
+
+        initialize();
+
+        if (id == null || id.equals(""))
+            throw new InvalidParameterException("id can't be null");
+        if (image == null)
+            throw new InvalidParameterException("file can't be null");
+
+
+        Log.d(TAG, "storing image with id: [" + id + "] from bitmap");
+
+        // build new file name for storing in Firebase storage
+        String storeName = id + ".bmp";
+        Log.d(TAG, "new image name: " + storeName);
+
+        // Create storage reference and uploading task
+        StorageReference fileReference = getRefToImage(storeName);
+        return fileReference.putBytes(byteArrayFromBitmap(image));
+
+    }
+
 
     /**
      * Creates a new filename using the supplied ID as the filename and the extension
@@ -110,5 +135,28 @@ public class ImageController {
 
     }
 
+    /**
+     * Creates a byte array from a bitmap. Uses a byte buffer.
+     *
+     * This *could* potentially cause an out of memory error if the image being converted is
+     * exceptionally large.
+     *
+     * @param image The bitmap image to convert.
+     * @return A byte array represening the bitmap.
+     */
+    private static byte[] byteArrayFromBitmap(Bitmap image) {
+
+        int imageSize = image.getRowBytes() * image.getHeight();
+        ByteBuffer b = ByteBuffer.allocate(imageSize);
+
+        image.copyPixelsToBuffer(b);
+        b.rewind(); // failure to do this will cause an underflow exception
+
+        byte[] bytes = new byte[imageSize];
+        b.get(bytes, 0, bytes.length);
+
+        return bytes;
+
+    }
 
 }

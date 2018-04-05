@@ -22,37 +22,18 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".StartMenu"
-            android:label="@string/title_activity_start_menu"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".DebugActivity"
             android:label="@string/title_activity_debug"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".FoundAPet"
-            android:label="@string/title_activity_foundapet"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".LostMyPetActivity"
-            android:label="@string/title_activity_lostpet"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MyPets_Activity" />
-        <activity android:name=".AddAPet_Activity" />
-        <activity android:name=".MyProfile_Activity" />
-        <activity android:name=".ReportLostAnimal_Activity" />
-        <activity android:name=".Settings_Activity" />
-        <activity android:name=".About_Activity" />
-        <activity android:name=".Help_Activity" />
     </application>
 
 </manifest>
