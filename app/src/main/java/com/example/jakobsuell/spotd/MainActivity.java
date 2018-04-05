@@ -1,5 +1,8 @@
 package com.example.jakobsuell.spotd;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +17,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,8 +30,8 @@ public class MainActivity extends AppCompatActivity
 
     private String TAG = "MainActivity";
     private NavigationView navigationView;
-    private TextView textView;
-
+    private DrawerLayout drawer;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +43,26 @@ public class MainActivity extends AppCompatActivity
         // make sure user is logged in
         LoginController.enforceSignIn(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // find view instances.
+        /*
+            Doing this here and then using the private instance means you only have to find the
+            view from the id once.
+        */
+
+        toolbar = findViewById(R.id.toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+
+        // create toolbar
         setSupportActionBar(toolbar);
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // create and setup navigation drawer
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        setHeaderViewOnNavDrawer();
 
         // ensure navigation drawer gets the click event from the mouse
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -77,26 +84,30 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        setupLostMyPetButton();
-        setupFoundAPetButton();
-        setHeaderViewOnNavDrawer();
+        // initial load of Home Fragment
+        displayFragment(new HomeFragment());
+
     }
 
     public void setHeaderViewOnNavDrawer() {
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
+        TextView userName = headerView.findViewById(R.id.textView_NavUserName);
+        TextView emailAccount = headerView.findViewById(R.id.textView_NavEmail);
 
-        TextView userName = (TextView) headerView.findViewById(R.id.textView_NavUserName);
-        userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        try {
+            userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            emailAccount.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        } catch (NullPointerException ex) {
+            // if we can't set them, just hide them
+            userName.setText("");
+            emailAccount.setText("");
+        }
 
-        TextView emailAccount = (TextView)headerView.findViewById(R.id.textView_NavEmail);
-        emailAccount.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -111,85 +122,85 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
+/*    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
+    }*/
+
+    /**
+     * Show a fragment.
+     * Loads the specified fragment into the specified container.  Tries to be smart about using
+     * the correct transaction call depending on whether this is an initial call or not.
+     *
+     * @param fragment The fragment to display.
+     */
+    private void displayFragment(Fragment fragment) {
+
+        FragmentManager fragmentManager = getFragmentManager();
+
+        Log.d(TAG, "loading fragment " + fragment.toString() + " to " + R.id.fragment_container);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        // check if there is already a fragment
+        if (fragmentManager.getFragments().size() > 0) {
+            // use replace to remove previous fragment
+            Log.d(TAG, "replacing current fragment");
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+        } else {
+            Log.d(TAG, "adding initial fragment");
+            fragmentTransaction.add(R.id.fragment_container, fragment);
+        }
+
+        fragmentTransaction.commit();
+
     }
 
-    private void displaySelectedFragment(int id) {
-        android.support.v4.app.Fragment fragment = null;
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        switch (id) {
+        switch (item.getItemId()) {
             case R.id.home:
                 Log.d(TAG, "home clicked on nav menu");
-                fragment = new HomeFragment();
+                displayFragment(new HomeFragment());
                 break;
             case R.id.profile:
                 Log.d(TAG, "profile clicked on nav menu");
-                fragment = new MyProfileFragment();
+                displayFragment(new MyProfileFragment());
                 break;
             case R.id.found:
                 Log.d(TAG, "found clicked on nav menu");
-                fragment = new FoundAPetFragment();
+                displayFragment(new FoundAPetFragment());
                 break;
             case R.id.lost:
                 Log.d(TAG, "lost clicked on nav menu");
-                fragment = new LostAPetFragment();
+                displayFragment(new LostAPetFragment());
                 break;
             case R.id.log:
-                Toast.makeText(MainActivity.this, "Signing you out...", Toast.LENGTH_SHORT).show();
-                LoginController.signOut(this).addOnSuccessListener(new OnSuccessListener() {
-                    @Override
-                    public void onSuccess(Object o) {
-                        // TODO:  Replace with a call to the NavigationController.
-                        loadLoginActivity();
-                    }
-                });
+                signOut();
                 break;
             case R.id.quit:
                 finish();
                 System.exit(0);
         }
 
-        if (fragment != null) {
-            android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.content_main, fragment);
-            ft.commit();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // close the drawer, we don't live in a barn!
         drawer.closeDrawer(GravityCompat.START);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        displaySelectedFragment(id);
-
         return true;
     }
 
-    //Do something when "Lost My Pet" button is clicked
+    // TODO: These methods need to be moved into the Home Fragment
+
+   /* //Do something when "Lost My Pet" button is clicked
     private void setupLostMyPetButton() {
         Button btn = (Button) findViewById(R.id.lostPetButton);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(MainActivity.this, "Clicked 'Lost My Pet'.", Toast.LENGTH_SHORT).show();
-
                 android.support.v4.app.Fragment fragment = null;
                 fragment = new LostAPetFragment();
 
@@ -200,7 +211,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-
     }
 
     //Do something when "Found a Pet" button is clicked
@@ -209,8 +219,6 @@ public class MainActivity extends AppCompatActivity
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(MainActivity.this, "Clicked 'Found a Pet'.", Toast.LENGTH_SHORT).show();
-
                 android.support.v4.app.Fragment fragment = null;
                 fragment = new FoundAPetFragment();
 
@@ -221,50 +229,25 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+    }*/
 
-    }
 
+    // TODO: Combine these into one method with a switch.
 
-    /**
-     * This method is invoked when the user clicks the Settings menu option.
-     *
-     * @param menuItem
-     */
-    public void settingsClicked(MenuItem menuItem) {
+    public void actionBarClicked(MenuItem item) {
 
-        Toast.makeText(MainActivity.this, "Clicked 'Settings'.", Toast.LENGTH_SHORT).show();
+        switch(item.getItemId()) {
+            case R.id.action_bar_menu_about:
+                Log.d(TAG, "action_bar_menu_about clicked");
+                break;
+            case R.id.action_bar_menu_help:
+                Log.d(TAG, "action_bar_menu_help clicked");
+                break;
+            case R.id.action_bar_menu_settings:
+                Log.d(TAG, "action_bar_menu_settings clicked");
+                break;
+        }
 
-        Intent intent = ToolbarMenu_Activity.makeToolbarMenuActivityIntent(MainActivity.this);
-        startActivity(intent);
-        finish();
-    }
-
-    /**
-     * This method is invoked when the user clicks the About menu option.
-     *
-     * @param menuItem
-     */
-    public void aboutClicked(MenuItem menuItem) {
-
-        Toast.makeText(MainActivity.this, "Clicked 'About'.", Toast.LENGTH_SHORT).show();
-
-        Intent intent = ToolbarMenu_Activity.makeToolbarMenuActivityIntent(MainActivity.this);
-        startActivity(intent);
-        finish();
-    }
-
-    /**
-     * This method is invoked when the user clicks the Help menu option.
-     *
-     * @param menuItem
-     */
-    public void helpClicked(MenuItem menuItem) {
-
-        Toast.makeText(MainActivity.this, "Clicked 'Help'.", Toast.LENGTH_SHORT).show();
-
-        Intent intent = ToolbarMenu_Activity.makeToolbarMenuActivityIntent(MainActivity.this);
-        startActivity(intent);
-        finish();
     }
 
     //Encapsulates ability to create itself
@@ -277,7 +260,19 @@ public class MainActivity extends AppCompatActivity
      * *******************************************************
      */
 
-    private void loadLoginActivity() {
+    private void signOut() {
+
+        Toast.makeText(MainActivity.this, "Signing you out...", Toast.LENGTH_SHORT).show();
+        LoginController.signOut(this).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                // TODO:  Replace with a call to the NavigationController.
+                loadLoginActivity();
+            }
+        });
+    }
+
+    public void loadLoginActivity() {
 
         // launch login activity
         Intent nextActivity = new Intent(this, LoginActivity.class);

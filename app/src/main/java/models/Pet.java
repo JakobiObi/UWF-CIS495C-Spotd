@@ -104,19 +104,19 @@ public class Pet {
      */
     public void show() {
 
-        String logMsg = "name: " + this.name
+        StringBuilder logMsg = new StringBuilder("name: " + this.name
                 + " " + "type: " + this.animalType.description()
                 + " " + "status: " + this.status.description()
                 + " " + "petID: " + this.petID
                 + " " + "ownerID: " + this.ownerID
                 + " " + "pictureID: " + this.pictureUID
-                + " " + "keywords:";
+                + " " + "keywords:");
 
         for (String keyword : keywords) {
-            logMsg = logMsg + " " + keyword;
+            logMsg.append(" ").append(keyword);
         }
 
-        Log.d("Pet", logMsg);
+        Log.d("Pet", logMsg.toString());
 
     }
 }
