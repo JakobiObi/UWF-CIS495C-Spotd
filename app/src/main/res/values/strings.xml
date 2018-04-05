@@ -30,4 +30,33 @@
     <string name="nav_profile">My Profile</string>
     <string name="nav_log">Logout</string>
     <string name="nav_quit">Quit</string>
+    
+    
+
+    <string-array name="genders">
+        <item>N/A</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string-array name="type">
+        <item>N/A</item>
+        <item>Cat</item>
+        <item>Dog</item>
+        <item>Horse</item>
+        <item>Rabbit</item>
+        <item>Snake</item>
+        <item>Lizard</item>
+        <item>Guinea pig</item>
+    </string-array>
+    <string-array name="color">
+        <item>N/A</item>
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Brown</item>
+        <item>Cream</item>
+        <item>Grey</item>
+        <item>White</item>
+        <item>Lizard</item>
+        <item>Guinea pig</item>
+    </string-array>
 </resources>

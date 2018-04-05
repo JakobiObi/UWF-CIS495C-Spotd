@@ -24,12 +24,11 @@ public class MyPets_Activity extends AppCompatActivity {
 
         for(int i = 1; i < 5; i++){
             Button testButton = new Button(this);
+            testButton.setText("pet1");
+            testButton.setCompoundDrawablesWithIntrinsicBounds( R.mipmap.sample_1, 0, 0, 0);
             layout.addView(testButton);
-
-
-
-
         }
+        setupAddAPetButton();
     }
 
     //Do something when "Add a Pet" button is clicked

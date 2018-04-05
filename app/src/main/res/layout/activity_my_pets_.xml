@@ -16,7 +16,7 @@
             android:id="@+id/petLinearLayout"
             android:orientation="vertical">
 
-            <EditText
+            <TextView
                 android:id="@+id/editText4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -27,7 +27,6 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:layout_editor_absoluteY="0dp" />
-
             <Button
                 android:id="@+id/btn_addAPet"
                 android:layout_width="match_parent"
@@ -42,7 +41,10 @@
                 android:id="@+id/button2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="Pupper"
+                android:drawableLeft="@mipmap/sample_7" />
+
+
         </LinearLayout>
     </ScrollView>
 
