@@ -4,25 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/profileBackground"
     tools:context="com.example.jakobsuell.spotd.MyProfile_Activity">
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="39dp"
-        android:layout_marginTop="30dp"
-        android:text="My Profile Activity"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_MyPets"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="98dp"
-        android:text="My Pets"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_height="115dp"
+            app:srcCompat="@drawable/com_facebook_profile_picture_blank_portrait"
+            tools:layout_editor_absoluteX="136dp"
+            tools:layout_editor_absoluteY="55dp" />
+
+        <TextView
+            android:id="@+id/profilePromt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Profile"
+            android:textAlignment="center"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/editProfileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Name:"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/editProfileEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Email:"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/btn_MyPets"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/buttonRed"
+            android:text="My Pets"
+            android:textColor="@color/whiteText" />
+
+        <Button
+            android:id="@+id/profileSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/buttonBlue"
+            android:text="Save"
+            android:textColor="@color/cardview_light_background" />
+
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

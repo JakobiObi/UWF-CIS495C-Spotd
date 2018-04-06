@@ -1,24 +1,19 @@
 <resources>
     <string name="app_name">Spot\'d</string>
-    <string name="action_settings">Settings</string>
 
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
     <string name="facebook_application_id" translatable="false">150913652261880</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb150913652261880</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_start_menu">Dashboard</string>
     <string name="title_activity_debug">DebugActivity</string>
-    <string name="title_activity_foundapet">Found Pet</string>
-    <string name="title_activity_lostpet">Lost Pet</string>
-    <string name="debug_btn_signout">Sign Out</string>
-    <string name="signin_in_progress">Signing in...</string>
+    <string name="signin_in_progress">Signing in…</string>
     <string name="signin_fail_generic">Sign in unsuccessful.</string>
     <string name="signin_fail_network">There is no network connection. Please check your network settings and try again.</string>
     <string name="signin_fail_cancelled">"Spot'd needs to know who you are!  Please sign in. "</string>
     <string name="signin_btn_signin">Sign In</string>
-    <string name="title_activity_lost_my_pet">LostMyPetActivity</string>
-    <string name="title_activity_found_apet">FoundAPet</string>
-    <string name="title_activity_my_pets_">MyPets_Activity</string>
+    <string name="home_fragment_lost_button">I LOST MY PET</string>
+    <string name="home_fragment_found_button">I FOUND A PET</string>
+    <string name="home_fragment_profile_photo_desc">Profile photo</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="menu_settings">Settings</string>
@@ -30,12 +25,37 @@
     <string name="nav_profile">My Profile</string>
     <string name="nav_log">Logout</string>
     <string name="nav_quit">Quit</string>
-    <string name="homeFragment">This is the "Home" fragment</string>
+
+    <string-array name="genders">
+        <item>N/A</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string-array name="type">
+        <item>N/A</item>
+        <item>Cat</item>
+        <item>Dog</item>
+        <item>Horse</item>
+        <item>Rabbit</item>
+        <item>Snake</item>
+        <item>Lizard</item>
+        <item>Guinea pig</item>
+    </string-array>
+    <string-array name="color">
+        <item>N/A</item>
+        <item>Black</item>
+        <item>Blue</item>
+        <item>Brown</item>
+        <item>Cream</item>
+        <item>Grey</item>
+        <item>White</item>
+    </string-array>
+
     <string name="myProfileFragment">This is the "My Profile" fragment</string>
     <string name="lostAPetFragment">This is the "Lost a Pet" fragment</string>
     <string name="foundAPetFragment">This is the "Found a Pet" fragment</string>
-    <string name="title_activity_toolbar_menu_">ToolbarMenu_Activity</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+
 </resources>

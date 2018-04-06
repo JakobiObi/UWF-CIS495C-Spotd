@@ -4,15 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/about_background"
     tools:context="com.example.jakobsuell.spotd.About_Activity">
 
     <TextView
         android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="16dp"
-        android:text="About Activity"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="329dp"
+        android:layout_height="458dp"
+        android:text="Spot'd is an Android Application designed by the University of West Florida Capstone group 3.
+
+The application is a lost and found pet registry where people can create accounts and load their pets to it. Users will report if they found or lost an animal and it will be loaded to the database for others to be on the lookout for.
+
+For any questions contact spotd@gmail.com"
+        android:textColor="@color/whiteText"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="28dp"
+        tools:layout_editor_absoluteY="26dp" />
+
 </android.support.constraint.ConstraintLayout>

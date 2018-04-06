@@ -34,16 +34,6 @@
             android:name=".DebugActivity"
             android:label="@string/title_activity_debug"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MyPets_Activity" />
-        <activity android:name=".AddAPet_Activity" />
-        <activity android:name=".MyProfile_Activity" />
-        <activity android:name=".Settings_Activity" />
-        <activity android:name=".About_Activity" />
-        <activity android:name=".Help_Activity" />
-        <activity
-            android:name=".ToolbarMenu_Activity"
-            android:label="@string/title_activity_toolbar_menu_"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

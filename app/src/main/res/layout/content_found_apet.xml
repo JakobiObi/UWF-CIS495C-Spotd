@@ -4,9 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/content_toolbarMain"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ToolbarMenu_Activity"
-    tools:showIn="@layout/app_bar_toolbar_menu_">
+    tools:context="com.example.jakobsuell.spotd.FoundAPet"
+    tools:showIn="@layout/activity_found_apet">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

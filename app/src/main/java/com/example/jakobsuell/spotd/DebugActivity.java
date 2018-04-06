@@ -1,10 +1,12 @@
 package com.example.jakobsuell.spotd;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,6 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.CRC32;
 
 import controllers.FirestoreController;
 import controllers.LoginController;
@@ -31,16 +34,21 @@ import models.User;
  * triggering of code by the developer to perform debugging.
  */
 
+@SuppressWarnings("unused")
 public class DebugActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
 
     private String TAG = "DebugActivity";
 
+    private ImageView profile_pic;
+    private Uri userPicture;
+
     // these need to persist across several saves
     private Pet testPet;
     private List<Pet> pets;
 
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +56,15 @@ public class DebugActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
 
+        // set views
+        profile_pic = findViewById(R.id.iv_user_profile_picture);
+
         auth = FirebaseAuth.getInstance();
 
-        Log.d(TAG, "entering");
-
         LoginController.enforceSignIn(this);
+        userPicture = LoginController.getUserPictureUri(auth);
 
     }
-
-
 
 
     /***
@@ -78,19 +86,29 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     /**
-     * Save the current user to the Firestore.
+     * Save the current user to Firestore.
      *
      * @param view Required parameter to call this method from a button.
      */
     public void saveUser(View view) {
 
         // create user from the auth object
-        User user = new User().fromAuth();
+        user = new User().fromAuth();
 
         // show all the user info in logcat
         user.show();
 
-        // attempt to write the info to the firestore
+        // attempt to write user photo to storage
+        // the picture id is the crc32 of the user's email address
+        CRC32 pictureUID = new CRC32();
+        pictureUID.update(user.getEmailAddress().getBytes());
+
+        Log.d(TAG, "user profile pic uid is: " + pictureUID.getValue());
+
+        // determine user's profile picture URI.
+        Uri userProfilePictureUri = LoginController.getUserPictureUri(auth);
+
+        // attempt to write user info to the firestore
         FirestoreController.saveUser(FirebaseFirestore.getInstance(), user).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
@@ -102,6 +120,7 @@ public class DebugActivity extends AppCompatActivity {
                 Log.d(TAG, "user write failed: " + e);
             }
         });
+
 
     }
 
