@@ -91,8 +91,17 @@ public class HomeFragment extends Fragment {
             fragmentTransaction.add(R.id.fragment_container, fragment);
         }
 
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
     }
 
+    public void onBackPressed() {
+            FragmentManager fm = getFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                fm.popBackStack();
+            } else {
+                super.getActivity().onBackPressed();
+            }
+        }
 }
