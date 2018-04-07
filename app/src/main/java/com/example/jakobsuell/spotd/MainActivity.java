@@ -1,13 +1,14 @@
 package com.example.jakobsuell.spotd;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -111,11 +112,12 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            FragmentManager fm = getFragmentManager();
+            FragmentManager fm = getSupportFragmentManager();
+            Log.d(TAG,fm.getBackStackEntryCount() + " fragments on stack");
             if (fm.getBackStackEntryCount() > 0) {
                 fm.popBackStack();
             } else {
-                super.onBackPressed();
+                return;
             }
         }
     }
@@ -146,7 +148,7 @@ public class MainActivity extends AppCompatActivity
      */
     private void displayFragment(Fragment fragment) {
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         Log.d(TAG, "loading fragment " + fragment.toString() + " to " + R.id.fragment_container);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -159,9 +161,10 @@ public class MainActivity extends AppCompatActivity
         } else {
             Log.d(TAG, "adding initial fragment");
             fragmentTransaction.add(R.id.fragment_container, fragment);
+            fragmentTransaction.addToBackStack(null);
         }
 
-        fragmentTransaction.addToBackStack(null);
+
         fragmentTransaction.commit();
 
     }
@@ -198,45 +201,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    // TODO: These methods need to be moved into the Home Fragment
-
-   /* //Do something when "Lost My Pet" button is clicked
-    private void setupLostMyPetButton() {
-        Button btn = (Button) findViewById(R.id.lostPetButton);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                android.support.v4.app.Fragment fragment = null;
-                fragment = new LostAPetFragment();
-
-                if (fragment != null) {
-                    android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_main, fragment);
-                    ft.commit();
-                }
-            }
-        });
-    }
-
-    //Do something when "Found a Pet" button is clicked
-    private void setupFoundAPetButton() {
-        Button btn = (Button) findViewById(R.id.foundPetButton);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                android.support.v4.app.Fragment fragment = null;
-                fragment = new FoundAPetFragment();
-
-                if (fragment != null) {
-                    android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_main, fragment);
-                    ft.commit();
-                }
-            }
-        });
-    }*/
-
 
     // TODO: Combine these into one method with a switch.
 
@@ -290,5 +254,6 @@ public class MainActivity extends AppCompatActivity
 
         this.startActivity(nextActivity);
     }
+
 
 }

@@ -1,17 +1,16 @@
 package com.example.jakobsuell.spotd;
 
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 
 /**
@@ -96,12 +95,5 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public void onBackPressed() {
-            FragmentManager fm = getFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                fm.popBackStack();
-            } else {
-                super.getActivity().onBackPressed();
-            }
-        }
+
 }
