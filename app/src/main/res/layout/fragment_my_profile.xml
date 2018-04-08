@@ -34,7 +34,6 @@
                 android:id="@+id/profileFragment_editName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop=""
                 android:ems="10"
                 android:hint="@string/profile_fragment_editName_hint"
                 android:inputType="textPersonName" />
