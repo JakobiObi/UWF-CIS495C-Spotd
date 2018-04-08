@@ -66,17 +66,7 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_read_user"
             tools:ignore="HardcodedText" />
 
-        <Button
-            android:id="@+id/btn_save_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="saveTestImage"
-            android:text="Save Image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_save_petlist"
-            tools:ignore="HardcodedText" />
+
 
         <Button
             android:id="@+id/btn_read_pet"
@@ -102,6 +92,29 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_read_user"
             tools:ignore="HardcodedText" />
 
+        <Button
+            android:id="@+id/btn_save_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="saveTestImage"
+            android:text="Save Image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_save_petlist"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/btn_get_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="getTestImage"
+            android:text="Get Image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/btn_save_image"
+            app:layout_constraintTop_toBottomOf="@+id/btn_save_petlist"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btn_sign_out"

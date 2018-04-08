@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         TextView userName = headerView.findViewById(R.id.textView_NavUserName);
         TextView emailAccount = headerView.findViewById(R.id.textView_NavEmail);
+        ImageView profileImageView = headerView.findViewById(R.id.image_home_fragment_profile_photo);
 
         try {
             userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
@@ -105,6 +107,11 @@ public class MainActivity extends AppCompatActivity
             emailAccount.setText("");
         }
 
+        // load profile image
+        GlideApp.with(this)
+                .load(LoginController.getUserPictureUri(FirebaseAuth.getInstance()))
+                .placeholder(R.drawable.profile_placeholder)
+                .into(profileImageView);
     }
 
     @Override
@@ -129,15 +136,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-/*    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-
-
-        return super.onOptionsItemSelected(item);
-    }*/
 
     /**
      * Show a fragment.
@@ -146,7 +144,7 @@ public class MainActivity extends AppCompatActivity
      *
      * @param fragment The fragment to display.
      */
-    private void displayFragment(Fragment fragment) {
+    public void displayFragment(Fragment fragment) {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
