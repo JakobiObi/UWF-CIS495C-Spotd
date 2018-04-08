@@ -4,9 +4,6 @@ package com.example.jakobsuell.spotd;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,10 +34,7 @@ public class HomeFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(getActivity(), "Clicked 'Lost My Pet'.", Toast.LENGTH_SHORT).show();
-
-
-                displayFragment(new LostAPetFragment());
+                ((MainActivity)getActivity()).displayFragment(new LostAPetFragment());
             }
         });
     }
@@ -51,9 +45,7 @@ public class HomeFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(getActivity(), "Clicked 'Found a Pet'.", Toast.LENGTH_SHORT).show();
-
-                displayFragment(new FoundAPetFragment());
+                ((MainActivity)getActivity()).displayFragment(new FoundAPetFragment());
             }
         });
 
@@ -66,34 +58,6 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    /**
-     * Show a fragment.
-     * Loads the specified fragment into the specified container.  Tries to be smart about using
-     * the correct transaction call depending on whether this is an initial call or not.
-     *
-     * @param fragment The fragment to display.
-     */
-    private void displayFragment(Fragment fragment) {
-
-        FragmentManager fragmentManager = getFragmentManager();
-
-        Log.d(TAG, "loading fragment " + fragment.toString() + " to " + R.id.fragment_container);
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        // check if there is already a fragment
-        if (fragmentManager.getFragments().size() > 0) {
-            // use replace to remove previous fragment
-            Log.d(TAG, "replacing current fragment");
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-        } else {
-            Log.d(TAG, "adding initial fragment");
-            fragmentTransaction.add(R.id.fragment_container, fragment);
-        }
-
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-
-    }
 
 
 }

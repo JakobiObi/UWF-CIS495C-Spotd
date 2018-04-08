@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.zip.CRC32;
 
 import controllers.FirestoreController;
-import controllers.ImageController;
 import controllers.LoginController;
 import enums.AnimalStatus;
 import enums.AnimalType;
@@ -174,9 +173,23 @@ public class DebugActivity extends AppCompatActivity {
 
         Log.d(TAG, "fetching testimage [" + testImage + "] from storage...");
 
-        ImageController.putImageIntoView(this,profile_pic,testImage);
+        // ImageController.putImageIntoView(this,profile_pic,testImage);
 
+        /*
+        GlideApp.with(this)
+                .load(FirebaseStorage.getInstance().getReference(testImage))
+                .placeholder(R.drawable.profile_placeholder)
+                .into(profile_pic);
+                */
+
+        // test loading the actual user profile pic
+        GlideApp.with(this)
+                .load(LoginController.getUserPictureUri(FirebaseAuth.getInstance()))
+                .placeholder(R.drawable.profile_placeholder)
+                .into(profile_pic);
     }
+
+
 
     public void savePet(View view) {
 

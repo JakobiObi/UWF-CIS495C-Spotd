@@ -73,7 +73,7 @@ public class ImageController {
 
     }
 
-    // TODO: Save an image from a bitmap?
+
 
 
     public static UploadTask storeImageFromBitmap(String id, Bitmap image) {
@@ -127,5 +127,7 @@ public class ImageController {
         return bytes;
 
     }
+
+
 
 }
