@@ -5,10 +5,65 @@
     android:layout_height="match_parent"
     tools:context=".MyProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/myProfileFragment" />
+        android:paddingTop="10dp"
+        android:background="@color/profileBackground"
+        tools:context="com.example.jakobsuell.spotd.MyProfile_Activity">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:contentDescription="@string/profile_fragment_profile_photo_desc"
+                android:id="@+id/profileFragment_profilePicture"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                app:srcCompat="@drawable/com_facebook_profile_picture_blank_portrait"
+                tools:layout_editor_absoluteX="136dp"
+                tools:layout_editor_absoluteY="55dp" />
+
+            <EditText
+                android:id="@+id/profileFragment_editName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop=""
+                android:ems="10"
+                android:hint="@string/profile_fragment_editName_hint"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/profileFragment_editEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/profile_fragment_editEmail_hint"
+                android:inputType="textEmailAddress" />
+
+            <Button
+                android:id="@+id/profileFragment_btnShowMyPets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/buttonRed"
+                android:text="Show My Pets"
+                android:textColor="@color/whiteText" />
+
+            <Button
+                android:id="@+id/profileFragment_btnSaveProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/buttonBlue"
+                android:text="Save Profile"
+                android:textColor="@color/cardview_light_background" />
+
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>
