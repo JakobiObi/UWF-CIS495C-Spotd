@@ -18,6 +18,8 @@
     <string name="profile_fragment_profile_photo_desc">Profile photo</string>
     <string name="profile_fragment_editName_hint">First Last</string>
     <string name="profile_fragment_editEmail_hint">address@example.com</string>
+    <string name="profile_fragment_btnShowMyPets_text">Show My Pets</string>
+    <string name="profile_fragment_btnSaveProfile_text">Save Profile</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
