@@ -3,6 +3,7 @@ package controllers;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -74,9 +75,18 @@ public class ImageController {
     }
 
 
+    public static UploadTask storeImage(String id, ImageView imageView) {
+
+        // pull bitmap from image
+        Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+
+        // call other overload method
+        return storeImage(id, bitmap);
+
+    }
 
 
-    public static UploadTask storeImageFromBitmap(String id, Bitmap image) {
+    public static UploadTask storeImage(String id, Bitmap image) {
 
         initialize();
 
