@@ -2,6 +2,7 @@ package controllers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -14,8 +15,12 @@ import com.bumptech.glide.request.target.Target;
 import com.example.jakobsuell.spotd.GlideApp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
+import java.security.InvalidParameterException;
 
 /**
  * Used to manage images
@@ -27,7 +32,7 @@ public class ImageController {
     private static final String TAG = "ImageController";
     private static FirebaseStorage firebaseStorage;
     private static boolean isInitialized = false;
-
+    private static final String imageFileExtension = "png";
 
     private static void initialize() {
         if (!isInitialized) {
@@ -41,19 +46,17 @@ public class ImageController {
      *
      * @param context   The context associated with the specified imageView.
      * @param imageView The imagView to load the image into.
-     * @param fileName  The filename as stored in Firebase storage. This is case sensitive.
+     * @param id  The id of the file to load.
      */
-    public static void putImageIntoView(Context context, ImageView imageView, String fileName) {
+    public static void putImageIntoView(Context context, ImageView imageView, String id) {
 
         initialize();
 
-        Log.d(TAG, "loading image [" + fileName + "] to view [" + imageView.toString() + "]");
-
-        // Build reference to imagefile in storage
-        StorageReference storageReference = firebaseStorage.getReference(fileName);
+        String fileName = id + imageFileExtension;
+        Log.d(TAG, "loading image (" + fileName + ") into (" + imageView.toString() + ")");
 
         GlideApp.with(context)
-                .load(storageReference)
+                .load(firebaseStorage.getReference(fileName))
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -73,7 +76,6 @@ public class ImageController {
     // TODO: Save an image from a bitmap?
 
 
-/*
     public static UploadTask storeImageFromBitmap(String id, Bitmap image) {
 
         initialize();
@@ -86,14 +88,20 @@ public class ImageController {
         Log.d(TAG, "storing image with id: [" + id + "] from bitmap");
 
         // build new file name for storing in Firebase storage
-        String storeName = id + ".bmp";
-        Log.d(TAG, "new image name: " + storeName);
+        String fileName = id + imageFileExtension;
+        Log.d(TAG, "new image name: " + fileName);
+
+        // convert image to compressed png
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG,100, outStream);
+
+        Bitmap compressedImage = BitmapFactory.decodeStream(new ByteArrayInputStream(outStream.toByteArray()));
 
         // Create storage reference and uploading task
-        StorageReference fileReference = getRefToImage(storeName);
-        return fileReference.putBytes(byteArrayFromBitmap(image));
+        StorageReference fileReference = firebaseStorage.getReference(fileName);
+        return fileReference.putBytes(byteArrayFromBitmap(compressedImage));
 
-    }*/
+    }
 
 
     /**
