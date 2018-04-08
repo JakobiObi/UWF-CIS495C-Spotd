@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MyProfileFragment">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="10dp"
-        android:background="@color/profileBackground"
-        tools:context="com.example.jakobsuell.spotd.MyProfile_Activity">
+        android:background="@color/profileBackground">
 
 
         <LinearLayout
@@ -26,9 +27,7 @@
                 android:id="@+id/profileFragment_profilePicture"
                 android:layout_width="128dp"
                 android:layout_height="128dp"
-                app:srcCompat="@drawable/com_facebook_profile_picture_blank_portrait"
-                tools:layout_editor_absoluteX="136dp"
-                tools:layout_editor_absoluteY="55dp" />
+                app:srcCompat="@drawable/com_facebook_profile_picture_blank_portrait"/>
 
             <EditText
                 android:id="@+id/profileFragment_editName"
