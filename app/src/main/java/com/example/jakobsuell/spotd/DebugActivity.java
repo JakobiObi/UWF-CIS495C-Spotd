@@ -50,6 +50,8 @@ public class DebugActivity extends AppCompatActivity {
 
     private User user;
 
+    private final String testImage = "dubstep.PNG";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -161,11 +163,33 @@ public class DebugActivity extends AppCompatActivity {
 
     public void saveTestImage(View view) {
 
-        // TODO: Use a ContentProvider to find a test image to use with the ImageController
+        // TODO: Use a ContentProvider to find a test image to use with the ImageHandler
         // This will be done when I figure out how to use ContentProviders to find an image
         // on the device.
 
     }
+
+    public void getTestImage(View view) {
+
+        Log.d(TAG, "fetching testimage [" + testImage + "] from storage...");
+
+        // ImageController.putImageIntoView(this,profile_pic,testImage);
+
+        /*
+        GlideApp.with(this)
+                .load(FirebaseStorage.getInstance().getReference(testImage))
+                .placeholder(R.drawable.profile_placeholder)
+                .into(profile_pic);
+                */
+
+        // test loading the actual user profile pic
+        GlideApp.with(this)
+                .load(LoginController.getUserPictureUri(FirebaseAuth.getInstance()))
+                .placeholder(R.drawable.profile_placeholder)
+                .into(profile_pic);
+    }
+
+
 
     public void savePet(View view) {
 

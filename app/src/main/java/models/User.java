@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseUserMetadata;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.zip.CRC32;
 
 /**
  * This implements the User model.
@@ -30,7 +31,7 @@ public class User {
     private String emailAddress;    // this is used to uniquely identify the user account
     private long creationDate;      // timestamp of account creation
     private long lastLogin;         // timestamp of last login (zero if brand new account)
-    private String profilePhoto;    // UID to user photo
+    private String profilePhotoId;    // UID to user photo
 
 
     // default constructor (required)
@@ -40,12 +41,12 @@ public class User {
 
     // other constructors
 
-    public User(String displayName, String emailAddress, long creationDate, long lastLogin, String profilePhoto) {
+    public User(String displayName, String emailAddress, long creationDate, long lastLogin, String profilePhotoId) {
         this.displayName = displayName;
         this.emailAddress = emailAddress;
         this.creationDate = creationDate;
         this.lastLogin = lastLogin;
-        this.profilePhoto = profilePhoto;
+        this.profilePhotoId = profilePhotoId;
     }
 
     public User fromAuth() {
@@ -93,6 +94,8 @@ public class User {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+        // generate a new unique id, as it is dependent on the email address
+        this.profilePhotoId = generatePictureId();
     }
 
     public long getCreationDate() {
@@ -111,13 +114,18 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
-    public String getProfilePhoto() {
-        return profilePhoto;
+
+    public String getProfilePhotoId() {
+        // make sure the thing exists before we try to return it
+        if (this.profilePhotoId == null || this.profilePhotoId.equals("")) {
+            if (this.emailAddress.equals("")) {
+                throw new IllegalStateException("user profile photo id not available when no email address set");
+            }
+            this.profilePhotoId = generatePictureId();
+        }
+        return profilePhotoId;
     }
 
-    public void setProfilePhoto(String profilePhoto) {
-        this.profilePhoto = profilePhoto;
-    }
 
     /**
      * Writes this user objects data to the debugging log.
@@ -128,7 +136,7 @@ public class User {
                 + " " + "email: " + this.emailAddress
                 + " " + "created: " + this.creationDate + " (" + getShortDateFromTimestamp(this.creationDate) + ")"
                 + " " + "last login: " + this.lastLogin + " (" + getShortDateFromTimestamp(this.lastLogin) + ")"
-                + " " + "photo: " + this.profilePhoto;
+                + " " + "photo: " + this.profilePhotoId;
 
 
         Log.d("User", logMsg);
@@ -148,6 +156,19 @@ public class User {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
         return formatter.format(cal.getTime());
+    }
+
+    /**
+     * Generate a unique id from the user's email address.
+     *
+     * @return A unique string.
+     */
+    private String generatePictureId() {
+
+        CRC32 pictureIdFromCrc32 = new CRC32();
+        pictureIdFromCrc32.update(this.emailAddress.getBytes());
+        return pictureIdFromCrc32.toString();
+
     }
 
 }
