@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/buttonRed"
-                android:text="Show My Pets"
+                android:text="@string/profile_fragment_btnShowMyPets_text"
                 android:textColor="@color/whiteText" />
 
             <Button
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/buttonBlue"
-                android:text="Save Profile"
+                android:text="@string/profile_fragment_btnSaveProfile_text"
                 android:textColor="@color/cardview_light_background" />
 
         </LinearLayout>
