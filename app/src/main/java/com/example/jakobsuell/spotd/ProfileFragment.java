@@ -14,10 +14,10 @@ import android.widget.Button;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyProfileFragment extends Fragment implements View.OnClickListener {
+public class ProfileFragment extends Fragment implements View.OnClickListener {
 
 
-    private final String TAG = "MyProfileFragment";
+    private final String TAG = "ProfileFragment";
     private Button showMyPets;
     private Button saveProfile;
 
@@ -42,7 +42,7 @@ public class MyProfileFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_profile, container, false);
+        return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
 
