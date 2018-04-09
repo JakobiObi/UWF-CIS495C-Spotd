@@ -116,10 +116,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "got back button");
+        Log.d(TAG, "back button pressed");
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+            Log.d(TAG, "nav drawer is open, closing");
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            Log.d(TAG, "nav drawer is not open");
             FragmentManager fm = getSupportFragmentManager();
             Log.d(TAG,fm.getBackStackEntryCount() + " fragments on stack");
             if (fm.getBackStackEntryCount() > 0) {
@@ -150,6 +153,8 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         Log.d(TAG, "loading fragment " + fragment.toString() + " to " + R.id.fragment_container);
+        Log.d(TAG,fragmentManager.getBackStackEntryCount() + " fragments already on stack");
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // check if there is already a fragment
@@ -164,7 +169,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         fragmentTransaction.commit();
-
+        Log.d(TAG,fragmentManager.getBackStackEntryCount() + " fragments on stack afterwards");
     }
 
     @Override
