@@ -21,6 +21,9 @@
     <string name="profile_fragment_btnShowMyPets_text">Show My Pets</string>
     <string name="profile_fragment_btnSaveProfile_text">Save Profile</string>
 
+    <string name="about_app_description">A lost and found pet registry.</string>
+    <string name="about_authors">Jakob Suell \n Spencer AskFeldt \n Anthony Dwyer</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="menu_settings">Settings</string>
@@ -64,5 +67,6 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+
 
 </resources>

@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity
         switch(item.getItemId()) {
             case R.id.action_bar_menu_about:
                 Log.d(TAG, "action_bar_menu_about clicked");
+                displayFragment(new AboutFragment());
                 break;
             case R.id.action_bar_menu_help:
                 Log.d(TAG, "action_bar_menu_help clicked");
