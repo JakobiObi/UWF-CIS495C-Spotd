@@ -8,12 +8,9 @@
     tools:context="com.example.jakobsuell.spotd.FoundAPet"
     tools:showIn="@layout/activity_found_apet">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </android.support.v7.widget.RecyclerView>
 
-
-    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

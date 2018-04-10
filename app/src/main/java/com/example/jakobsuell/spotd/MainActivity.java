@@ -1,7 +1,6 @@
 package com.example.jakobsuell.spotd;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +24,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.List;
+
 import controllers.LoginController;
 
 public class MainActivity extends AppCompatActivity
@@ -46,11 +47,6 @@ public class MainActivity extends AppCompatActivity
         LoginController.enforceSignIn(this);
 
         // find view instances.
-        /*
-            Doing this here and then using the private instance means you only have to find the
-            view from the id once.
-        */
-
         toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -116,15 +112,25 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        Log.d(TAG, "back button pressed");
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+            Log.d(TAG, "nav drawer is open, closing");
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            FragmentManager fm = getSupportFragmentManager();
-            Log.d(TAG,fm.getBackStackEntryCount() + " fragments on stack");
-            if (fm.getBackStackEntryCount() > 0) {
-                fm.popBackStack();
+
+            Log.d(TAG, "nav drawer is not open");
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            int backStackSize = fragmentManager.getBackStackEntryCount();
+
+            if (backStackSize >= 2) {
+                fragmentManager.popBackStack();
+            } else if(backStackSize == 1) {
+                fragmentManager.popBackStack();
+                fragmentManager.popBackStack();
             } else {
-                return;
+                super.onBackPressed();
             }
         }
     }
@@ -149,19 +155,16 @@ public class MainActivity extends AppCompatActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         Log.d(TAG, "loading fragment " + fragment.toString() + " to " + R.id.fragment_container);
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        // check if there is already a fragment
-        if (fragmentManager.getFragments().size() > 0) {
-            // use replace to remove previous fragment
-            Log.d(TAG, "replacing current fragment");
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-        } else {
-            Log.d(TAG, "adding initial fragment");
+        if (fragmentManager.getFragments().size() < 1) {
             fragmentTransaction.add(R.id.fragment_container, fragment);
+        } else {
+            removeGlideFragment(fragmentManager);
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.addToBackStack(null);
         }
-
 
         fragmentTransaction.commit();
 
@@ -177,7 +180,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.profile:
                 Log.d(TAG, "profile clicked on nav menu");
-                displayFragment(new MyProfileFragment());
+                displayFragment(new ProfileFragment());
                 break;
             case R.id.found:
                 Log.d(TAG, "found clicked on nav menu");
@@ -200,8 +203,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    // TODO: Combine these into one method with a switch.
-
     public void actionBarClicked(MenuItem item) {
 
         switch(item.getItemId()) {
@@ -218,10 +219,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    //Encapsulates ability to create itself
-    public static Intent makeMainActivityIntent(Context context) {
-        return new Intent(context, MainActivity.class);
-    }
 
     /*********************************************************
      * Helper Functions
@@ -253,5 +250,56 @@ public class MainActivity extends AppCompatActivity
         this.startActivity(nextActivity);
     }
 
+
+    private void showFragmentStack(FragmentManager fragmentManager) {
+
+        Log.d(TAG, "Fragment Stacks:");
+        List<Fragment> currentStack = fragmentManager.getFragments();
+
+        Log.d(TAG, "Current: (size: " + currentStack.size() + ")");
+        for (int i=0; i < currentStack.size(); i++) {
+            Log.d(TAG, "(" + i + "): " +
+                    currentStack.get(i).toString());
+        }
+
+        // have to iterate through backstack, can't pull as list
+        int backStackSize = fragmentManager.getBackStackEntryCount();
+        Log.d(TAG, "Backstack: (size: " + backStackSize + ")");
+        for (int i=0; i < backStackSize; i++) {
+            Log.d(TAG, "(" + i + "): " +
+                    fragmentManager.getBackStackEntryAt(i).toString());
+        }
+    }
+
+    private void removeGlideFragment(FragmentManager fragmentManager) {
+
+        // search for fragment in stack
+        List<Fragment> currentStack = fragmentManager.getFragments();
+
+        Fragment glideFragment = findGlideFragment(currentStack);
+        if (glideFragment != null) {
+            removeFragment(glideFragment, fragmentManager);
+        }
+
+    }
+
+    private Fragment findGlideFragment(List<Fragment> fragments) {
+        for (Fragment fragment:fragments) {
+            if (fragment.toString().contains("SupportRequestManagerFragment")) {
+                Log.d(TAG, "found glide fragment in stack");
+                return fragment;
+            }
+        }
+        return null;
+    }
+
+    private void removeFragment(Fragment fragment, FragmentManager fragmentManager) {
+
+        Log.d(TAG, "removing fragment " + fragment.toString() + " from stack");
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.remove(fragment);
+        fragmentTransaction.commit();
+
+    }
 
 }
