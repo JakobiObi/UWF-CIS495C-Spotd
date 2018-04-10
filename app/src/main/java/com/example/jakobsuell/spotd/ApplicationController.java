@@ -6,7 +6,6 @@ public class ApplicationController extends Application {
 
     public boolean isPicassoSingletonAssigned = false;
 
-
     public ApplicationController() {
 
     }

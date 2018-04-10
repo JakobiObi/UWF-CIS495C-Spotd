@@ -16,9 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
 
-/**
- * Created by Anthony Dwyer on 4/9/2018.
- */
 class FirebaseRequestHandler extends RequestHandler {
 
     private final String SCHEME_FIREBASE_STORAGE = "gs";

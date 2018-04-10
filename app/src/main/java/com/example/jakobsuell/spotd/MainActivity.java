@@ -321,7 +321,6 @@ public class MainActivity extends AppCompatActivity
         Picasso picassoInstance = new Picasso.Builder(this.getApplicationContext())
                 .addRequestHandler(new FirebaseRequestHandler())
                 .build();
-
         Picasso.setSingletonInstance(picassoInstance);
     }
 
