@@ -21,21 +21,21 @@ public class Pet {
     private AnimalStatus status;    // lost/found.etc, enumerated type
     private String petID;           // the unique ID of this pet. Assigned when saved to db.
     private String ownerID;         // the unique ID of the pet's owner (if applicable)
-    private String pictureUID;      // the unique ID of the picture associated with this animal
+    private String pictureID;      // the unique ID of the picture associated with this animal
 
 
     // default constructor (required)
     public Pet() {
     }
 
-    public Pet(String name, AnimalType animalType, List<String> keywords, AnimalStatus status, String petID, String ownerID, String pictureUID) {
+    public Pet(String name, AnimalType animalType, List<String> keywords, AnimalStatus status, String petID, String ownerID, String pictureID) {
         this.name = name;
         this.animalType = animalType;
         this.keywords = new ArrayList<>(keywords);
         this.petID = petID;
         this.status = status;
         this.ownerID = ownerID;
-        this.pictureUID = pictureUID;
+        this.pictureID = pictureID;
     }
 
 
@@ -81,12 +81,12 @@ public class Pet {
         this.ownerID = ownerID;
     }
 
-    public String getPictureUID() {
-        return pictureUID;
+    public String getPictureID() {
+        return pictureID;
     }
 
-    public void setPictureUID(String pictureUID) {
-        this.pictureUID = pictureUID;
+    public void setPictureID(String pictureID) {
+        this.pictureID = pictureID;
     }
 
     public String getPetID() {
@@ -109,7 +109,7 @@ public class Pet {
                 + " " + "status: " + this.status.description()
                 + " " + "petID: " + this.petID
                 + " " + "ownerID: " + this.ownerID
-                + " " + "pictureID: " + this.pictureUID
+                + " " + "pictureID: " + this.pictureID
                 + " " + "keywords:");
 
         for (String keyword : keywords) {

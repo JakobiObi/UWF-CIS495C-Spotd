@@ -183,13 +183,15 @@ public class DebugActivity extends AppCompatActivity {
                 */
 
         // test loading the actual user profile pic
+        // TODO: Replace with Picasso calls
+
+        /*
         GlideApp.with(this)
                 .load(LoginController.getUserPictureUri(FirebaseAuth.getInstance()))
                 .placeholder(R.drawable.profile_placeholder)
                 .into(profile_pic);
+*/
     }
-
-
 
     public void savePet(View view) {
 

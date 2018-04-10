@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private Toolbar toolbar;
+    private ApplicationController applicationController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,13 @@ public class MainActivity extends AppCompatActivity
 
         // create toolbar
         setSupportActionBar(toolbar);
+
+        // create picasso singleton
+        applicationController = (ApplicationController)this.getApplication();
+        if (!applicationController.isPicassoSingletonAssigned) {
+            createPicassoSingleton();
+            applicationController.isPicassoSingletonAssigned = true;
+        }
 
         // create and setup navigation drawer
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -103,11 +112,15 @@ public class MainActivity extends AppCompatActivity
             emailAccount.setText("");
         }
 
-        // load profile image
-        GlideApp.with(this)
+        putProfilePictureOnNavigationMenu(profileImageView);
+
+    }
+
+    private void putProfilePictureOnNavigationMenu(ImageView imageView) {
+        Picasso.get()
                 .load(LoginController.getUserPictureUri(FirebaseAuth.getInstance()))
                 .placeholder(R.drawable.profile_placeholder)
-                .into(profileImageView);
+                .into(imageView);
     }
 
     @Override
@@ -301,6 +314,15 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.remove(fragment);
         fragmentTransaction.commit();
 
+    }
+
+    public void createPicassoSingleton() {
+
+        Picasso picassoInstance = new Picasso.Builder(this.getApplicationContext())
+                .addRequestHandler(new FirebaseRequestHandler())
+                .build();
+
+        Picasso.setSingletonInstance(picassoInstance);
     }
 
 }
