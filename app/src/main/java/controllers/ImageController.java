@@ -2,15 +2,24 @@ package controllers;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.jakobsuell.spotd.GlideApp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.security.InvalidParameterException;
 
@@ -20,78 +29,64 @@ import java.security.InvalidParameterException;
 
 public class ImageController {
 
-    private static final String imagePath = "images/";
-    private static final String TAG = "ImageController";
-    private static FirebaseStorage fbStorage;
-    private static boolean isInitialized = false;
 
+    private static final String TAG = "ImageController";
+    private static FirebaseStorage firebaseStorage;
+    private static boolean isInitialized = false;
+    private static final String imageFileExtension = "png";
 
     private static void initialize() {
         if (!isInitialized) {
-            fbStorage = FirebaseStorage.getInstance();
+            firebaseStorage = FirebaseStorage.getInstance();
             isInitialized = true;
         }
     }
 
     /**
-     * Fetches an image from Firestorage and places it directly into a specified imageView.
-     * This uses the Glide framework.
+     *  Fetches an image from Firestorage and places it directly into a specified imageView.
      *
-     * @param id        The id of the image to fetch.
-     * @param imageView The ImageView to place the image into.
-     * @param context   The context of the activity owning the ImageView
+     * @param context   The context associated with the specified imageView.
+     * @param imageView The imagView to load the image into.
+     * @param id  The id of the file to load.
      */
-
-    public static void getImageIntoView(String id, ImageView imageView, Context context) {
+    public static void putImageIntoView(Context context, ImageView imageView, String id) {
 
         initialize();
 
-        Log.d(TAG, "sending image [" + id + "] to view [" + imageView.toString() + "]");
-        // Build reference to image file in storage
-        StorageReference storageRef = getRefToImage(id);
+        String fileName = id + imageFileExtension;
+        Log.d(TAG, "loading image (" + fileName + ") into (" + imageView.toString() + ")");
 
-        // Download directly from StorageReference using Glide
-        // (See MyAppGlideModule for Loader registration)
         GlideApp.with(context)
-                .load(storageRef)
+                .load(firebaseStorage.getReference(fileName))
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        Log.e(TAG, "failed to load image:" + e);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                })
                 .into(imageView);
 
     }
 
-    /**
-     * This saves a local file (from the device) into the cloud store (Firebase storage).
-     * This method will rename the file to whatever id you provide it, while preserving the
-     * file extension.
-     *
-     * The method will return an UploadTask object which can be used to control the upload, or
-     * to create observers on for monitoring the upload.
-     *
-     * @param id    The id of the file.
-     * @param file  The local file to upload.
-     * @return An UploadTask object.
-     */
-    public static UploadTask storeImageFromFile(String id, Uri file) {
 
-        initialize();
+    public static UploadTask storeImage(String id, ImageView imageView) {
 
-        if (id == null || id.equals(""))
-            throw new InvalidParameterException("id can't be null");
-        if (file == null)
-            throw new InvalidParameterException("file can't be null");
+        // pull bitmap from image
+        Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
 
-        Log.d(TAG, "storing image with id: [" + id + "] from file: [" + file.getPath() + "]");
-
-        // build new file name for storing in Firebase storage
-        String storeName = getImageStoreName(id, file.getLastPathSegment());
-        Log.d(TAG, "new image name: " + storeName);
-
-        // Create storage reference and uploading task
-        StorageReference fileReference = getRefToImage(storeName);
-        return fileReference.putFile(file);
+        // call other overload method
+        return storeImage(id, bitmap);
 
     }
 
-    public static UploadTask storeImageFromBitmap(String id, Bitmap image) {
+
+    public static UploadTask storeImage(String id, Bitmap image) {
 
         initialize();
 
@@ -100,40 +95,24 @@ public class ImageController {
         if (image == null)
             throw new InvalidParameterException("file can't be null");
 
-
         Log.d(TAG, "storing image with id: [" + id + "] from bitmap");
 
         // build new file name for storing in Firebase storage
-        String storeName = id + ".bmp";
-        Log.d(TAG, "new image name: " + storeName);
+        String fileName = id + imageFileExtension;
+        Log.d(TAG, "new image name: " + fileName);
+
+        // convert image to compressed png
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG,100, outStream);
+
+        Bitmap compressedImage = BitmapFactory.decodeStream(new ByteArrayInputStream(outStream.toByteArray()));
 
         // Create storage reference and uploading task
-        StorageReference fileReference = getRefToImage(storeName);
-        return fileReference.putBytes(byteArrayFromBitmap(image));
+        StorageReference fileReference = firebaseStorage.getReference(fileName);
+        return fileReference.putBytes(byteArrayFromBitmap(compressedImage));
 
     }
 
-
-    /**
-     * Creates a new filename using the supplied ID as the filename and the extension
-     * from the supplied filename.  For example, if id = "123456", and fileName = "ex.png",
-     * the string "123456.png" will be returned.
-     *
-     * @param id       An alphanumeric string that will become the new filename.
-     * @param fileName The existing filename, from which the extensione will be used.
-     * @return A string of the form {id}.{filename_extension}
-     */
-    public static String getImageStoreName(String id, String fileName) {
-
-        return id + fileName.substring(fileName.indexOf('.'));
-    }
-
-    private static StorageReference getRefToImage(String newFile) {
-
-        String path = imagePath + "/" + newFile;
-        return fbStorage.getReference(path);
-
-    }
 
     /**
      * Creates a byte array from a bitmap. Uses a byte buffer.
@@ -158,5 +137,7 @@ public class ImageController {
         return bytes;
 
     }
+
+
 
 }

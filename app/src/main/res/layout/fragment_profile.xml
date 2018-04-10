@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ProfileFragment">
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="10dp"
+        android:background="@color/profileBackground">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:contentDescription="@string/profile_fragment_profile_photo_desc"
+                android:id="@+id/profileFragment_profilePicture"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                app:srcCompat="@drawable/com_facebook_profile_picture_blank_portrait"/>
+
+            <EditText
+                android:id="@+id/profileFragment_editName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/profile_fragment_editName_hint"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/profileFragment_editEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/profile_fragment_editEmail_hint"
+                android:inputType="textEmailAddress" />
+
+            <Button
+                android:id="@+id/profileFragment_btnShowMyPets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/buttonRed"
+                android:text="@string/profile_fragment_btnShowMyPets_text"
+                android:textColor="@color/whiteText" />
+
+            <Button
+                android:id="@+id/profileFragment_btnSaveProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/buttonBlue"
+                android:text="@string/profile_fragment_btnSaveProfile_text"
+                android:textColor="@color/cardview_light_background" />
+
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

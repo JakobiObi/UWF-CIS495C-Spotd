@@ -1,13 +1,13 @@
 package com.example.jakobsuell.spotd;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Context;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,11 +17,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.List;
 
 import controllers.LoginController;
 
@@ -44,11 +47,6 @@ public class MainActivity extends AppCompatActivity
         LoginController.enforceSignIn(this);
 
         // find view instances.
-        /*
-            Doing this here and then using the private instance means you only have to find the
-            view from the id once.
-        */
-
         toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -94,6 +92,7 @@ public class MainActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         TextView userName = headerView.findViewById(R.id.textView_NavUserName);
         TextView emailAccount = headerView.findViewById(R.id.textView_NavEmail);
+        ImageView profileImageView = headerView.findViewById(R.id.image_home_fragment_profile_photo);
 
         try {
             userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
@@ -104,14 +103,35 @@ public class MainActivity extends AppCompatActivity
             emailAccount.setText("");
         }
 
+        // load profile image
+        GlideApp.with(this)
+                .load(LoginController.getUserPictureUri(FirebaseAuth.getInstance()))
+                .placeholder(R.drawable.profile_placeholder)
+                .into(profileImageView);
     }
 
     @Override
     public void onBackPressed() {
+        Log.d(TAG, "back button pressed");
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+            Log.d(TAG, "nav drawer is open, closing");
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+
+            Log.d(TAG, "nav drawer is not open");
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            int backStackSize = fragmentManager.getBackStackEntryCount();
+
+            if (backStackSize >= 2) {
+                fragmentManager.popBackStack();
+            } else if(backStackSize == 1) {
+                fragmentManager.popBackStack();
+                fragmentManager.popBackStack();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -122,15 +142,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-/*    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-
-
-        return super.onOptionsItemSelected(item);
-    }*/
 
     /**
      * Show a fragment.
@@ -139,21 +150,20 @@ public class MainActivity extends AppCompatActivity
      *
      * @param fragment The fragment to display.
      */
-    private void displayFragment(Fragment fragment) {
+    public void displayFragment(Fragment fragment) {
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         Log.d(TAG, "loading fragment " + fragment.toString() + " to " + R.id.fragment_container);
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        // check if there is already a fragment
-        if (fragmentManager.getFragments().size() > 0) {
-            // use replace to remove previous fragment
-            Log.d(TAG, "replacing current fragment");
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-        } else {
-            Log.d(TAG, "adding initial fragment");
+        if (fragmentManager.getFragments().size() < 1) {
             fragmentTransaction.add(R.id.fragment_container, fragment);
+        } else {
+            removeGlideFragment(fragmentManager);
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.addToBackStack(null);
         }
 
         fragmentTransaction.commit();
@@ -170,7 +180,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.profile:
                 Log.d(TAG, "profile clicked on nav menu");
-                displayFragment(new MyProfileFragment());
+                displayFragment(new ProfileFragment());
                 break;
             case R.id.found:
                 Log.d(TAG, "found clicked on nav menu");
@@ -193,47 +203,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    // TODO: These methods need to be moved into the Home Fragment
-
-   /* //Do something when "Lost My Pet" button is clicked
-    private void setupLostMyPetButton() {
-        Button btn = (Button) findViewById(R.id.lostPetButton);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                android.support.v4.app.Fragment fragment = null;
-                fragment = new LostAPetFragment();
-
-                if (fragment != null) {
-                    android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_main, fragment);
-                    ft.commit();
-                }
-            }
-        });
-    }
-
-    //Do something when "Found a Pet" button is clicked
-    private void setupFoundAPetButton() {
-        Button btn = (Button) findViewById(R.id.foundPetButton);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                android.support.v4.app.Fragment fragment = null;
-                fragment = new FoundAPetFragment();
-
-                if (fragment != null) {
-                    android.support.v4.app.FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.content_main, fragment);
-                    ft.commit();
-                }
-            }
-        });
-    }*/
-
-
-    // TODO: Combine these into one method with a switch.
-
     public void actionBarClicked(MenuItem item) {
 
         switch(item.getItemId()) {
@@ -250,10 +219,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    //Encapsulates ability to create itself
-    public static Intent makeMainActivityIntent(Context context) {
-        return new Intent(context, MainActivity.class);
-    }
 
     /*********************************************************
      * Helper Functions
@@ -283,6 +248,58 @@ public class MainActivity extends AppCompatActivity
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         this.startActivity(nextActivity);
+    }
+
+
+    private void showFragmentStack(FragmentManager fragmentManager) {
+
+        Log.d(TAG, "Fragment Stacks:");
+        List<Fragment> currentStack = fragmentManager.getFragments();
+
+        Log.d(TAG, "Current: (size: " + currentStack.size() + ")");
+        for (int i=0; i < currentStack.size(); i++) {
+            Log.d(TAG, "(" + i + "): " +
+                    currentStack.get(i).toString());
+        }
+
+        // have to iterate through backstack, can't pull as list
+        int backStackSize = fragmentManager.getBackStackEntryCount();
+        Log.d(TAG, "Backstack: (size: " + backStackSize + ")");
+        for (int i=0; i < backStackSize; i++) {
+            Log.d(TAG, "(" + i + "): " +
+                    fragmentManager.getBackStackEntryAt(i).toString());
+        }
+    }
+
+    private void removeGlideFragment(FragmentManager fragmentManager) {
+
+        // search for fragment in stack
+        List<Fragment> currentStack = fragmentManager.getFragments();
+
+        Fragment glideFragment = findGlideFragment(currentStack);
+        if (glideFragment != null) {
+            removeFragment(glideFragment, fragmentManager);
+        }
+
+    }
+
+    private Fragment findGlideFragment(List<Fragment> fragments) {
+        for (Fragment fragment:fragments) {
+            if (fragment.toString().contains("SupportRequestManagerFragment")) {
+                Log.d(TAG, "found glide fragment in stack");
+                return fragment;
+            }
+        }
+        return null;
+    }
+
+    private void removeFragment(Fragment fragment, FragmentManager fragmentManager) {
+
+        Log.d(TAG, "removing fragment " + fragment.toString() + " from stack");
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.remove(fragment);
+        fragmentTransaction.commit();
+
     }
 
 }
