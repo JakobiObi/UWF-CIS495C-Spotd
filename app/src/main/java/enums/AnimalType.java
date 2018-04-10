@@ -1,6 +1,7 @@
 package enums;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Different animal type categories.
@@ -70,4 +71,11 @@ public enum AnimalType {
         return this.description;
     }
 
+
+    public AnimalType getRandom() {
+        Random randItem = new Random();
+        int numValues = AnimalType.values().length;
+        return AnimalType.values()[randItem.nextInt(numValues)];
+
+    }
 }
