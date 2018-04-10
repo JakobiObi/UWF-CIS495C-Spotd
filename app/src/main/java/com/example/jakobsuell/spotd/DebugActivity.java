@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,19 +39,16 @@ import models.User;
 public class DebugActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
-
-    private String TAG = "DebugActivity";
+    private final String TAG = "DebugActivity";
+    private String firebase_uri;
+    private final String testImage = "dubstep.PNG";
 
     private ImageView profile_pic;
     private Uri userPicture;
-
-    // these need to persist across several saves
     private Pet testPet;
     private List<Pet> pets;
-
     private User user;
 
-    private final String testImage = "dubstep.PNG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +56,15 @@ public class DebugActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
 
-        // set views
         profile_pic = findViewById(R.id.iv_user_profile_picture);
 
         auth = FirebaseAuth.getInstance();
+        firebase_uri = this.getResources().getString(R.string.firebase_storage_uri);
 
         LoginController.enforceSignIn(this);
         userPicture = LoginController.getUserPictureUri(auth);
 
+        createPicassoSingleton();
     }
 
 
@@ -173,23 +172,11 @@ public class DebugActivity extends AppCompatActivity {
 
         Log.d(TAG, "fetching testimage [" + testImage + "] from storage...");
 
-        // ImageController.putImageIntoView(this,profile_pic,testImage);
-
-        /*
-        GlideApp.with(this)
-                .load(FirebaseStorage.getInstance().getReference(testImage))
-                .placeholder(R.drawable.profile_placeholder)
+        Picasso.get()
+                .load(firebase_uri + testImage)
                 .into(profile_pic);
-                */
 
-        // test loading the actual user profile pic
-        GlideApp.with(this)
-                .load(LoginController.getUserPictureUri(FirebaseAuth.getInstance()))
-                .placeholder(R.drawable.profile_placeholder)
-                .into(profile_pic);
     }
-
-
 
     public void savePet(View view) {
 
@@ -364,4 +351,16 @@ public class DebugActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *  This also exists in MainActivity, and runs when OnCreate is called.  When debugging is on,
+     *  MainActivity is bypassed and this does not get run, therefore it is here also.  Please ensure
+     *  changes to the other instance of this method propagate to this method also.
+     */
+    public void createPicassoSingleton() {
+
+        Picasso picassoInstance = new Picasso.Builder(this.getApplicationContext())
+                .addRequestHandler(new FirebaseRequestHandler())
+                .build();
+        Picasso.setSingletonInstance(picassoInstance);
+    }
 }

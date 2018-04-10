@@ -4,16 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-import com.example.jakobsuell.spotd.GlideApp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -55,8 +48,8 @@ public class ImageController {
 
         String fileName = id + imageFileExtension;
         Log.d(TAG, "loading image (" + fileName + ") into (" + imageView.toString() + ")");
-
-        GlideApp.with(context)
+        // TODO: Replace with Picasso calls
+/*        GlideApp.with(context)
                 .load(firebaseStorage.getReference(fileName))
                 .listener(new RequestListener<Drawable>() {
                     @Override
@@ -70,7 +63,7 @@ public class ImageController {
                         return false;
                     }
                 })
-                .into(imageView);
+                .into(imageView);*/
 
     }
 
