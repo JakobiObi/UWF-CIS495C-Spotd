@@ -35,6 +35,8 @@ public class ShowPetsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //TODO: Make sure title changes based on what screen is being displayed
+        getActivity().setTitle("Pets List");
         recyclerView = getView().findViewById(R.id.show_pets_recyclerview);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());

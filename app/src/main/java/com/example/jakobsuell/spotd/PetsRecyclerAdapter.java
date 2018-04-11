@@ -2,6 +2,7 @@ package com.example.jakobsuell.spotd;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,20 +12,11 @@ import java.util.List;
 
 public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapter.ViewHolder>  {
 
+    private final String TAG = "PetsRecyclerAdapter";
     private List<String> values;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView txtHeader;
-        public TextView txtFooter;
-        public View layout;
-
-        public ViewHolder(View v) {
-            super(v);
-            layout = v;
-            txtHeader = v.findViewById(R.id.firstLine);
-            txtFooter = v.findViewById(R.id.secondLine);
-        }
+    public PetsRecyclerAdapter(List<String> dataset) {
+        values = dataset;
     }
 
     public void add(int position, String item) {
@@ -35,10 +27,6 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
     public void remove(int position) {
         values.remove(position);
         notifyItemRemoved(position);
-    }
-
-    public PetsRecyclerAdapter(List<String> dataset) {
-        values = dataset;
     }
 
     @Override
@@ -57,6 +45,8 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
         holder.txtHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "item " + position + "clicked");
+                // TODO: Replace with actual click functionality
                 remove(position);
             }
         });
@@ -67,5 +57,19 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
     @Override
     public int getItemCount() {
         return values.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView txtHeader;
+        public TextView txtFooter;
+        public View layout;
+
+        public ViewHolder(View v) {
+            super(v);
+            layout = v;
+            txtHeader = v.findViewById(R.id.firstLine);
+            txtFooter = v.findViewById(R.id.secondLine);
+        }
     }
 }
