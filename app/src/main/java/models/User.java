@@ -12,41 +12,33 @@ import java.util.Calendar;
 import java.util.zip.CRC32;
 
 /**
- * This implements the User model.
- * <p>
+ * The User model.
+ *
  * Note:  This class must have a public default constructor and public getters for each property
  * in order to work with Firestore.
- * <p>
+ *
  * To quickly create a new user based on the currently logged in user, use
  * User user = new User().fromAuth();
- * <p>
- * When the fromAuth() method is used and it is not the first sign-in session for the user, the
- * creation and last login timestamps will likely be null. This is due to a known persistence
- * bug in Android SDK that is not fixed as of the time of this writing.
- * (see https://stackoverflow.com/questions/48079683/firebase-user-returns-null-metadata-for-already-signed-up-users)
+ *
  */
 public class User {
 
-    private String displayName;     // the display name (not username)
-    private String emailAddress;    // this is used to uniquely identify the user account
-    private long creationDate;      // timestamp of account creation
-    private long lastLogin;         // timestamp of last login (zero if brand new account)
-    private String profilePhotoId;    // UID to user photo
+    private String displayName;
+    private String emailAddress;
+    private long creationDate;
+    private long lastLogin;
+    private String profilePhotoId;
     private String userID;
 
-    // default constructor (required)
     public User() {
     }
 
-
-    // other constructors
-
-    public User(String displayName, String emailAddress, long creationDate, long lastLogin, String profilePhotoId, String userID) {
+    public User(String displayName, String emailAddress, long creationDate, long lastLogin) {
         this.displayName = displayName;
         this.emailAddress = emailAddress;
         this.creationDate = creationDate;
         this.lastLogin = lastLogin;
-        this.profilePhotoId = profilePhotoId;
+        this.profilePhotoId = generatePictureIdFrom(emailAddress);
     }
 
     public User fromAuth() {
@@ -54,46 +46,40 @@ public class User {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
 
-        FirebaseUserMetadata meta;
+        FirebaseUserMetadata metaUserData;
 
         if (user != null) {
-            meta = user.getMetadata();
+            metaUserData = user.getMetadata();
             this.displayName = user.getDisplayName();
             this.emailAddress = user.getEmail();
         } else {
             this.displayName = "Not supplied";
             this.emailAddress = "Not supplied";
-            meta = null;
+            metaUserData = null;
         }
 
-        if (meta != null) {
-            this.creationDate = meta.getCreationTimestamp();
-            this.lastLogin = meta.getLastSignInTimestamp();
+        if (metaUserData != null) {
+            this.creationDate = metaUserData.getCreationTimestamp();
+            this.lastLogin = metaUserData.getLastSignInTimestamp();
         } else {
             this.creationDate = 0;
             this.lastLogin = 0;
         }
-
         return this;
-
     }
 
-    // getters/setters (getters are required)
-
+    // getters/setters (getters required by Firestore)
 
     public String getUserID() {
-        return userID;
+        return emailAddress;
     }
-
     public void setUserID(String userID) {
-        // TODO: Change this to return the actual userID field once userIDs are actually seperate.
-        this.userID = emailAddress;
+        this.userID = userID;
     }
 
     public String getDisplayName() {
         return displayName;
     }
-
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
@@ -101,17 +87,14 @@ public class User {
     public String getEmailAddress() {
         return emailAddress;
     }
-
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
-        // generate a new unique id, as it is dependent on the email address
-        this.profilePhotoId = generatePictureId();
+        this.profilePhotoId = generatePictureIdFrom(emailAddress);
     }
 
     public long getCreationDate() {
         return creationDate;
     }
-
     public void setCreationDate(long creationDate) {
         this.creationDate = creationDate;
     }
@@ -119,7 +102,6 @@ public class User {
     public long getLastLogin() {
         return lastLogin;
     }
-
     public void setLastLogin(long lastLogin) {
         this.lastLogin = lastLogin;
     }
@@ -131,7 +113,7 @@ public class User {
             if (this.emailAddress.equals("")) {
                 throw new IllegalStateException("user profile photo id not available when no email address set");
             }
-            this.profilePhotoId = generatePictureId();
+            this.profilePhotoId = generatePictureIdFrom(emailAddress);
         }
         return profilePhotoId;
     }
@@ -141,16 +123,12 @@ public class User {
      * Writes this user objects data to the debugging log.
      */
     public void show() {
-
         String logMsg = "name: " + this.displayName
                 + " " + "email: " + this.emailAddress
                 + " " + "created: " + this.creationDate + " (" + getShortDateFromTimestamp(this.creationDate) + ")"
                 + " " + "last login: " + this.lastLogin + " (" + getShortDateFromTimestamp(this.lastLogin) + ")"
                 + " " + "photo: " + this.profilePhotoId;
-
-
         Log.d("User", logMsg);
-
     }
 
     /**
@@ -170,15 +148,12 @@ public class User {
 
     /**
      * Generate a unique id from the user's email address.
-     *
      * @return A unique string.
      */
-    private String generatePictureId() {
-
+    private String generatePictureIdFrom(String value) {
         CRC32 pictureIdFromCrc32 = new CRC32();
-        pictureIdFromCrc32.update(this.emailAddress.getBytes());
+        pictureIdFromCrc32.update(value.getBytes());
         return pictureIdFromCrc32.toString();
-
     }
 
 }
