@@ -28,6 +28,7 @@
 
     <string name="about_app_description">A lost and found pet registry.</string>
     <string name="about_authors">Jakob Suell \n Spencer AskFeldt \n Anthony Dwyer</string>
+    <string name="about_pic_content_description">Pug life.</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

@@ -2,6 +2,7 @@ package com.example.jakobsuell.spotd;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -19,7 +20,7 @@ public class HomeFragment extends Fragment {
 
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         getActivity().setTitle("Home");
@@ -30,7 +31,7 @@ public class HomeFragment extends Fragment {
 
     //Do something when "Lost My Pet" button is clicked
     private void setupLostMyPetButton() {
-        Button btn = (Button) getView().findViewById(R.id.lostPetButton);
+        Button btn = getView().findViewById(R.id.lostPetButton);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,7 +42,7 @@ public class HomeFragment extends Fragment {
 
     //Do something when "Found a Pet" button is clicked
     private void setupFoundAPetButton() {
-        Button btn = (Button) getView().findViewById(R.id.foundPetButton);
+        Button btn = getView().findViewById(R.id.foundPetButton);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +53,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);

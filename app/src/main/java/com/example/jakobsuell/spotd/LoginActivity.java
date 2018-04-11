@@ -130,6 +130,7 @@ public class LoginActivity extends AppCompatActivity {
         if (auth.getCurrentUser() != null) {
             Log.d(TAG, "user signed in: " + auth.getCurrentUser().getDisplayName());
             logUserInfo();
+            //noinspection ConstantConditions
             if (GO_DEBUG_ACTIVITY) {
                 goDebugActivity();
             } else {

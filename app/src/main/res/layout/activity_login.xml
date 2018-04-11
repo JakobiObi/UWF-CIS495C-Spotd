@@ -37,7 +37,8 @@
             android:autoSizeStepGranularity="2sp"
             android:autoSizeTextType="uniform"
             android:text="@string/signin_in_progress"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            tools:targetApi="o" />
 
         <Button
             android:id="@+id/btnSignIn"

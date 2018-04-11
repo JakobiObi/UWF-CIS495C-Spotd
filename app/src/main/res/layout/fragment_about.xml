@@ -36,7 +36,7 @@
 
                 android:text="@string/app_name"
                 android:textColor="@color/colorPrimary"
-                android:textSize="24dp"
+                android:textSize="24sp"
                 android:textAlignment="center"
                 />
 
@@ -46,7 +46,7 @@
             android:layout_height="150dp"
             android:layout_marginTop="64dp"
             android:adjustViewBounds="false"
-            android:contentDescription="TODO"
+            android:contentDescription="@string/about_pic_content_description"
             android:cropToPadding="false"
 
             app:layout_constraintDimensionRatio="h,1:1"
@@ -66,7 +66,7 @@
 
             android:text="@string/about_authors"
             android:textColor="@color/colorPrimary"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:textAlignment="center"
             />
 
