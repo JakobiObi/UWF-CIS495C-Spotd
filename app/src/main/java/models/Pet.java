@@ -21,18 +21,20 @@ public class Pet {
     private AnimalStatus status;
     private String petID;
     private String ownerID; // if known
+    private String finderID; // if ownerID is blank
 
     // default constructor (required)
     public Pet() {
         this.petID = getUniqueID(20, "abcdefghijklmnopqrstuvwxyz123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     }
 
-    public Pet(String name, AnimalType animalType, List<String> keywords, AnimalStatus status, String ownerID) {
+    public Pet(String name, AnimalType animalType, List<String> keywords, AnimalStatus status, String ownerID, String finderID) {
         this.name = name;
         this.animalType = animalType;
         this.keywords = new ArrayList<>(keywords);
         this.status = status;
         this.ownerID = ownerID;
+        this.finderID = finderID;
     }
 
 
