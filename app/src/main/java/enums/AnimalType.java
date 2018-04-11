@@ -72,10 +72,11 @@ public enum AnimalType {
     }
 
 
-    public AnimalType getRandom() {
+    public static AnimalType getRandom() {
         Random randItem = new Random();
         int numValues = AnimalType.values().length;
         return AnimalType.values()[randItem.nextInt(numValues)];
 
     }
+
 }

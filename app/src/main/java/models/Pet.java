@@ -97,6 +97,14 @@ public class Pet {
         this.petID = petID;
     }
 
+    public Pet belongsTo(User user) {
+
+        // link this pet to the specified owner
+        this.setOwnerID(user.getUserID());
+        return this;
+
+    }
+
     // Other stuff
 
     /**
@@ -119,4 +127,5 @@ public class Pet {
         Log.d("Pet", logMsg.toString());
 
     }
+
 }

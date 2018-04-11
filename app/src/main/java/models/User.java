@@ -32,7 +32,7 @@ public class User {
     private long creationDate;      // timestamp of account creation
     private long lastLogin;         // timestamp of last login (zero if brand new account)
     private String profilePhotoId;    // UID to user photo
-
+    private String userID;
 
     // default constructor (required)
     public User() {
@@ -41,7 +41,7 @@ public class User {
 
     // other constructors
 
-    public User(String displayName, String emailAddress, long creationDate, long lastLogin, String profilePhotoId) {
+    public User(String displayName, String emailAddress, long creationDate, long lastLogin, String profilePhotoId, String userID) {
         this.displayName = displayName;
         this.emailAddress = emailAddress;
         this.creationDate = creationDate;
@@ -79,6 +79,16 @@ public class User {
     }
 
     // getters/setters (getters are required)
+
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        // TODO: Change this to return the actual userID field once userIDs are actually seperate.
+        this.userID = emailAddress;
+    }
 
     public String getDisplayName() {
         return displayName;
