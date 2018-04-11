@@ -33,8 +33,7 @@ public class MockDataGenerator {
 
         Pet randomPet = new Pet();
         randomPet = giveRandomInfo(randomPet).belongsTo(aRandomUser());
-
-
+        return randomPet;
     }
 
     private void initializeNameList() {
@@ -68,5 +67,6 @@ public class MockDataGenerator {
     private Pet giveRandomInfo(Pet pet) {
         pet.setName(mockDataGenerator.getRandomName());
         pet.setAnimalType(AnimalType.getRandom());
+        return pet;
     }
 }

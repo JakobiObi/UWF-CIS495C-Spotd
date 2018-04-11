@@ -55,8 +55,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.profileFragment_btnShowMyPets:
                 Log.d(TAG, "profileFragment_btnShowMyPets clicked");
-                //TODO: Put in call to MyPets Fragment
-                //((MainActivity) getActivity()).displayFragment(new PetListFragment());
+                ((MainActivity) getActivity()).displayFragment(new ShowPetsFragment());
                 break;
         }
     }
