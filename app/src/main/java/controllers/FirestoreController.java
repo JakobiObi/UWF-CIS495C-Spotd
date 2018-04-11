@@ -41,6 +41,21 @@ public class FirestoreController {
         return fb.collection(userDirectory).document(user.getEmailAddress()).set(user);
     }
 
+    public static Task saveUser(FirebaseFirestore fb, List<User> users) {
+        Log.d(TAG, "Saving list of users...");
+        if (fb == null || users == null) {
+            String err = (fb == null) ? "firestore reference cannot be null" : "users cannot be null";
+            throw new InvalidParameterException(err);
+        }
+        WriteBatch batch = fb.batch();
+        DocumentReference docRef;
+        for (User user : users) {
+            docRef = fb.collection(userDirectory).document(user.getEmailAddress());
+            batch.set(docRef, user);
+        }
+        return batch.commit();
+    }
+
     /**
      * Reads a user from firestore.
      * To use this, attach an OnSuccessListener to the task returned by this method.
@@ -60,6 +75,10 @@ public class FirestoreController {
         DocumentReference userDoc = fb.collection(userDirectory).document(email);
         return userDoc.get();
     }
+
+
+
+
 
     /**
      * Saves a pet object to Firestore
