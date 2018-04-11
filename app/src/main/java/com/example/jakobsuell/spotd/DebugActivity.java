@@ -25,7 +25,6 @@ import java.util.zip.CRC32;
 
 import controllers.FirestoreController;
 import controllers.LoginController;
-import enums.AnimalStatus;
 import enums.AnimalType;
 import models.Pet;
 import models.User;
@@ -180,93 +179,14 @@ public class DebugActivity extends AppCompatActivity {
 
     public void savePet(View view) {
 
-        // save a test pet to the firestore
-        if (testPet == null) {
-            testPet = getDummyPet();
-        } else {
-            // change something about the pet
-            testPet.setName("Second");
-        }
 
-        FirestoreController.savePet(FirebaseFirestore.getInstance(), testPet).addOnSuccessListener(new OnSuccessListener() {
-            @Override
-            public void onSuccess(Object o) {
-                Log.d(TAG, "pet write successful");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "pet write failed: " + e);
-            }
-        });
     }
 
     public void savePetList(View view) {
 
-        // save a test list of pets to the firestore
-        if (pets == null) {
-            pets = getDummyPetList();
-        }
-
-
-        FirestoreController.savePetList(FirebaseFirestore.getInstance(), pets).addOnSuccessListener(new OnSuccessListener() {
-            @Override
-            public void onSuccess(Object o) {
-                Log.d(TAG, "pet list write successful");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "pet list write failed: " + e);
-            }
-        });
     }
 
     public void readPet(View view) {
-
-        // read the pet that we have saved
-
-        Log.d(TAG, "Attempting to read a test pet...");
-
-        if (testPet == null || testPet.getPetID() == null || testPet.getPetID().equals("")) {
-            // save a pet real quick, then re-call ourselves when it is done
-            Log.d(TAG, "no pet object created...creating...");
-            if (testPet == null)
-                testPet = getDummyPet();
-            FirestoreController.savePet(FirebaseFirestore.getInstance(), testPet).addOnSuccessListener(new OnSuccessListener() {
-                @Override
-                public void onSuccess(Object o) {
-                    // call ourselves again
-                    Log.d(TAG, "new pet object saved. recalling this...");
-                    readPet(null);
-                }
-            });
-            return;
-        }
-
-        FirestoreController.readPet(FirebaseFirestore.getInstance(), testPet.getPetID()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Pet pet;
-                if (documentSnapshot.exists()) {
-                    pet = documentSnapshot.toObject(Pet.class);
-                    Log.d(TAG, "pet read success:");
-                    pet.show();
-                } else {
-                    // this pet couldn't be found
-                    Log.d(TAG, "pet with id " + testPet.getPetID() + " could not be found");
-                    pet = null;
-                }
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // what to do when it fails
-                Log.d(TAG, "pet read failed:" + e);
-            }
-        });
-
 
     }
 
@@ -307,49 +227,7 @@ public class DebugActivity extends AppCompatActivity {
 
     }
 
-    public Pet getDummyPet() {
 
-        ArrayList<String> keywords = new ArrayList<>();
-        keywords.add("tuxedo");
-        keywords.add("black");
-        keywords.add("white");
-
-        return new Pet("Fluffy", AnimalType.Cat, keywords, AnimalStatus.Home, null, null, null);
-
-    }
-
-    public List<Pet> getDummyPetList() {
-
-        ArrayList<Pet> pets = new ArrayList<>();
-        ArrayList<String> keywords = new ArrayList<>();
-
-        keywords.add("tuxedo");
-        keywords.add("black");
-        keywords.add("white");
-        pets.add(
-                new Pet("Bella", AnimalType.Cat, keywords, AnimalStatus.Home, null, null, null)
-        );
-
-        keywords.clear();
-        keywords.add("tabby");
-        keywords.add("orange");
-        keywords.add("white");
-        pets.add(
-                new Pet("Tiger", AnimalType.Cat, keywords, AnimalStatus.Home, null, null, null)
-        );
-
-        keywords.clear();
-        keywords.add("st. bernard");
-        keywords.add("white");
-        keywords.add("brown");
-        keywords.add("large");
-        pets.add(
-                new Pet("Cujo", AnimalType.Dog, keywords, AnimalStatus.Lost, null, null, null)
-        );
-
-        return pets;
-
-    }
 
     /**
      *  This also exists in MainActivity, and runs when OnCreate is called.  When debugging is on,
