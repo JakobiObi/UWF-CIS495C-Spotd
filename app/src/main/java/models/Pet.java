@@ -27,7 +27,7 @@ public class Pet {
         this.petID = getUniqueID(20, "abcdefghijklmnopqrstuvwxyz123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     }
 
-    public Pet(String name, AnimalType animalType, List<String> keywords, AnimalStatus status, String ownerID, String pictureID) {
+    public Pet(String name, AnimalType animalType, List<String> keywords, AnimalStatus status, String ownerID) {
         this.name = name;
         this.animalType = animalType;
         this.keywords = new ArrayList<>(keywords);
