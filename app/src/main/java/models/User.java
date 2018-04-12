@@ -153,7 +153,7 @@ public class User {
     private String generatePictureIdFrom(String value) {
         CRC32 pictureIdFromCrc32 = new CRC32();
         pictureIdFromCrc32.update(value.getBytes());
-        return pictureIdFromCrc32.toString();
+        return String.valueOf(pictureIdFromCrc32.getValue());
     }
 
 }
