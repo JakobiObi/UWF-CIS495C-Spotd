@@ -1,8 +1,14 @@
 package com.example.jakobsuell.spotd;
 
+import android.util.Log;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import controllers.FirestoreController;
 import enums.AnimalStatus;
 import enums.AnimalType;
 import models.Pet;
@@ -12,13 +18,10 @@ import models.User;
 public class MockDataGenerator {
 
     private static MockDataGenerator mockDataGenerator;
+    private final String TAG = "MockDataGenerator";
 
     private List<Pet> pets;
     private List<User> users;
-
-    private MockDataGenerator() {
-        makePetList();
-    }
 
     public static MockDataGenerator make() {
         if (mockDataGenerator == null) {
@@ -26,6 +29,12 @@ public class MockDataGenerator {
         }
         return mockDataGenerator;
     }
+
+    private MockDataGenerator() {
+        makeUserList();
+        makePetList();
+    }
+
     private void makeUserList() {
         List<User> users = new ArrayList<>();
         users.add(new User("John Doe", "mrdoe@fake.com", 0,0));
@@ -72,9 +81,9 @@ public class MockDataGenerator {
         keywords.add("fat");
         keywords.add("young");
         keywords.add("pink");
-        keywords.add("potbelly")
+        keywords.add("potbelly");
         pet = new Pet("Oinkers", AnimalType.Pig, keywords, AnimalStatus.Home, "mrdoe@fake.com",null);
-        pet.setPetID("P2tOLF1X6r5QC9XaEMaB");
+        pet.setPetID("pt97zaK1do7plnIooq4E");
         pets.add(pet);
 
         keywords.clear();
@@ -125,8 +134,77 @@ public class MockDataGenerator {
         pet.setPetID("2XlUFHpt7wNKflnfA2Ur");
         pets.add(pet);
 
+        keywords.clear();
+        keywords.add("reddish");
+        keywords.add("curly");
+        pet = new Pet("", AnimalType.Dog, keywords, AnimalStatus.Found, null,"shaggy2dope@mysterymachine.com");
+        pet.setPetID("Yeb9AtnyClAnhdTjGMKo");
+        pets.add(pet);
 
+        keywords.clear();
+        keywords.add("labrador");
+        keywords.add("yellow");
+        pet = new Pet("", AnimalType.Dog, keywords, AnimalStatus.Found, null,"mrdoe@fake.com");
+        pet.setPetID("P2tOLF1X6r5QC9XaEMaB");
+        pets.add(pet);
+
+        keywords.clear();
+        keywords.add("white");
+        keywords.add("brown");
+        keywords.add("black");
+        keywords.add("guinea pig");
+        pet = new Pet("Giggles", AnimalType.Other, keywords, AnimalStatus.Lost, "sweet_ascot@fake.com",null);
+        pet.setPetID("5pRSo5boJ3ASYugYYfg3");
+        pets.add(pet);
+
+        keywords.clear();
+        keywords.add("grey");
+        keywords.add("white");
+        keywords.add("netherland dwarf");
+        pet = new Pet("Thumper", AnimalType.Rabbit, keywords, AnimalStatus.Lost, "sweet_ascot@fake.com",null);
+        pet.setPetID("nAGFTcX3t7Pw1OYhcIbw");
+        pets.add(pet);
+
+        keywords.clear();
+        keywords.add("white");
+        keywords.add("chocolate");
+        keywords.add("brown");
+        keywords.add("english lop");
+        pet = new Pet("Rabbit De Niro", AnimalType.Rabbit, keywords, AnimalStatus.Home, "sweet_ascot@fake.com",null);
+        pet.setPetID("LFbm894gKzXNOVMcEwWb");
+        pets.add(pet);
+
+        keywords.clear();
+        keywords.add("sand");
+        keywords.add("white");
+        keywords.add("rex");
+        pet = new Pet("", AnimalType.Rabbit, keywords, AnimalStatus.Found, null,"mrsdoe@fake.com");
+        pet.setPetID("UJKNSTDgdPWg7WA5PieM");
+        pets.add(pet);
     }
 
+    public void saveData() {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        saveUsers(firestore);
+        savePets(firestore);
+    }
+
+    private void saveUsers(FirebaseFirestore firestore) {
+        FirestoreController.saveUser(firestore, users).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                Log.d(TAG, "mock users written to Firestore");
+            }
+        });
+    }
+
+    private void savePets(FirebaseFirestore firestore) {
+        FirestoreController.savePet(firestore, pets).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                Log.d(TAG, "mock pets written to Firestore");
+            }
+        });
+    }
 
 }
