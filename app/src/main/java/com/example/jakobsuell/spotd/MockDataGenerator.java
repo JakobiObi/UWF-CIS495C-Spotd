@@ -17,17 +17,12 @@ import models.User;
 // This will setup and create a bunch of mock testing data.
 public class MockDataGenerator {
 
-    private static MockDataGenerator mockDataGenerator;
     private final String TAG = "MockDataGenerator";
-
     private List<Pet> pets;
     private List<User> users;
 
     public static MockDataGenerator make() {
-        if (mockDataGenerator == null) {
-            mockDataGenerator = new MockDataGenerator();
-        }
-        return mockDataGenerator;
+        return new MockDataGenerator();
     }
 
     private MockDataGenerator() {
@@ -36,21 +31,19 @@ public class MockDataGenerator {
     }
 
     private void makeUserList() {
-        List<User> users = new ArrayList<>();
+        users = new ArrayList<>();
         users.add(new User("John Doe", "mrdoe@fake.com", 0,0));
         users.add(new User("Jane Doe", "mrsdoe@fake.com", 0,0));
         users.add(new User("Shaggy Rogers", "shaggy2dope@mysterymachine.com", 0,0));
         users.add(new User("Fred Jones", "sweet_ascot@mysterymachine.com", 0,0));
         users.add(new User("Daphne Blake", "whereRuScooby@mysterymachine.com", 0,0));
         users.add(new User("Velma Dinkley", "jinkies@mysterymachine.com", 0,0));
-
     }
 
     private void makePetList() {
 
-        // note that normally you don't explicitly set the petID, but we already have photos made up
         List<String> keywords = new ArrayList<>();
-        List<Pet> pets = new ArrayList<>();
+        pets = new ArrayList<>();
         Pet pet;
 
         keywords.clear();
