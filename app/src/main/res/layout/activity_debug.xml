@@ -17,91 +17,42 @@
             android:id="@+id/iv_user_profile_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="10dp"
             app:srcCompat="@drawable/com_facebook_profile_picture_blank_portrait"
             app:layout_constraintTop_toBottomOf="@id/btn_sign_out"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/btn_save_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="saveUser"
-            android:text="Save User"
+            android:onClick="saveCurrentUser"
+            android:text="Save Current User"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
             tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btn_read_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="readUser"
-            android:text="Read User"
-            app:layout_constraintStart_toEndOf="@+id/btn_save_user"
-            tools:ignore="HardcodedText,MissingConstraints"
-            tools:layout_editor_absoluteY="0dp" />
-
-        <Button
-            android:id="@+id/btn_save_pet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="savePet"
-            android:text="Save Pet"
+            android:onClick="readCurrentUser"
+            android:text="Read Current User"
+            app:layout_constraintLeft_toRightOf="@+id/btn_save_user"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_save_user"
-            tools:ignore="HardcodedText" />
-
-        <Button
-            android:id="@+id/btn_save_petlist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="savePetList"
-            android:text="Save list"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/btn_save_pet"
-            app:layout_constraintTop_toBottomOf="@+id/btn_read_user"
-            tools:ignore="HardcodedText" />
-
-
-
-        <Button
-            android:id="@+id/btn_read_pet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="readPet"
-            android:text="Get Pet"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/btn_save_petlist"
-            app:layout_constraintTop_toBottomOf="@+id/btn_read_user"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            />
 
         <Button
             android:id="@+id/btn_read_petlist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="readPetList"
-            android:text="Get list"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/btn_read_pet"
-            app:layout_constraintTop_toBottomOf="@+id/btn_read_user"
-            tools:ignore="HardcodedText" />
-
-        <Button
-            android:id="@+id/btn_save_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="saveTestImage"
-            android:text="Save Image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:text="Get List of Cats"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_save_petlist"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_read_user"
             tools:ignore="HardcodedText" />
 
         <Button
@@ -110,23 +61,32 @@
             android:layout_height="wrap_content"
             android:onClick="getTestImage"
             android:text="Get Image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_read_petlist"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/btn_save_image"
-            app:layout_constraintTop_toBottomOf="@+id/btn_save_petlist"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/btn_mock_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="getTestImage"
+            android:text="Mock Data"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_get_image"
             tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btn_sign_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
-            android:onClick="signOut"
+            android:layout_marginTop="32dp"
+            android:onClick="signUserOut"
             android:text="Sign Out"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_save_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_mock_data"
             tools:ignore="HardcodedText" />
 
     </android.support.constraint.ConstraintLayout>

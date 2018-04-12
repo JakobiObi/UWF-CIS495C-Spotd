@@ -1,5 +1,7 @@
 package com.example.jakobsuell.spotd;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,21 +19,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.CRC32;
 
 import controllers.FirestoreController;
+import controllers.ImageController;
 import controllers.LoginController;
 import enums.AnimalType;
 import models.Pet;
 import models.User;
 
 /**
- * This activity is merely a placeholder for the Homescreen/Main menu UI to allow for
- * triggering of code by the developer to perform debugging.
+ * As the name implies, this activity is strictly for debugging and shouldn't be visible to a
+ * normal user.
  */
 
 @SuppressWarnings("unused")
@@ -48,6 +52,7 @@ public class DebugActivity extends AppCompatActivity {
     private List<Pet> pets;
     private User user;
 
+    private Target profilePicTarget;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,23 +60,17 @@ public class DebugActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
 
-        profile_pic = findViewById(R.id.iv_user_profile_picture);
+        LoginController.enforceSignIn(this);
+        createPicassoSingleton();
 
+        profile_pic = findViewById(R.id.iv_user_profile_picture);
         auth = FirebaseAuth.getInstance();
         firebase_uri = this.getResources().getString(R.string.firebase_storage_uri);
-
-        LoginController.enforceSignIn(this);
         userPicture = LoginController.getUserPictureUri(auth);
 
-        createPicassoSingleton();
     }
 
-
-    /***
-     * Sign the current user out of the app, using the built-in FirebaseUI
-     */
-    public void signOut(View view) {
-
+    public void signUserOut(View view) {
         Log.d(TAG, "Signing user out");
         AuthUI.getInstance()
                 .signOut(this)
@@ -85,42 +84,55 @@ public class DebugActivity extends AppCompatActivity {
                 });
     }
 
-    /**
-     * Save the current user to Firestore.
-     *
-     * @param view Required parameter to call this method from a button.
-     */
-    public void saveUser(View view) {
-
-        // create user from the auth object
+    public void saveCurrentUser(View view) {
+        Log.d(TAG, "Saving current user");
         user = new User().fromAuth();
-
-        // show all the user info in logcat
         user.show();
-
-        // attempt to write user photo to storage
-        // the picture id is the crc32 of the user's email address
-        CRC32 pictureUID = new CRC32();
-        pictureUID.update(user.getEmailAddress().getBytes());
-
-        Log.d(TAG, "user profile pic uid is: " + pictureUID.getValue());
-
-        // determine user's profile picture URI.
         Uri userProfilePictureUri = LoginController.getUserPictureUri(auth);
-
-        // attempt to write user info to the firestore
-        FirestoreController.saveUser(FirebaseFirestore.getInstance(), user).addOnSuccessListener(new OnSuccessListener() {
+        FirestoreController.saveUser(FirebaseFirestore.getInstance(), user)
+                .addOnSuccessListener(new OnSuccessListener() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Log.d(TAG, "user write successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "user write failed: " + e);
+                    }
+                });
+        profilePicTarget = new Target() {
             @Override
-            public void onSuccess(Object o) {
-                Log.d(TAG, "user write successful");
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                Log.d(TAG, "Saving user's profile photo...");
+                ImageController.storeImage(user.getProfilePhotoId(), bitmap)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Log.d(TAG, "Profile picture saved.");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e(TAG, "error during save: " + e);
+                            }
+                        });
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "user write failed: " + e);
-            }
-        });
 
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+            }
+        };
+
+        Picasso.get()
+                .load(userProfilePictureUri)
+                .into(profilePicTarget);
 
     }
 
@@ -129,77 +141,44 @@ public class DebugActivity extends AppCompatActivity {
      *
      * @param view This is required if this is called by a button.
      */
-    public void readUser(View view) {
-
+    public void readCurrentUser(View view) {
         Log.d(TAG, "attempting to read current user account...");
-
-        // create user from the auth object
-        User user = new User().fromAuth();
-
-        FirestoreController.getUserByEmail(FirebaseFirestore.getInstance(), user.getEmailAddress()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    User user = documentSnapshot.toObject(User.class);
-                    Log.d(TAG, "user read success:");
-                    user.show();
-                } else {
-                    // there is no user stored here.
-                    Log.d(TAG, "no user found. probably a new account.");
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "could not read user information. error: " + e);
-            }
-        });
-
-
-    }
-
-
-    public void saveTestImage(View view) {
-
-        // TODO: Use a ContentProvider to find a test image to use with the ImageHandler
-        // This will be done when I figure out how to use ContentProviders to find an image
-        // on the device.
-
+        User user = new User().fromAuth(); // to get current user's email addy
+        FirestoreController.getUserByEmail(FirebaseFirestore.getInstance(), user.getEmailAddress())
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            User user = documentSnapshot.toObject(User.class);
+                            Log.d(TAG, "user read success:");
+                            user.show();
+                        } else {
+                            Log.d(TAG, "no user found. probably a new account.");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "could not read user information. error: " + e);
+                    }
+                });
     }
 
     public void getTestImage(View view) {
-
         Log.d(TAG, "fetching testimage [" + testImage + "] from storage...");
-
         Picasso.get()
                 .load(firebase_uri + testImage)
                 .into(profile_pic);
-
-    }
-
-    public void savePet(View view) {
-
-
-    }
-
-    public void savePetList(View view) {
-
-    }
-
-    public void readPet(View view) {
-
     }
 
     public void readPetList(View view) {
-
         Log.d(TAG, "Attempting to read a test pet...");
-
         if (pets == null) {
             pets = new ArrayList<>();
         } else {
             pets.clear();
         }
-
         // try getting all cats
         FirestoreController.readPets(FirebaseFirestore.getInstance(), "animalType", AnimalType.Cat.description()).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -218,24 +197,20 @@ public class DebugActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
-    private void showPet(Pet pet) {
-
-        pet.show();
-
+    public void mockData(View view) {
+        Log.d(TAG, "Creating mock data...");
+        MockDataGenerator mockDataGenerator = MockDataGenerator.make();
+        mockDataGenerator.saveData();
     }
-
-
 
     /**
-     *  This also exists in MainActivity, and runs when OnCreate is called.  When debugging is on,
-     *  MainActivity is bypassed and this does not get run, therefore it is here also.  Please ensure
-     *  changes to the other instance of this method propagate to this method also.
+     * This also exists in MainActivity, and runs when OnCreate is called.  When debugging is on,
+     * MainActivity is bypassed and this does not get run, therefore it is here also.  Please ensure
+     * changes to the other instance of this method propagate to this method also.
      */
     public void createPicassoSingleton() {
-
         Picasso picassoInstance = new Picasso.Builder(this.getApplicationContext())
                 .addRequestHandler(new FirebaseRequestHandler())
                 .build();
