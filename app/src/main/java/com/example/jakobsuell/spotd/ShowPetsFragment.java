@@ -10,8 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import models.Pet;
 
 
 public class ShowPetsFragment extends Fragment {
@@ -19,6 +20,7 @@ public class ShowPetsFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private ApplicationController applicationController;
 
     public ShowPetsFragment() {
         // Required empty public constructor
@@ -36,24 +38,22 @@ public class ShowPetsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //TODO: Make sure title changes based on what screen is being displayed
+        applicationController = (ApplicationController)getActivity().getApplication();
+
         getActivity().setTitle("Pets List");
         recyclerView = getView().findViewById(R.id.show_pets_recyclerview);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        List<String> input = getMockData();
+        List<Pet> input = getMockData();
 
-        adapter = new PetsRecyclerAdapter(input);
+        adapter = new PetsRecyclerAdapter(applicationController.firebaseURI, input);
         recyclerView.setAdapter(adapter);
     }
 
-    private List<String> getMockData() {
-        List<String> out = new ArrayList<>();
-        for (int i =0; i < 100; i++) {
-            out.add("Test " + i);
-        }
-        return out;
+    private List<Pet> getMockData() {
+        MockDataGenerator mockDataGenerator = MockDataGenerator.make();
+        return mockDataGenerator.pets;
     }
-
 }

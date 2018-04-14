@@ -71,7 +71,6 @@ public enum AnimalStatus {
         Random randItem = new Random();
         int numValues = AnimalStatus.values().length;
         return AnimalStatus.values()[randItem.nextInt(numValues)];
-
     }
 
 }
