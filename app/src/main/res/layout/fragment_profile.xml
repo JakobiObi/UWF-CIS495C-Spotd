@@ -61,6 +61,12 @@
                 android:text="@string/profile_fragment_btnSaveProfile_text"
                 android:textColor="@color/cardview_light_background" />
 
+            <Button
+                android:id="@+id/profileFragment_btnAddAPet"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_fragment_btnAddAPet_text" />
+
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 

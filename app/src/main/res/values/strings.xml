@@ -25,6 +25,7 @@
     <string name="profile_fragment_editEmail_hint">address@example.com</string>
     <string name="profile_fragment_btnShowMyPets_text">Show My Pets</string>
     <string name="profile_fragment_btnSaveProfile_text">Save Profile</string>
+    <string name="profile_fragment_btnAddAPet_text">Add a Pet</string>
 
     <string name="about_app_description">A lost and found pet registry.</string>
     <string name="about_authors">Jakob Suell \n Spencer AskFeldt \n Anthony Dwyer</string>
