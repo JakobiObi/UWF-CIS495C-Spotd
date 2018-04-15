@@ -1,6 +1,7 @@
 package enums;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 /**
@@ -63,6 +64,14 @@ public enum AnimalStatus {
 
     public String description() {
         return this.description;
+    }
+
+
+    public static AnimalStatus getRandom() {
+        Random randItem = new Random();
+        int numValues = AnimalStatus.values().length;
+        return AnimalStatus.values()[randItem.nextInt(numValues)];
+
     }
 
 }

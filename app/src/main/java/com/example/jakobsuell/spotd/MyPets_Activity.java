@@ -2,9 +2,8 @@ package com.example.jakobsuell.spotd;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -20,7 +19,7 @@ public class MyPets_Activity extends AppCompatActivity {
 
         ImageButton btn[] = new ImageButton[10];
 
-        LinearLayout layout = (LinearLayout) findViewById(R.id.petLinearLayout);
+        LinearLayout layout = findViewById(R.id.petLinearLayout);
 
         for(int i = 1; i < 5; i++){
             Button testButton = new Button(this);
@@ -33,7 +32,7 @@ public class MyPets_Activity extends AppCompatActivity {
 
     //Do something when "Add a Pet" button is clicked
     private void setupAddAPetButton() {
-        Button btn = (Button) findViewById(R.id.btn_addAPet);
+        Button btn = findViewById(R.id.btn_addAPet);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

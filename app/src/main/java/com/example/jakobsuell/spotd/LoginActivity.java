@@ -85,15 +85,13 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                 }
-                onSignInFail(msg);
+                showSignInFailureToUser(msg);
             }
         }
     }
 
     /**
      * Signs users in using pre-built FirebaseUI.
-     *
-     * This is the only method that is possible to run when a new user is signing up.
      *
      */
     private void signUserIn() {
@@ -132,12 +130,12 @@ public class LoginActivity extends AppCompatActivity {
         if (auth.getCurrentUser() != null) {
             Log.d(TAG, "user signed in: " + auth.getCurrentUser().getDisplayName());
             logUserInfo();
+            //noinspection ConstantConditions
             if (GO_DEBUG_ACTIVITY) {
                 goDebugActivity();
             } else {
                 goMainActivity();
             }
-
         }
 
     }
@@ -146,15 +144,10 @@ public class LoginActivity extends AppCompatActivity {
      * Inform the user that an error has occurred while logging in.
      * @param msg   The error message to display to the user.
      */
-
-    private void onSignInFail(String msg) {
-
-        // show button initially
+    private void showSignInFailureToUser(String msg) {
         btSignIn.setVisibility(View.VISIBLE);
         btSignIn.requestFocus();
-
         tvMessage.setText(msg);
-
     }
 
     private void goDebugActivity() {
@@ -177,7 +170,6 @@ public class LoginActivity extends AppCompatActivity {
      * pull user information from authentication object and log it
      */
     private void logUserInfo() {
-
         if (auth.getCurrentUser() != null) {
             String displayName;
             try {
@@ -192,19 +184,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void goMainActivity() {
-
         // TODO: Replace this with a call to the Navigation controller
-
-        // launch the toolbar_menu_selector activity
         Intent nextActivity = new Intent(this, MainActivity.class);
-
-        // don't allow user to return to login screen
         nextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
         this.startActivity(nextActivity);
-
     }
 
     public void signInUser_click(View view) {
