@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public enum AnimalStatus {
 
-    Lost("Lost"),
+    Lost("Missing"),
     Found("Found"),
     Home("Home");
 
