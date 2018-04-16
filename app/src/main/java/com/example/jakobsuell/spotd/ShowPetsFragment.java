@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout.LayoutParams;
 
 import java.util.List;
 
@@ -27,11 +29,10 @@ public class ShowPetsFragment extends Fragment {
     private PetListType petListType;
     private List<Pet> pets;
     private String title = "Pets List";
+    private Button topButton;
 
     public ShowPetsFragment() {
-        // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +50,7 @@ public class ShowPetsFragment extends Fragment {
 
         floatingActionButton = getView().findViewById(R.id.show_pets_fab);
         recyclerView = getView().findViewById(R.id.show_pets_recyclerview);
+        topButton = getView().findViewById(R.id.show_pets_top_button);
         layoutManager = new LinearLayoutManager(getContext());
         adapter = new PetsRecyclerAdapter(applicationController.firebaseURI, pets);
 
@@ -56,8 +58,8 @@ public class ShowPetsFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
+        setupTopButton();
         setupAddButton();
-
     }
 
     public ShowPetsFragment setPetList(List<Pet> pets) {
@@ -82,6 +84,31 @@ public class ShowPetsFragment extends Fragment {
         } else {
             floatingActionButton.hide();
         }
+    }
+
+    private void setupTopButton() {
+
+        if (petListType != PetListType.FoundPetPicker && petListType != PetListType.LostPetPicker) {
+            topButton.setVisibility(View.INVISIBLE);
+            LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            recyclerView.setLayoutParams(layoutParams);
+        } else {
+            topButton.setText(getActivity().getResources().getString(R.string.show_petlist_topbutton_not_found));
+            attachTopButtonListener();
+        }
+
+    }
+
+    private void attachTopButtonListener() {
+
+        topButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Top button clicked", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
     }
 
     private void hideAddButtonDuringScroll() {
@@ -116,7 +143,8 @@ public class ShowPetsFragment extends Fragment {
     public enum PetListType {
         MyPets,
         LostPetPicker,
-        FoundPetPicker
+        FoundPetPicker,
+        Browse
     }
 
 }
