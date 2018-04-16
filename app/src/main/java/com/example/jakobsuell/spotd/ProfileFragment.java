@@ -58,7 +58,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.profileFragment_btnShowMyPets:
                 Log.d(TAG, "profileFragment_btnShowMyPets clicked");
-                ((MainActivity) getActivity()).displayFragment(new ShowPetsFragment());
+                // TODO: change this so that it sends the appropriate query results
+                ShowPetsFragment listFragment = new ShowPetsFragment();
+                MockDataGenerator mockDataGenerator = MockDataGenerator.make();
+                listFragment.setPetList(mockDataGenerator.pets);
+                ((MainActivity) getActivity()).displayFragment(listFragment);
                 break;
             case R.id.profileFragment_btnAddAPet:
                 Log.d(TAG, "profileFragment_btnAddAPet clicked");
