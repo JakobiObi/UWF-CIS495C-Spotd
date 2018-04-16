@@ -21,6 +21,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private final String TAG = "ProfileFragment";
     private Button showMyPets;
     private Button saveProfile;
+    private Button addAPet;
 
 
     @Override
@@ -32,10 +33,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         // find views for buttons
         saveProfile = getView().findViewById(R.id.profileFragment_btnSaveProfile);
         showMyPets = getView().findViewById(R.id.profileFragment_btnShowMyPets);
+        addAPet = getView().findViewById(R.id.profileFragment_btnAddAPet);
 
         // set click listeners
         saveProfile.setOnClickListener(this);
         showMyPets.setOnClickListener(this);
+        addAPet.setOnClickListener(this);
     }
 
 
@@ -56,6 +59,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.profileFragment_btnShowMyPets:
                 Log.d(TAG, "profileFragment_btnShowMyPets clicked");
                 ((MainActivity) getActivity()).displayFragment(new ShowPetsFragment());
+                break;
+            case R.id.profileFragment_btnAddAPet:
+                Log.d(TAG, "profileFragment_btnAddAPet clicked");
+                ((MainActivity) getActivity()).displayFragment(new AddAPetFragment());
                 break;
         }
     }
