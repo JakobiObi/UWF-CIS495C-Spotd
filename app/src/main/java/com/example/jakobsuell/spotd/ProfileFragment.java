@@ -10,6 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
+
+import controllers.LoginController;
 
 
 /**
@@ -39,8 +46,34 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         saveProfile.setOnClickListener(this);
         showMyPets.setOnClickListener(this);
         addAPet.setOnClickListener(this);
+
+        setProfileInfo();
     }
 
+    private void setProfileInfo() {
+
+        TextView userName = getActivity().findViewById(R.id.profileFragment_editName);
+        TextView emailAccount = getActivity().findViewById(R.id.profileFragment_editEmail);
+        ImageView profileImageView = getActivity().findViewById(R.id.profileFragment_profilePicture);
+
+        try {
+            userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            emailAccount.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        } catch (NullPointerException ex) {
+            // if we can't set them, just hide them
+            userName.setText("");
+            emailAccount.setText("");
+        }
+
+        putProfilePictureOnNavigationMenu(profileImageView);
+    }
+
+    private void putProfilePictureOnNavigationMenu(ImageView imageView) {
+        Picasso.get()
+                .load(LoginController.getUserPictureUri(FirebaseAuth.getInstance()))
+                .placeholder(R.drawable.profile_placeholder)
+                .into(imageView);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
