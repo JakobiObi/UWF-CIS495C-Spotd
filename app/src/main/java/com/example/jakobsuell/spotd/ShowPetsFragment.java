@@ -31,13 +31,6 @@ public class ShowPetsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public void setPetList(List<Pet> pets) {
-        this.pets = pets;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,6 +72,21 @@ public class ShowPetsFragment extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
+    }
+
+    public ShowPetsFragment setPetList(List<Pet> pets) {
+        this.pets = pets;
+        return this;
+    }
+
+    public ShowPetsFragment setPetListType(PetListType type) {
+        this.petListType = type;
+        return this;
+    }
+
+    public ShowPetsFragment setTitle(String title) {
+        this.title = title;
+        return this;
     }
 
     public enum PetListType {
