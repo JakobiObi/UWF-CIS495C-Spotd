@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -55,23 +56,8 @@ public class ShowPetsFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        // hide floating action bar when scrolling
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0 || dy < 0 && floatingActionButton.isShown()) {
-                    floatingActionButton.hide();
-                }
-            }
+        setupAddButton();
 
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    floatingActionButton.show();
-                }
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
     }
 
     public ShowPetsFragment setPetList(List<Pet> pets) {
@@ -87,6 +73,44 @@ public class ShowPetsFragment extends Fragment {
     public ShowPetsFragment setTitle(String title) {
         this.title = title;
         return this;
+    }
+
+    private void setupAddButton() {
+        if (petListType == PetListType.MyPets) {
+            hideAddButtonDuringScroll();
+            attachAddButtonListener();
+        } else {
+            floatingActionButton.hide();
+        }
+    }
+
+    private void hideAddButtonDuringScroll() {
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 || dy < 0 && floatingActionButton.isShown()) {
+                    floatingActionButton.hide();
+                }
+            }
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    floatingActionButton.show();
+                }
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+    }
+
+    private void attachAddButtonListener() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Add button clicked", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
     }
 
     public enum PetListType {
