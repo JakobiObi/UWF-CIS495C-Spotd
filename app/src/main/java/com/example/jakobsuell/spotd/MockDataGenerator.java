@@ -18,8 +18,8 @@ import models.User;
 public class MockDataGenerator {
 
     private final String TAG = "MockDataGenerator";
-    private List<Pet> pets;
-    private List<User> users;
+    public List<Pet> pets;
+    public List<User> users;
 
     public static MockDataGenerator make() {
         return new MockDataGenerator();
