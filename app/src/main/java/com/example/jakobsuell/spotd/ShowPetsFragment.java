@@ -25,6 +25,7 @@ public class ShowPetsFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
     private PetListType petListType;
     private List<Pet> pets;
+    private String title = "Pets List";
 
     public ShowPetsFragment() {
         // Required empty public constructor
@@ -34,10 +35,13 @@ public class ShowPetsFragment extends Fragment {
         this.pets = pets;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_show_pets, container, false);
     }
 
@@ -47,8 +51,7 @@ public class ShowPetsFragment extends Fragment {
 
         applicationController = (ApplicationController)getActivity().getApplication();
 
-        //TODO: Make sure title changes based on what screen is being displayed
-        getActivity().setTitle("Pets List");
+        getActivity().setTitle(title);
 
         floatingActionButton = getView().findViewById(R.id.show_pets_fab);
         recyclerView = getView().findViewById(R.id.show_pets_recyclerview);
@@ -79,14 +82,9 @@ public class ShowPetsFragment extends Fragment {
     }
 
     public enum PetListType {
-        MyPets("My Pets");
-
-
-        private final String description;
-
-        PetListType(String description) {
-            this.description = description;
-        }
-
+        MyPets,
+        LostPetPicker,
+        FoundPetPicker
     }
+
 }
