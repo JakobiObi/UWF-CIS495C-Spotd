@@ -156,6 +156,6 @@ public class ShowPetsFragment extends Fragment {
 
     public enum TopButtonAction {
         TriggerBackButton,
-        DisplayAddAPet
+        DisplayFragment
     }
 }
