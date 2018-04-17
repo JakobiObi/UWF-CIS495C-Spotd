@@ -8,15 +8,6 @@
     tools:layout_editor_absoluteY="81dp">
 
     <!-- TODO: Update blank fragment layout -->
-    <Button
-        android:id="@+id/btn_savePetInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Save Pet Info"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -115,10 +106,26 @@
             tools:layout_editor_absoluteY="228dp" />
 
         <ImageView
-            android:id="@+id/selectPicture"
+            android:id="@+id/selectedPicture"
             android:layout_width="match_parent"
             android:layout_height="124dp"
             android:src="@mipmap/camera" />
+
+        <Button
+            android:id="@+id/takePictureButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="take a picture" />
+
+        <Button
+            android:id="@+id/btn_savePetInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Save Pet Info"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </LinearLayout>
