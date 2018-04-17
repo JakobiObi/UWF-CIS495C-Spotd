@@ -26,10 +26,13 @@ public class ShowPetsFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private ApplicationController applicationController;
     private FloatingActionButton floatingActionButton;
-    private PetListType petListType;
+    private Button topButton;
+
+    private PetListOptions petListOptions;
+    private TopButtonAction topButtonAction;
+
     private List<Pet> pets;
     private String title = "Pets List";
-    private Button topButton;
 
     public ShowPetsFragment() {
     }
@@ -67,8 +70,8 @@ public class ShowPetsFragment extends Fragment {
         return this;
     }
 
-    public ShowPetsFragment setPetListType(PetListType type) {
-        this.petListType = type;
+    public ShowPetsFragment setPetListOptions(PetListOptions type) {
+        this.petListOptions = type;
         return this;
     }
 
@@ -78,7 +81,7 @@ public class ShowPetsFragment extends Fragment {
     }
 
     private void setupAddButton() {
-        if (petListType == PetListType.MyPets) {
+        if (petListOptions == PetListOptions.AddButtonOnly) {
             hideAddButtonDuringScroll();
             attachAddButtonListener();
         } else {
@@ -88,7 +91,7 @@ public class ShowPetsFragment extends Fragment {
 
     private void setupTopButton() {
 
-        if (petListType != PetListType.FoundPetPicker && petListType != PetListType.LostPetPicker) {
+        if (petListOptions != PetListOptions.TopButtonOnly) {
             topButton.setVisibility(View.INVISIBLE);
             LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             recyclerView.setLayoutParams(layoutParams);
@@ -104,6 +107,11 @@ public class ShowPetsFragment extends Fragment {
         topButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO:  Add code to handle top button clicks here.
+                /*
+
+
+                 */
                 Snackbar.make(view, "Top button clicked", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -112,7 +120,6 @@ public class ShowPetsFragment extends Fragment {
     }
 
     private void hideAddButtonDuringScroll() {
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -134,17 +141,21 @@ public class ShowPetsFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO: Add code to handle add button clicks here.
                 Snackbar.make(view, "Add button clicked", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
     }
 
-    public enum PetListType {
-        MyPets,
-        LostPetPicker,
-        FoundPetPicker,
-        Browse
+    public enum PetListOptions {
+        AddButtonOnly,
+        TopButtonOnly,
+        NoButtons
     }
 
+    public enum TopButtonAction {
+        TriggerBackButton,
+        DisplayAddAPet
+    }
 }

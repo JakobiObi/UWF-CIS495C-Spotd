@@ -20,10 +20,10 @@ public class Pet {
     private List<String> keywords;
     private AnimalStatus status;
     private String petID;
-    private String ownerID; // if known
-    private String finderID; // if ownerID is blank
+    private String ownerID;
+    private String finderID;
 
-    // default constructor (required)
+    // default constructor is required
     public Pet() {
         this.petID = getUniqueID(20, "abcdefghijklmnopqrstuvwxyz123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     }
@@ -80,6 +80,14 @@ public class Pet {
     }
     public void setPetID(String petID) {
         this.petID = petID;
+    }
+
+    public String getFinderID() {
+        return finderID;
+    }
+
+    public void setFinderID(String finderID) {
+        this.finderID = finderID;
     }
 
     // Other stuff
