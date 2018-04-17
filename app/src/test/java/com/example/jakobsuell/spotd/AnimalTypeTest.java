@@ -17,10 +17,10 @@ public class AnimalTypeTest {
         String bird3 = "Bird";
         String bird4 = "bIRD";
 
-        boolean isBird1 = false;
-        boolean isBird2 = false;
-        boolean isBird3 = false;
-        boolean isBird4 = false;
+        boolean isBird1;
+        boolean isBird2;
+        boolean isBird3;
+        boolean isBird4;
 
         // act
         isBird1 = AnimalType.isValidAnimalType(bird1);
@@ -41,7 +41,7 @@ public class AnimalTypeTest {
 
         // arrange
         String donkey = "donkey";
-        boolean isValid = false;
+        boolean isValid;
 
         // act
         isValid = AnimalType.isValidAnimalType(donkey);

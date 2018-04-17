@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeightLarge"
+    android:padding="6dp"
+    android:paddingLeft="?android:attr/listPreferredItemPaddingLeft">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="?android:attr/listPreferredItemHeightLarge"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="6dip"
+        android:contentDescription="TODO"
+        android:src="@mipmap/puppy"
+        tools:ignore="RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/firstLine"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_toRightOf="@id/icon"
+        android:gravity="top"
+        android:text="Firstline"
+        android:textSize="24sp"
+        tools:ignore="RtlHardcoded"
+        />
+
+    <TextView
+        android:id="@+id/secondLine"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        android:layout_toRightOf="@id/icon"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="secondLine"
+        android:textSize="16sp"
+        tools:ignore="RtlHardcoded"
+        />
+
+
+
+
+</RelativeLayout>

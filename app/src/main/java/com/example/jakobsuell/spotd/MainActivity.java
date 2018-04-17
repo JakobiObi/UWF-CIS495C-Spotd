@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private Toolbar toolbar;
+    private ApplicationController applicationController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,13 @@ public class MainActivity extends AppCompatActivity
 
         // create toolbar
         setSupportActionBar(toolbar);
+
+        // create picasso singleton
+        applicationController = (ApplicationController)this.getApplication();
+        if (!applicationController.isPicassoSingletonAssigned) {
+            createPicassoSingleton();
+            applicationController.isPicassoSingletonAssigned = true;
+        }
 
         // create and setup navigation drawer
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -82,9 +91,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        // initial load of Home Fragment
         displayFragment(new HomeFragment());
-
     }
 
     public void setHeaderViewOnNavDrawer() {
@@ -103,11 +110,15 @@ public class MainActivity extends AppCompatActivity
             emailAccount.setText("");
         }
 
-        // load profile image
-        GlideApp.with(this)
+        putProfilePictureOnNavigationMenu(profileImageView);
+
+    }
+
+    private void putProfilePictureOnNavigationMenu(ImageView imageView) {
+        Picasso.get()
                 .load(LoginController.getUserPictureUri(FirebaseAuth.getInstance()))
                 .placeholder(R.drawable.profile_placeholder)
-                .into(profileImageView);
+                .into(imageView);
     }
 
     @Override
@@ -151,28 +162,22 @@ public class MainActivity extends AppCompatActivity
      * @param fragment The fragment to display.
      */
     public void displayFragment(Fragment fragment) {
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
         Log.d(TAG, "loading fragment " + fragment.toString() + " to " + R.id.fragment_container);
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         if (fragmentManager.getFragments().size() < 1) {
             fragmentTransaction.add(R.id.fragment_container, fragment);
         } else {
-            removeGlideFragment(fragmentManager);
             fragmentTransaction.replace(R.id.fragment_container, fragment);
             fragmentTransaction.addToBackStack(null);
         }
-
         fragmentTransaction.commit();
-
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.home:
                 Log.d(TAG, "home clicked on nav menu");
@@ -197,8 +202,6 @@ public class MainActivity extends AppCompatActivity
                 finish();
                 System.exit(0);
         }
-
-        // close the drawer, we don't live in a barn!
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -208,6 +211,7 @@ public class MainActivity extends AppCompatActivity
         switch(item.getItemId()) {
             case R.id.action_bar_menu_about:
                 Log.d(TAG, "action_bar_menu_about clicked");
+                displayFragment(new AboutFragment());
                 break;
             case R.id.action_bar_menu_help:
                 Log.d(TAG, "action_bar_menu_help clicked");
@@ -271,35 +275,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void removeGlideFragment(FragmentManager fragmentManager) {
 
-        // search for fragment in stack
-        List<Fragment> currentStack = fragmentManager.getFragments();
 
-        Fragment glideFragment = findGlideFragment(currentStack);
-        if (glideFragment != null) {
-            removeFragment(glideFragment, fragmentManager);
-        }
 
-    }
-
-    private Fragment findGlideFragment(List<Fragment> fragments) {
-        for (Fragment fragment:fragments) {
-            if (fragment.toString().contains("SupportRequestManagerFragment")) {
-                Log.d(TAG, "found glide fragment in stack");
-                return fragment;
-            }
-        }
-        return null;
-    }
-
-    private void removeFragment(Fragment fragment, FragmentManager fragmentManager) {
-
-        Log.d(TAG, "removing fragment " + fragment.toString() + " from stack");
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.remove(fragment);
-        fragmentTransaction.commit();
-
+    public void createPicassoSingleton() {
+        Picasso picassoInstance = new Picasso.Builder(this.getApplicationContext())
+                .addRequestHandler(new FirebaseRequestHandler())
+                .build();
+        Picasso.setSingletonInstance(picassoInstance);
     }
 
 }
