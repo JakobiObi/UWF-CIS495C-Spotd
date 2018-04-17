@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout.LayoutParams;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import models.Pet;
@@ -28,6 +29,10 @@ public class ShowPetsFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
     private Button topButton;
 
+    private final static String PETS_LIST_KEY = "pets";
+    private final static String OPTIONS_KEY = "options";
+    private final static String TITLE_KEY = "title";
+
     private PetListOptions petListOptions;
     private TopButtonAction topButtonAction;
 
@@ -35,6 +40,24 @@ public class ShowPetsFragment extends Fragment {
     private String title = "Pets List";
 
     public ShowPetsFragment() {
+    }
+
+    public static ShowPetsFragment newInstance(ArrayList<Pet> pets, PetListOptions petListOptions, String title) {
+        ShowPetsFragment showPetsFragment = new ShowPetsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(PETS_LIST_KEY, pets);
+        bundle.putString("options", petListOptions.name());
+        bundle.putString("title", title);
+        showPetsFragment.setArguments(bundle);
+        return showPetsFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        pets = getArguments().getParcelableArrayList(PETS_LIST_KEY);
+        petListOptions = petListOptions.valueOf(getArguments().getString(OPTIONS_KEY));
+        title = getArguments().getString(TITLE_KEY);
     }
 
     @Override
@@ -65,7 +88,7 @@ public class ShowPetsFragment extends Fragment {
         setupAddButton();
     }
 
-    public ShowPetsFragment setPetList(List<Pet> pets) {
+/*    public ShowPetsFragment setPetList(List<Pet> pets) {
         this.pets = pets;
         return this;
     }
@@ -78,7 +101,7 @@ public class ShowPetsFragment extends Fragment {
     public ShowPetsFragment setTitle(String title) {
         this.title = title;
         return this;
-    }
+    }*/
 
     private void setupAddButton() {
         if (petListOptions == PetListOptions.AddButtonOnly) {

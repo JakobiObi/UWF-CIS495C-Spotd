@@ -90,11 +90,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "profileFragment_btnShowMyPets clicked");
                 // TODO: change this so that it sends the appropriate query results
                 MockDataGenerator mockDataGenerator = MockDataGenerator.make();
-                ShowPetsFragment listFragment = new ShowPetsFragment();
-                listFragment
-                        .setPetList(mockDataGenerator.pets)
-                        .setTitle("My Pets")
-                        .setPetListOptions(ShowPetsFragment.PetListOptions.AddButtonOnly);
+                ShowPetsFragment listFragment = ShowPetsFragment.newInstance(mockDataGenerator.pets, ShowPetsFragment.PetListOptions.AddButtonOnly, "My Pets" );
+
                 // TODO: change this back to .setPetListOptions(ShowPetsFragment.PetListType.MyPets); when done debugging
                 ((MainActivity) getActivity()).displayFragment(listFragment);
                 break;
