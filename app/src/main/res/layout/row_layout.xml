@@ -7,7 +7,7 @@
     android:paddingLeft="?android:attr/listPreferredItemPaddingLeft">
 
     <ImageView
-        android:id="@+id/icon"
+        android:id="@+id/list_image"
         android:layout_width="?android:attr/listPreferredItemHeightLarge"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
@@ -24,7 +24,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@id/icon"
+        android:layout_toRightOf="@id/list_image"
         android:gravity="top"
         android:text="Firstline"
         android:textSize="24sp"
@@ -37,15 +37,12 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:gravity="bottom"
-        android:layout_toRightOf="@id/icon"
+        android:layout_toRightOf="@id/list_image"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text="secondLine"
         android:textSize="16sp"
         tools:ignore="RtlHardcoded"
         />
-
-
-
 
 </RelativeLayout>

@@ -1,6 +1,5 @@
 package controllers;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -10,6 +9,7 @@ import android.widget.ImageView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,7 +26,7 @@ public class ImageController {
     private static final String TAG = "ImageController";
     private static FirebaseStorage firebaseStorage;
     private static boolean isInitialized = false;
-    private static final String imageFileExtension = "png";
+    private static final String imageFileExtension = ".png";
 
     private static void initialize() {
         if (!isInitialized) {
@@ -37,36 +37,19 @@ public class ImageController {
 
     /**
      *  Fetches an image from Firestorage and places it directly into a specified imageView.
-     *
-     * @param context   The context associated with the specified imageView.
-     * @param imageView The imagView to load the image into.
+     * @param firebaseURI The URI associated with Firebase storage
+     * @param imageView The imageView to load the image into.
      * @param id  The id of the file to load.
      */
-    public static void putImageIntoView(Context context, ImageView imageView, String id) {
-
+    public static void putImageIntoView(String firebaseURI, ImageView imageView, String id) {
         initialize();
-
-        String fileName = id + imageFileExtension;
-        Log.d(TAG, "loading image (" + fileName + ") into (" + imageView.toString() + ")");
-        // TODO: Replace with Picasso calls
-/*        GlideApp.with(context)
-                .load(firebaseStorage.getReference(fileName))
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        Log.e(TAG, "failed to load image:" + e);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .into(imageView);*/
+        String filePath = firebaseURI + id + imageFileExtension;
+        Log.d(TAG, "loading image (" + filePath + ") into (" + imageView.toString() + ")");
+        Picasso.get()
+                .load(filePath)
+                .into(imageView);
 
     }
-
 
     public static UploadTask storeImage(String id, ImageView imageView) {
 
