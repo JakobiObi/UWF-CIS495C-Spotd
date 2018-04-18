@@ -19,9 +19,6 @@ import com.squareup.picasso.Picasso;
 import controllers.LoginController;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
 
@@ -92,9 +89,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.profileFragment_btnShowMyPets:
                 Log.d(TAG, "profileFragment_btnShowMyPets clicked");
                 // TODO: change this so that it sends the appropriate query results
-                ShowPetsFragment listFragment = new ShowPetsFragment();
                 MockDataGenerator mockDataGenerator = MockDataGenerator.make();
-                listFragment.setPetList(mockDataGenerator.pets);
+                ShowPetsFragment listFragment = ShowPetsFragment.newInstance(mockDataGenerator.pets, ShowPetsFragment.PetListOptions.AddButtonOnly, "My Pets" );
+
+                // TODO: change this back to .setPetListOptions(ShowPetsFragment.PetListType.MyPets); when done debugging
                 ((MainActivity) getActivity()).displayFragment(listFragment);
                 break;
             case R.id.profileFragment_btnAddAPet:

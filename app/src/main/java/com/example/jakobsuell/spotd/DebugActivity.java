@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +30,7 @@ import java.util.List;
 import controllers.FirestoreController;
 import controllers.ImageController;
 import controllers.LoginController;
+import enums.AnimalStatus;
 import enums.AnimalType;
 import models.Pet;
 import models.User;
@@ -203,6 +205,28 @@ public class DebugActivity extends AppCompatActivity {
         Log.d(TAG, "Creating mock data...");
         MockDataGenerator mockDataGenerator = MockDataGenerator.make();
         mockDataGenerator.saveData();
+    }
+
+    public void savePet(final View view) {
+
+        Log.d(TAG, "Saving test pet...");
+        List<String> keywords = new ArrayList<>();
+        Pet testPet;
+        keywords.add("gold");
+        keywords.add("blue");
+        keywords.add("giant");
+        testPet = new Pet("Lepus", AnimalType.Rabbit, keywords, AnimalStatus.Home, "fake@fake.com", null);
+
+        testPet.show();
+        FirestoreController.savePet(FirebaseFirestore.getInstance(), testPet).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                Snackbar.make(view, "Pet saved to firestore.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+
     }
 
     /**

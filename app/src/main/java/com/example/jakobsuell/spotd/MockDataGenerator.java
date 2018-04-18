@@ -6,7 +6,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import controllers.FirestoreController;
 import enums.AnimalStatus;
@@ -18,8 +17,8 @@ import models.User;
 public class MockDataGenerator {
 
     private final String TAG = "MockDataGenerator";
-    public List<Pet> pets;
-    public List<User> users;
+    public ArrayList<Pet> pets;
+    public ArrayList<User> users;
 
     public static MockDataGenerator make() {
         return new MockDataGenerator();
