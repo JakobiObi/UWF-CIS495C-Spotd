@@ -21,6 +21,7 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
     private final String storageURI;
     private List<Pet> pets;
 
+
     public PetsRecyclerAdapter(String storageURI, List<Pet> petsToShow) {
         pets = petsToShow;
         this.storageURI = storageURI;
