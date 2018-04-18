@@ -56,12 +56,12 @@ public class ShowPetsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pets = getArguments().getParcelableArrayList(PETS_LIST_KEY);
-        petListOptions = petListOptions.valueOf(getArguments().getString(OPTIONS_KEY));
+        petListOptions = PetListOptions.valueOf(getArguments().getString(OPTIONS_KEY));
         title = getArguments().getString(TITLE_KEY);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_show_pets, container, false);
     }

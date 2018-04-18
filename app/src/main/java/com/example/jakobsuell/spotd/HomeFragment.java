@@ -12,7 +12,7 @@ import android.widget.Button;
 
 public class HomeFragment extends Fragment {
 
-    private String TAG = "Home Fragment";
+    private final String TAG = "Home Fragment";
 
 
     @Override

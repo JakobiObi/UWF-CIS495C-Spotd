@@ -233,8 +233,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
     private void showFragmentStack(FragmentManager fragmentManager) {
 
         Log.d(TAG, "Fragment Stacks:");

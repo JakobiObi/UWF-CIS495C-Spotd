@@ -6,6 +6,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import controllers.FirestoreController;
@@ -205,9 +206,7 @@ public class MockDataGenerator {
 
     private Pet createPet(String petID, String name, AnimalType type, AnimalStatus status, String ownerID, String finderID, String[] keywords) {
         List<String> words = new ArrayList<>();
-        for (String word : keywords) {
-            words.add(word);
-        }
+        Collections.addAll(words, keywords);
         Pet newPet = new Pet(name, type, words, status, ownerID, finderID);
         if (petID != null) {
             newPet.setPetID(petID);
