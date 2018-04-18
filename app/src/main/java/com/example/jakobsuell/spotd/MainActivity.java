@@ -1,6 +1,5 @@
 package com.example.jakobsuell.spotd;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,14 +28,17 @@ import java.util.List;
 
 import controllers.LoginController;
 
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private String TAG = "MainActivity";
+    private final int INITIAL_BACKSTACK_SIZE = 1;
+    private final int NORMAL_BACKSTACK_SIZE = 2;
+    private final String TAG = "MainActivity";
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private Toolbar toolbar;
-    private ApplicationController applicationController;
+    private Globals globals;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,25 +47,20 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(TAG, "entered MainActivity");
 
-        // make sure user is logged in
         LoginController.enforceSignIn(this);
 
-        // find view instances.
         toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
-        // create toolbar
         setSupportActionBar(toolbar);
 
-        // create picasso singleton
-        applicationController = (ApplicationController)this.getApplication();
-        if (!applicationController.isPicassoSingletonAssigned) {
+        globals = (Globals)this.getApplication();
+        if (!globals.isPicassoSingletonAssigned) {
             createPicassoSingleton();
-            applicationController.isPicassoSingletonAssigned = true;
+            globals.isPicassoSingletonAssigned = true;
         }
 
-        // create and setup navigation drawer
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -94,8 +91,14 @@ public class MainActivity extends AppCompatActivity
         displayFragment(new HomeFragment());
     }
 
-    public void setHeaderViewOnNavDrawer() {
+    public void createPicassoSingleton() {
+        Picasso picassoInstance = new Picasso.Builder(this.getApplicationContext())
+                .addRequestHandler(new FirebaseRequestHandler())
+                .build();
+        Picasso.setSingletonInstance(picassoInstance);
+    }
 
+    public void setHeaderViewOnNavDrawer() {
         View headerView = navigationView.getHeaderView(0);
         TextView userName = headerView.findViewById(R.id.textView_NavUserName);
         TextView emailAccount = headerView.findViewById(R.id.textView_NavEmail);
@@ -105,13 +108,10 @@ public class MainActivity extends AppCompatActivity
             userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
             emailAccount.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         } catch (NullPointerException ex) {
-            // if we can't set them, just hide them
             userName.setText("");
             emailAccount.setText("");
         }
-
         putProfilePictureOnNavigationMenu(profileImageView);
-
     }
 
     private void putProfilePictureOnNavigationMenu(ImageView imageView) {
@@ -123,21 +123,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "back button pressed");
-
+        // TODO: Investigate if this can be modified to not have the apparent workaround from Glide
+        /*
+            Specifically, the double popBackStack when there is only one fragment on the backstack
+            is probably no longer necessary. This can eliminate the if-else also.
+         */
         if (drawer.isDrawerOpen(GravityCompat.START)) {
-            Log.d(TAG, "nav drawer is open, closing");
             drawer.closeDrawer(GravityCompat.START);
         } else {
-
-            Log.d(TAG, "nav drawer is not open");
-
             FragmentManager fragmentManager = getSupportFragmentManager();
             int backStackSize = fragmentManager.getBackStackEntryCount();
-
-            if (backStackSize >= 2) {
+            if (backStackSize >= NORMAL_BACKSTACK_SIZE) {
                 fragmentManager.popBackStack();
-            } else if(backStackSize == 1) {
+            } else if(backStackSize == INITIAL_BACKSTACK_SIZE) {
                 fragmentManager.popBackStack();
                 fragmentManager.popBackStack();
             } else {
@@ -148,7 +146,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_menu_selector, menu);
         return true;
     }
@@ -163,7 +160,6 @@ public class MainActivity extends AppCompatActivity
      */
     public void displayFragment(Fragment fragment) {
         Log.d(TAG, "loading fragment " + fragment.toString() + " to " + R.id.fragment_container);
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -207,7 +203,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void actionBarClicked(MenuItem item) {
-
         switch(item.getItemId()) {
             case R.id.action_bar_menu_about:
                 Log.d(TAG, "action_bar_menu_about clicked");
@@ -216,43 +211,28 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_bar_menu_help:
                 Log.d(TAG, "action_bar_menu_help clicked");
                 break;
-            case R.id.action_bar_menu_settings:
-                Log.d(TAG, "action_bar_menu_settings clicked");
-                break;
         }
-
     }
 
-
-    /*********************************************************
-     * Helper Functions
-     * *******************************************************
-     */
-
     private void signOut() {
-
         Toast.makeText(MainActivity.this, "Signing you out...", Toast.LENGTH_SHORT).show();
         LoginController.signOut(this).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
-                // TODO:  Replace with a call to the NavigationController.
                 loadLoginActivity();
             }
         });
     }
 
     public void loadLoginActivity() {
-
-        // launch login activity
         Intent nextActivity = new Intent(this, LoginActivity.class);
-
-        // don't allow user to return to login screen
         nextActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
         this.startActivity(nextActivity);
     }
+
+
 
 
     private void showFragmentStack(FragmentManager fragmentManager) {
@@ -273,16 +253,6 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG, "(" + i + "): " +
                     fragmentManager.getBackStackEntryAt(i).toString());
         }
-    }
-
-
-
-
-    public void createPicassoSingleton() {
-        Picasso picassoInstance = new Picasso.Builder(this.getApplicationContext())
-                .addRequestHandler(new FirebaseRequestHandler())
-                .build();
-        Picasso.setSingletonInstance(picassoInstance);
     }
 
 }

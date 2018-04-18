@@ -21,13 +21,12 @@ public class ShowPetsFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private ApplicationController applicationController;
+    private Globals globals;
     private FloatingActionButton floatingActionButton;
     private PetListType petListType;
     private List<Pet> pets;
 
     public ShowPetsFragment() {
-        // Required empty public constructor
     }
 
     public void setPetList(List<Pet> pets) {
@@ -37,7 +36,6 @@ public class ShowPetsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_show_pets, container, false);
     }
 
@@ -45,7 +43,7 @@ public class ShowPetsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        applicationController = (ApplicationController)getActivity().getApplication();
+        globals = (Globals)getActivity().getApplication();
 
         //TODO: Make sure title changes based on what screen is being displayed
         getActivity().setTitle("Pets List");
@@ -53,7 +51,7 @@ public class ShowPetsFragment extends Fragment {
         floatingActionButton = getView().findViewById(R.id.show_pets_fab);
         recyclerView = getView().findViewById(R.id.show_pets_recyclerview);
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new PetsRecyclerAdapter(applicationController.firebaseURI, pets);
+        adapter = new PetsRecyclerAdapter(globals.firebaseURI, pets);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);

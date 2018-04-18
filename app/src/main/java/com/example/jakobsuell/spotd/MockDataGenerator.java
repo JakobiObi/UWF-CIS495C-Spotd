@@ -14,7 +14,7 @@ import enums.AnimalType;
 import models.Pet;
 import models.User;
 
-// This will setup and create a bunch of mock testing data.
+
 public class MockDataGenerator {
 
     private final String TAG = "MockDataGenerator";
@@ -41,139 +41,142 @@ public class MockDataGenerator {
     }
 
     private void makePetList() {
-
-        List<String> keywords = new ArrayList<>();
         pets = new ArrayList<>();
-        Pet pet;
 
-        keywords.clear();
-        keywords.add("orange");
-        keywords.add("yellow");
-        keywords.add("parrot");
-        pet = new Pet("Tweety", AnimalType.Bird, keywords, AnimalStatus.Home, "mrsdoe@fake.com", null);
-        pet.setPetID("BXzedITf2VGN8eEjar5o");
-        pets.add(pet);
+        pets.add(createPet(
+                "BXzedITf2VGN8eEjar5o",
+                "Tweety",
+                AnimalType.Bird,
+                AnimalStatus.Home,
+                "mrsdoe@fake.com",
+                null,
+                new String[]{"orange","yellow","parrot"}));
 
-        keywords.clear();
-        keywords.add("orange");
-        keywords.add("white");
-        keywords.add("cockatoo");
-        pet = new Pet("Ginger", AnimalType.Bird, keywords, AnimalStatus.Lost, "mrsdoe@fake.com",null);
-        pet.setPetID("wISynRaXI8nhXjZPR6JC");
-        pets.add(pet);
+        pets.add(createPet(
+                "wISynRaXI8nhXjZPR6JC",
+                "Ginger",
+                AnimalType.Bird,
+                AnimalStatus.Lost,
+                "mrsdoe@fake.com",
+                null,
+                new String[]{"orange","white","cockatoo"}));
 
-        keywords.clear();
-        keywords.add("orange");
-        keywords.add("white");
-        keywords.add("tabby");
-        pet = new Pet("Tigger", AnimalType.Cat, keywords, AnimalStatus.Home, "mrdoe@fake.com",null);
-        pet.setPetID("N7F7XxQVxGfVmSVHRj1e");
-        pets.add(pet);
+        pets.add(createPet(
+                "N7F7XxQVxGfVmSVHRj1e",
+                "Tigger",
+                AnimalType.Cat,
+                AnimalStatus.Home,
+                "mrdoe@fake.com",
+                null,
+                new String[]{"orange","white","tabby"}));
 
-        keywords.clear();
-        keywords.add("fat");
-        keywords.add("young");
-        keywords.add("pink");
-        keywords.add("potbelly");
-        pet = new Pet("Oinkers", AnimalType.Pig, keywords, AnimalStatus.Home, "mrdoe@fake.com",null);
-        pet.setPetID("pt97zaK1do7plnIooq4E");
-        pets.add(pet);
+        pets.add(createPet(
+                "pt97zaK1do7plnIooq4E",
+                "Oinkers",
+                AnimalType.Pig,
+                AnimalStatus.Home,
+                "mrdoe@fake.com",
+                null,
+                new String[]{"fat","young","pink", "potbelly"}));
 
-        keywords.clear();
-        keywords.add("brown");
-        keywords.add("black");
-        keywords.add("white");
-        keywords.add("tabby");
-        keywords.add("kitten");
-        pet = new Pet("", AnimalType.Cat, keywords, AnimalStatus.Found, null,"whereRuScooby@mysterymachine.com");
-        pet.setPetID("ifgE6TAKSb8XaqEKUUlF");
-        pets.add(pet);
+        pets.add(createPet(
+                "ifgE6TAKSb8XaqEKUUlF",
+                "",
+                AnimalType.Cat,
+                AnimalStatus.Found,
+                null,
+                "whereRuScooby@mysterymachine.com",
+                new String[]{"brown","black","white", "tabby", "kitten"}));
 
-        keywords.clear();
-        keywords.add("brown");
-        keywords.add("black");
-        keywords.add("white feet");
-        keywords.add("tabby");
-        keywords.add("tricolor");
-        pet = new Pet("Chairman Meow", AnimalType.Cat, keywords, AnimalStatus.Home, "jinkies@mysterymachine.com",null);
-        pet.setPetID("7RglBQu9vbDwBPX6Km5Q");
-        pets.add(pet);
+        pets.add(createPet(
+                "7RglBQu9vbDwBPX6Km5Q",
+                "Chairman Meow",
+                AnimalType.Cat,
+                AnimalStatus.Home,
+                "jinkies@mysterymachine.com",
+                null,
+                new String[]{"brown","black","white feet", "tabby", "tricolor"}));
 
-        keywords.clear();
-        keywords.add("brown");
-        keywords.add("retriever");
-        keywords.add("hungry");
-        pet = new Pet("Scooby Doo", AnimalType.Dog, keywords, AnimalStatus.Lost, "whereRuScooby@mysterymachine.com",null);
-        pet.setPetID("x8gFZNvjm9VNGXkccw7r");
-        pets.add(pet);
+        pets.add(createPet(
+                "x8gFZNvjm9VNGXkccw7r",
+                "Scooby Doo",
+                AnimalType.Dog,
+                AnimalStatus.Lost,
+                "whereRuScooby@mysterymachine.com",
+                null,
+                new String[]{"brown","retriever","hungry"}));
 
-        keywords.clear();
-        keywords.add("brown");
-        keywords.add("tan");
-        keywords.add("white");
-        keywords.add("boxer");
-        keywords.add("red collar");
-        pet = new Pet("Mr. Barkley", AnimalType.Dog, keywords, AnimalStatus.Lost, "jinkies@mysterymachine.com",null);
-        pet.setPetID("cdxvjOxTzoUx1HoxobXY");
-        pets.add(pet);
+        pets.add(createPet(
+                "cdxvjOxTzoUx1HoxobXY",
+                "Mr. Barkley",
+                AnimalType.Dog,
+                AnimalStatus.Lost,
+                "jinkies@mysterymachine.com",
+                null,
+                new String[]{"brown","tan","white", "boxer", "red collar"}));
 
-        keywords.clear();
-        keywords.add("gray");
-        keywords.add("white");
-        keywords.add("longhair");
-        keywords.add("mustache");
-        keywords.add("tuxedo");
-        pet = new Pet("Wyatt Earp", AnimalType.Cat, keywords, AnimalStatus.Home, "whereRuScooby@mysterymachine.com",null);
-        pet.setPetID("2XlUFHpt7wNKflnfA2Ur");
-        pets.add(pet);
+        pets.add(createPet(
+                "2XlUFHpt7wNKflnfA2Ur",
+                "Wyatt Earp",
+                AnimalType.Cat,
+                AnimalStatus.Home,
+                "whereRuScooby@mysterymachine.com",
+                null,
+                new String[]{"gray","white","longhair", "mustache", "tuxedo"}));
 
-        keywords.clear();
-        keywords.add("reddish");
-        keywords.add("curly");
-        pet = new Pet("", AnimalType.Dog, keywords, AnimalStatus.Found, null,"shaggy2dope@mysterymachine.com");
-        pet.setPetID("Yeb9AtnyClAnhdTjGMKo");
-        pets.add(pet);
+        pets.add(createPet(
+                "Yeb9AtnyClAnhdTjGMKo",
+                "",
+                AnimalType.Dog,
+                AnimalStatus.Found,
+                null,
+                "shaggy2dope@mysterymachine.com",
+                new String[]{"reddish","curly"}));
 
-        keywords.clear();
-        keywords.add("labrador");
-        keywords.add("yellow");
-        pet = new Pet("", AnimalType.Dog, keywords, AnimalStatus.Found, null,"mrdoe@fake.com");
-        pet.setPetID("P2tOLF1X6r5QC9XaEMaB");
-        pets.add(pet);
+        pets.add(createPet(
+                "P2tOLF1X6r5QC9XaEMaB",
+                "",
+                AnimalType.Dog,
+                AnimalStatus.Found,
+                null,
+                "mrdoe@fake.com",
+                new String[]{"labrador","yellow"}));
 
-        keywords.clear();
-        keywords.add("white");
-        keywords.add("brown");
-        keywords.add("black");
-        keywords.add("guinea pig");
-        pet = new Pet("Giggles", AnimalType.Other, keywords, AnimalStatus.Lost, "sweet_ascot@fake.com",null);
-        pet.setPetID("5pRSo5boJ3ASYugYYfg3");
-        pets.add(pet);
+        pets.add(createPet(
+                "5pRSo5boJ3ASYugYYfg3",
+                "Giggles",
+                AnimalType.Other,
+                AnimalStatus.Lost,
+                "sweet_ascot@fake.com",
+                null,
+                new String[]{"white","brown","black","guinea pig"}));
 
-        keywords.clear();
-        keywords.add("grey");
-        keywords.add("white");
-        keywords.add("netherland dwarf");
-        pet = new Pet("Thumper", AnimalType.Rabbit, keywords, AnimalStatus.Lost, "sweet_ascot@fake.com",null);
-        pet.setPetID("nAGFTcX3t7Pw1OYhcIbw");
-        pets.add(pet);
+        pets.add(createPet(
+                "nAGFTcX3t7Pw1OYhcIbw",
+                "Thumper",
+                AnimalType.Rabbit,
+                AnimalStatus.Lost,
+                "sweet_ascot@fake.com",
+                null,
+                new String[]{"grey","white","netherland dwarf"}));
 
-        keywords.clear();
-        keywords.add("white");
-        keywords.add("chocolate");
-        keywords.add("brown");
-        keywords.add("english lop");
-        pet = new Pet("Rabbit De Niro", AnimalType.Rabbit, keywords, AnimalStatus.Home, "sweet_ascot@fake.com",null);
-        pet.setPetID("LFbm894gKzXNOVMcEwWb");
-        pets.add(pet);
+        pets.add(createPet(
+                "LFbm894gKzXNOVMcEwWb",
+                "Rabbit De Niro",
+                AnimalType.Rabbit,
+                AnimalStatus.Home,
+                "sweet_ascot@fake.com",
+                null,
+                new String[]{"white","chocolate","brown","english lop"}));
 
-        keywords.clear();
-        keywords.add("sand");
-        keywords.add("white");
-        keywords.add("rex");
-        pet = new Pet("", AnimalType.Rabbit, keywords, AnimalStatus.Found, null,"mrsdoe@fake.com");
-        pet.setPetID("UJKNSTDgdPWg7WA5PieM");
-        pets.add(pet);
+        pets.add(createPet(
+                "UJKNSTDgdPWg7WA5PieM",
+                "",
+                AnimalType.Rabbit,
+                AnimalStatus.Home,
+                null,
+                "mrsdoe@fake.com",
+                new String[]{"sand","white","rex"}));
     }
 
     public void saveData() {
@@ -198,6 +201,18 @@ public class MockDataGenerator {
                 Log.d(TAG, "mock pets written to Firestore");
             }
         });
+    }
+
+    private Pet createPet(String petID, String name, AnimalType type, AnimalStatus status, String ownerID, String finderID, String[] keywords) {
+        List<String> words = new ArrayList<>();
+        for (String word : keywords) {
+            words.add(word);
+        }
+        Pet newPet = new Pet(name, type, words, status, ownerID, finderID);
+        if (petID != null) {
+            newPet.setPetID(petID);
+        }
+        return newPet;
     }
 
 }

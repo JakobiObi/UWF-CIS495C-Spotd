@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
 
+
 class FirebaseRequestHandler extends RequestHandler {
 
     private final String SCHEME_FIREBASE_STORAGE = "gs";
@@ -23,10 +24,8 @@ class FirebaseRequestHandler extends RequestHandler {
 
     @Override
     public boolean canHandleRequest(Request data) {
-
         String scheme = data.uri.getScheme();
         return (SCHEME_FIREBASE_STORAGE.equals(scheme));
-
     }
 
     @Nullable
