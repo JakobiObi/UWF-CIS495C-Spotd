@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name=".ApplicationController"
+        android:name=".Globals"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".LoginActivity"
@@ -35,6 +35,7 @@
             android:name=".DebugActivity"
             android:label="@string/title_activity_debug"
             android:theme="@style/AppTheme" />
+
     </application>
 
 </manifest>

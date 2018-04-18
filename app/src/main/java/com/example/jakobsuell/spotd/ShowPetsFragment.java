@@ -25,7 +25,7 @@ public class ShowPetsFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private ApplicationController applicationController;
+    private Globals globals;
     private FloatingActionButton floatingActionButton;
     private Button topButton;
 
@@ -56,12 +56,12 @@ public class ShowPetsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pets = getArguments().getParcelableArrayList(PETS_LIST_KEY);
-        petListOptions = petListOptions.valueOf(getArguments().getString(OPTIONS_KEY));
+        petListOptions = PetListOptions.valueOf(getArguments().getString(OPTIONS_KEY));
         title = getArguments().getString(TITLE_KEY);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_show_pets, container, false);
     }
@@ -70,7 +70,7 @@ public class ShowPetsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        applicationController = (ApplicationController)getActivity().getApplication();
+        globals = (Globals)getActivity().getApplication();
 
         getActivity().setTitle(title);
 
@@ -78,7 +78,7 @@ public class ShowPetsFragment extends Fragment {
         recyclerView = getView().findViewById(R.id.show_pets_recyclerview);
         topButton = getView().findViewById(R.id.show_pets_top_button);
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new PetsRecyclerAdapter(applicationController.firebaseURI, pets);
+        adapter = new PetsRecyclerAdapter(globals.firebaseURI, pets);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);

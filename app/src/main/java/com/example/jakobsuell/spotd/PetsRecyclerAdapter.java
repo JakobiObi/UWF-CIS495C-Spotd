@@ -37,12 +37,12 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
         notifyItemRemoved(position);
     }
 
+    @NonNull
     @Override
     public PetsRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.row_layout, parent, false);
-        ViewHolder viewHolder = new ViewHolder(v);
-        return viewHolder;
+        return new ViewHolder(v);
     }
 
     // Replace the contents of a view (this method is invoked by the layout manager)
@@ -82,7 +82,7 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
 
     private String getPetNameLine(Pet pet) {
         StringBuilder name = new StringBuilder();
-        if (pet.getName() == null || pet.getName() == "") {
+        if (pet.getName() == null || pet.getName().equals("")) {
             name.append("Name Unknown");
         } else {
             name.append(pet.getName());

@@ -14,7 +14,7 @@ import com.squareup.picasso.RequestHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.ExecutionException;
+
 
 class FirebaseRequestHandler extends RequestHandler {
 
@@ -23,10 +23,8 @@ class FirebaseRequestHandler extends RequestHandler {
 
     @Override
     public boolean canHandleRequest(Request data) {
-
         String scheme = data.uri.getScheme();
         return (SCHEME_FIREBASE_STORAGE.equals(scheme));
-
     }
 
     @Nullable
@@ -42,9 +40,7 @@ class FirebaseRequestHandler extends RequestHandler {
             inputStream = Tasks.await(streamDownloadTask).getStream();
             Log.d(TAG, "Loaded " + storageReference.getPath());
             return new Result(BitmapFactory.decodeStream(inputStream), Picasso.LoadedFrom.NETWORK);
-        } catch (ExecutionException e) {
-            throw new IOException();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             throw new IOException();
         }
 
