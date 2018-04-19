@@ -46,8 +46,8 @@ public class ShowPetsFragment extends Fragment {
         ShowPetsFragment showPetsFragment = new ShowPetsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(PETS_LIST_KEY, pets);
-        bundle.putString("options", petListOptions.name());
-        bundle.putString("title", title);
+        bundle.putString(OPTIONS_KEY, petListOptions.name());
+        bundle.putString(TITLE_KEY, title);
         showPetsFragment.setArguments(bundle);
         return showPetsFragment;
     }
@@ -87,21 +87,6 @@ public class ShowPetsFragment extends Fragment {
         setupTopButton();
         setupAddButton();
     }
-
-/*    public ShowPetsFragment setPetList(List<Pet> pets) {
-        this.pets = pets;
-        return this;
-    }
-
-    public ShowPetsFragment setPetListOptions(PetListOptions type) {
-        this.petListOptions = type;
-        return this;
-    }
-
-    public ShowPetsFragment setTitle(String title) {
-        this.title = title;
-        return this;
-    }*/
 
     private void setupAddButton() {
         if (petListOptions == PetListOptions.AddButtonOnly) {

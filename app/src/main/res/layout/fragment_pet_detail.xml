@@ -7,122 +7,68 @@
     tools:context=".PetDetailFragment">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/pet_detail_linearlayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/nameTextField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Name:"
-            android:textSize="18sp"
-            tools:text="Name:" />
-
-        <EditText
-            android:id="@+id/addName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            tools:layout_editor_absoluteX="59dp"
-            tools:layout_editor_absoluteY="263dp" />
-
-        <TextView
-            android:id="@+id/genderTextField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Gender:"
-            android:textSize="18sp" />
-
-        <Spinner
-            android:id="@+id/genderSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/nameTypeView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Type:"
-            android:textSize="18sp"
-            tools:text="Type:" />
-
-        <Spinner
-            android:id="@+id/typeSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            tools:layout_editor_absoluteX="59dp"
-            tools:layout_editor_absoluteY="76dp" />
-
-        <TextView
-            android:id="@+id/ageTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Age:"
-            android:textSize="18sp"
-            tools:text="Age:" />
-
-        <EditText
-            android:id="@+id/ageTextInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:ems="10"
-            android:inputType="number" />
-
-        <TextView
-            android:id="@+id/colorTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Color:"
-            android:textSize="18sp"
-            tools:text="Color:" />
-
-        <Spinner
-            android:id="@+id/colorSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Image: "
-            android:textSize="18sp"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="228dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <ImageView
-            android:id="@+id/selectedPicture"
-            android:layout_width="match_parent"
-            android:layout_height="124dp"
-            android:src="@mipmap/camera" />
+            android:id="@+id/pet_detail_pet_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/camera"
+            />
 
-        <Button
-            android:id="@+id/takePictureButton"
+        <EditText
+            android:id="@+id/pet_detail_pet_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="take a picture" />
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="center"
+            android:inputType="textPersonName"
+            android:hint="Pet name"
+            />
+
+        <Spinner
+            android:id="@+id/pet_detail_animaltype_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="center"
+            />
+
+        <Spinner
+            android:id="@+id/pet_detail_status_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="center"
+            />
 
         <Button
             android:id="@+id/btn_savePetInfo"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:text="Save Pet Info"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_gravity="center"
+            />
 
     </LinearLayout>
 

@@ -48,7 +48,6 @@ public class ImageController {
         Picasso.get()
                 .load(filePath)
                 .into(imageView);
-
     }
 
     public static UploadTask storeImage(String id, ImageView imageView) {
