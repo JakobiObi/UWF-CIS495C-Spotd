@@ -107,8 +107,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 if (lostPets == null) {
                     return;
                 } else {
-                    // open the pets list
-                    ShowPetsFragment listFragment = ShowPetsFragment.newInstance(lostPets, ShowPetsFragment.PetListOptions.NoButtons, "Pets Reported Missing");
+                    ShowPetsFragment listFragment = ShowPetsFragment.newInstance(lostPets, ShowPetsFragment.PetListOptions.NoButtons,null, "Pets Reported Missing");
                     ((MainActivity) getActivity()).displayFragment(listFragment);
                 }
                 break;
