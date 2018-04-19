@@ -48,7 +48,9 @@ public class ShowPetsFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(PETS_LIST_KEY, pets);
         bundle.putString(OPTIONS_KEY, petListOptions.name());
-        bundle.putString(TOP_BUTTON_ACTION_KEY, topButtonAction.name());
+        if (topButtonAction != null) {
+            bundle.putString(TOP_BUTTON_ACTION_KEY, topButtonAction.name());
+        }
         bundle.putString(TITLE_KEY, title);
         showPetsFragment.setArguments(bundle);
         return showPetsFragment;
@@ -60,7 +62,10 @@ public class ShowPetsFragment extends Fragment {
         Bundle bundle = getArguments();
         pets = bundle.getParcelableArrayList(PETS_LIST_KEY);
         petListOptions = PetListOptions.valueOf(bundle.getString(OPTIONS_KEY));
-        topButtonAction = TopButtonAction.valueOf(bundle.getString(TOP_BUTTON_ACTION_KEY));
+        String topButtonData = bundle.getString(TOP_BUTTON_ACTION_KEY);
+        if (topButtonData != null) {
+            topButtonAction = TopButtonAction.valueOf(bundle.getString(TOP_BUTTON_ACTION_KEY));
+        }
         title = bundle.getString(TITLE_KEY);
     }
 
