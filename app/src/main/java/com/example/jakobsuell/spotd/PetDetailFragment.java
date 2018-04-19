@@ -17,20 +17,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 
-public class AddAPetFragment extends Fragment {
+public class PetDetailFragment extends Fragment {
 
-    private static final String TAG = "AddAPetFragment";
+    private static final String TAG = "PetDetailFragment";
     private static final int REQUEST_IMAGE_CAPTURE = 1313;
     private Button pictureButton;
     private ImageView petPicture;
 
-    public AddAPetFragment() {
+    public PetDetailFragment() {
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_add_apet, container, false);
+        return inflater.inflate(R.layout.fragment_pet_detail, container, false);
     }
 
 
