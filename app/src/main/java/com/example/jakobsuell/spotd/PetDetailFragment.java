@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -180,8 +181,9 @@ public class PetDetailFragment extends Fragment implements AdapterView.OnItemSel
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        // call the save routine here
-
+        // TODO: call the save routine here
+        Snackbar.make(view, "Save!", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 
     @Override

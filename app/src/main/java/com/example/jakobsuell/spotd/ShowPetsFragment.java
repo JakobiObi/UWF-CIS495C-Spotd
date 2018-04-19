@@ -149,9 +149,8 @@ public class ShowPetsFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Add code to handle add button clicks here.
-                Snackbar.make(view, "Add button clicked", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Add a New Pet");
+                ((MainActivity)getActivity()).displayFragment(petDetailFragment);
             }
         });
     }
