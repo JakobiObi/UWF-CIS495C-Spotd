@@ -7,5 +7,6 @@
     <color name="buttonRed">#fa171f</color>
     <color name="whiteText">#ffffff</color>
     <color name="profileBackground">#0bbe8b</color>
+    <color name="lostPetsNotifierButton">#330000</color>
 
 </resources>
