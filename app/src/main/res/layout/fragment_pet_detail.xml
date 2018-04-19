@@ -21,14 +21,14 @@
             android:id="@+id/pet_detail_pet_photo"
             android:layout_width="wrap_content"
             android:layout_height="200dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="40dp"
             android:layout_gravity="center"
             android:src="@mipmap/camera"
             />
 
         <EditText
             android:id="@+id/pet_detail_pet_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:layout_marginRight="20dp"
@@ -42,7 +42,7 @@
             android:id="@+id/pet_detail_animaltype_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:layout_gravity="center"
@@ -52,7 +52,7 @@
             android:id="@+id/pet_detail_status_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:layout_gravity="center"
@@ -62,11 +62,8 @@
             android:id="@+id/btn_savePetInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
             android:text="Save Pet Info"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_gravity="center"
             />
 

@@ -3,13 +3,16 @@ package com.example.jakobsuell.spotd;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +27,8 @@ import android.widget.Spinner;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import controllers.ImageController;
@@ -32,9 +37,10 @@ import enums.AnimalType;
 import models.Pet;
 
 
-public class PetDetailFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class PetDetailFragment extends Fragment {
 
     private static final String TAG = "PetDetailFragment";
+    private static final int REQUEST_TAKE_PHOTO = 1;
     private final int REQUEST_IMAGE_CAPTURE = 1313;
     private static final String PET_KEY = "pet";
     private final static String TITLE_KEY = "title";
@@ -47,6 +53,7 @@ public class PetDetailFragment extends Fragment implements AdapterView.OnItemSel
 
     private String title;
     private Pet pet;
+    private Uri cameraPhotoURI;
 
     public PetDetailFragment() {
     }
@@ -81,15 +88,18 @@ public class PetDetailFragment extends Fragment implements AdapterView.OnItemSel
         getAllViews();
 
         setupSpinners();
-        setFieldValues(pet);
-
-        if (isThisUserOwnerOrFinder(FirebaseAuth.getInstance(), pet)) {
+        if (pet != null) {
+            setFieldValues();
+            if (isThisUserOwnerOrFinder(FirebaseAuth.getInstance(), pet)) {
+                setFieldEditing(true);
+                setPhotoClickListener();
+            } else {
+                setFieldEditing(false);
+            }
+        } else {
             setFieldEditing(true);
             setPhotoClickListener();
-        } else {
-            setFieldEditing(false);
         }
-
     }
 
     private void getAllViews() {
@@ -100,7 +110,7 @@ public class PetDetailFragment extends Fragment implements AdapterView.OnItemSel
         saveInfo = getActivity().findViewById(R.id.btn_savePetInfo);
     }
 
-    private void setFieldValues(Pet pet) {
+    private void setFieldValues() {
         if (pet == null) {
             return;
         }
@@ -134,6 +144,12 @@ public class PetDetailFragment extends Fragment implements AdapterView.OnItemSel
         type.setEnabled(enabled);
         if (enabled) {
             saveInfo.setVisibility(View.VISIBLE);
+            saveInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    saveData();
+                }
+            });
         } else {
             saveInfo.setVisibility(View.INVISIBLE);
         }
@@ -164,30 +180,53 @@ public class PetDetailFragment extends Fragment implements AdapterView.OnItemSel
     }
 
     private void invokeCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, 0);
+        Log.d(TAG, "invoking camera");
+        Intent cameraTakePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (cameraTakePicture.resolveActivity(getActivity().getPackageManager()) != null) {
+            File photoFile = null;
+
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                Log.e(TAG, "could not create photo file: " + e);
+            }
+
+            if (photoFile != null) {
+                Log.d(TAG, "temp file created");
+                cameraPhotoURI = FileProvider.getUriForFile(getContext(),
+                        "com.example.android.fileprovider",
+                        photoFile);
+                cameraTakePicture.putExtra(MediaStore.EXTRA_OUTPUT, cameraPhotoURI);
+                startActivityForResult(cameraTakePicture, REQUEST_TAKE_PHOTO);
+            }
+        } else {
+            Log.e(TAG, "no app available to handle camera intent");
+        }
+
+    }
+
+    private File createImageFile() throws IOException {
+        long timeStamp = System.currentTimeMillis();
+        String imageFileName = "pet_" + timeStamp;
+        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        return image;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            petPhoto.setImageBitmap(bitmap);
-        } else {
-            Log.e(TAG, "error getting image - camera activity returned null intent");
-        }
+        Picasso.get()
+                .load(cameraPhotoURI)
+                .into(petPhoto);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        // TODO: call the save routine here
-        Snackbar.make(view, "Save!", Snackbar.LENGTH_LONG)
+    private void saveData() {
+        Log.d(TAG, "saved");
+        Snackbar.make(getView(), "Save!", Snackbar.LENGTH_SHORT)
                 .setAction("Action", null).show();
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
 
-    }
 }

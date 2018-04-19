@@ -1,5 +1,6 @@
 package com.example.jakobsuell.spotd;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,11 +21,13 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
     private final String TAG = "PetsRecyclerAdapter";
     private final String storageURI;
     private List<Pet> pets;
+    private Context context;
 
 
-    public PetsRecyclerAdapter(String storageURI, List<Pet> petsToShow) {
-        pets = petsToShow;
+    public PetsRecyclerAdapter(String storageURI, List<Pet> petsToShow, Context context) {
+        this.pets = petsToShow;
         this.storageURI = storageURI;
+        this.context = context;
     }
 
     public void add(int position, Pet item) {
@@ -54,9 +57,10 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "pet " + position + "clicked");
-                pets.get(position).show();
-                // TODO: Replace this line with actual click functionality
-                remove(position);
+                Pet pet = pets.get(position);
+                pet.show();
+                PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(pet, "Pet Detail");
+                ((MainActivity)context).displayFragment(petDetailFragment);
             }
         });
         holder.txtFooter.setText(getPetInfoLine(pet));

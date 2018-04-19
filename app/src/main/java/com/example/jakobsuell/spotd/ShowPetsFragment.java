@@ -87,7 +87,7 @@ public class ShowPetsFragment extends Fragment {
         recyclerView = getView().findViewById(R.id.show_pets_recyclerview);
         topButton = getView().findViewById(R.id.show_pets_top_button);
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new PetsRecyclerAdapter(globals.firebaseURI, pets);
+        adapter = new PetsRecyclerAdapter(globals.firebaseURI, pets, getContext());
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
