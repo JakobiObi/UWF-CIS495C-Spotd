@@ -8,7 +8,7 @@ package com.example.jakobsuell.spotd;
 
 public class WordTagLists {
 
-    public String[] BasicColors = {
+    public static String[] BasicColors = {
             "Black",
             "Blue",
             "Brown",
@@ -27,7 +27,7 @@ public class WordTagLists {
             "Yellow"
     };
 
-    public String[] DogBreeds = {
+    public static String[] DogBreeds = {
             "Beagle",
             "Boxer",
             "Bulldog",
@@ -54,7 +54,7 @@ public class WordTagLists {
             "Other"
     };
 
-    public String[] CatBreeds = {
+    public static String[] CatBreeds = {
             "Abyssinian",
             "American Bobtail",
             "American Curl",
@@ -100,7 +100,7 @@ public class WordTagLists {
             "Other"
     };
 
-    public String[] CatFurPatterns = {
+    public static String[] CatFurPatterns = {
             "Solid / Self-color",
             "Bi-color",
             "Tabby",
@@ -110,7 +110,7 @@ public class WordTagLists {
             "Other"
     };
 
-    public String[] DogFurPatterns = {
+    public static String[] DogFurPatterns = {
             "Black and tan",
             "Liver and tan",
             "Blue and tan",
@@ -127,7 +127,7 @@ public class WordTagLists {
             "Other"
     };
 
-    public String[] RabbitBreeds = {
+    public static String[] RabbitBreeds = {
             "American Fuzzy Lop",
             "Britannia Petite",
             "Dutch",
@@ -177,7 +177,7 @@ public class WordTagLists {
             "Other"
     };
 
-    public String[] PigBreeds = {
+    public static String[] PigBreeds = {
             "Berkshire",
             "Chester White",
             "Duroc",
@@ -189,7 +189,7 @@ public class WordTagLists {
             "Other"
     };
 
-    public String[] BirdBreeds = {
+    public static String[] BirdBreeds = {
             "American Golden Plover",
             "Arctic Tern",
             "Baleric Shearwater",

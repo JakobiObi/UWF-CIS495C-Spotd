@@ -21,11 +21,9 @@ import controllers.LoginController;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
-
     private final String TAG = "ProfileFragment";
     private Button showMyPets;
     private Button saveProfile;
-    private Button addAPet;
 
 
     @Override
@@ -34,21 +32,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         getActivity().setTitle("My Profile");
 
-        // find views for buttons
         saveProfile = getView().findViewById(R.id.profileFragment_btnSaveProfile);
         showMyPets = getView().findViewById(R.id.profileFragment_btnShowMyPets);
-        addAPet = getView().findViewById(R.id.profileFragment_btnAddAPet);
 
-        // set click listeners
         saveProfile.setOnClickListener(this);
         showMyPets.setOnClickListener(this);
-        addAPet.setOnClickListener(this);
 
         setProfileInfo();
     }
 
     private void setProfileInfo() {
-
         TextView userName = getActivity().findViewById(R.id.profileFragment_editName);
         TextView emailAccount = getActivity().findViewById(R.id.profileFragment_editEmail);
         ImageView profileImageView = getActivity().findViewById(R.id.profileFragment_profilePicture);
@@ -75,7 +68,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -90,14 +82,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "profileFragment_btnShowMyPets clicked");
                 // TODO: change this so that it sends the appropriate query results
                 MockDataGenerator mockDataGenerator = MockDataGenerator.make();
-                ShowPetsFragment listFragment = ShowPetsFragment.newInstance(mockDataGenerator.pets, ShowPetsFragment.PetListOptions.AddButtonOnly, "My Pets" );
-
-                // TODO: change this back to .setPetListOptions(ShowPetsFragment.PetListType.MyPets); when done debugging
+                ShowPetsFragment listFragment = ShowPetsFragment.newInstance(mockDataGenerator.pets, ShowPetsFragment.PetListOptions.AddButtonOnly,null, "My Pets" );
                 ((MainActivity) getActivity()).displayFragment(listFragment);
-                break;
-            case R.id.profileFragment_btnAddAPet:
-                Log.d(TAG, "profileFragment_btnAddAPet clicked");
-                ((MainActivity) getActivity()).displayFragment(new AddAPetFragment());
                 break;
         }
     }

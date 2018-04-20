@@ -32,6 +32,7 @@ public class ShowPetsFragment extends Fragment {
     private final static String PETS_LIST_KEY = "pets";
     private final static String OPTIONS_KEY = "options";
     private final static String TITLE_KEY = "title";
+    private final static String TOP_BUTTON_ACTION_KEY = "topbutton";
 
     private PetListOptions petListOptions;
     private TopButtonAction topButtonAction;
@@ -42,12 +43,15 @@ public class ShowPetsFragment extends Fragment {
     public ShowPetsFragment() {
     }
 
-    public static ShowPetsFragment newInstance(ArrayList<Pet> pets, PetListOptions petListOptions, String title) {
+    public static ShowPetsFragment newInstance(ArrayList<Pet> pets, PetListOptions petListOptions, TopButtonAction topButtonAction, String title) {
         ShowPetsFragment showPetsFragment = new ShowPetsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(PETS_LIST_KEY, pets);
-        bundle.putString("options", petListOptions.name());
-        bundle.putString("title", title);
+        bundle.putString(OPTIONS_KEY, petListOptions.name());
+        if (topButtonAction != null) {
+            bundle.putString(TOP_BUTTON_ACTION_KEY, topButtonAction.name());
+        }
+        bundle.putString(TITLE_KEY, title);
         showPetsFragment.setArguments(bundle);
         return showPetsFragment;
     }
@@ -55,9 +59,14 @@ public class ShowPetsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pets = getArguments().getParcelableArrayList(PETS_LIST_KEY);
-        petListOptions = PetListOptions.valueOf(getArguments().getString(OPTIONS_KEY));
-        title = getArguments().getString(TITLE_KEY);
+        Bundle bundle = getArguments();
+        pets = bundle.getParcelableArrayList(PETS_LIST_KEY);
+        petListOptions = PetListOptions.valueOf(bundle.getString(OPTIONS_KEY));
+        String topButtonData = bundle.getString(TOP_BUTTON_ACTION_KEY);
+        if (topButtonData != null) {
+            topButtonAction = TopButtonAction.valueOf(bundle.getString(TOP_BUTTON_ACTION_KEY));
+        }
+        title = bundle.getString(TITLE_KEY);
     }
 
     @Override
@@ -78,32 +87,17 @@ public class ShowPetsFragment extends Fragment {
         recyclerView = getView().findViewById(R.id.show_pets_recyclerview);
         topButton = getView().findViewById(R.id.show_pets_top_button);
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new PetsRecyclerAdapter(globals.firebaseURI, pets);
+        adapter = new PetsRecyclerAdapter(globals.firebaseURI, pets, getContext());
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         setupTopButton();
-        setupAddButton();
+        setupFloatingAddButton();
     }
 
-/*    public ShowPetsFragment setPetList(List<Pet> pets) {
-        this.pets = pets;
-        return this;
-    }
-
-    public ShowPetsFragment setPetListOptions(PetListOptions type) {
-        this.petListOptions = type;
-        return this;
-    }
-
-    public ShowPetsFragment setTitle(String title) {
-        this.title = title;
-        return this;
-    }*/
-
-    private void setupAddButton() {
+    private void setupFloatingAddButton() {
         if (petListOptions == PetListOptions.AddButtonOnly) {
             hideAddButtonDuringScroll();
             attachAddButtonListener();
@@ -113,7 +107,6 @@ public class ShowPetsFragment extends Fragment {
     }
 
     private void setupTopButton() {
-
         if (petListOptions != PetListOptions.TopButtonOnly) {
             topButton.setVisibility(View.INVISIBLE);
             LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -122,24 +115,20 @@ public class ShowPetsFragment extends Fragment {
             topButton.setText(getActivity().getResources().getString(R.string.show_petlist_topbutton_not_found));
             attachTopButtonListener();
         }
-
     }
 
     private void attachTopButtonListener() {
-
         topButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO:  Add code to handle top button clicks here.
-                /*
-
-
-                 */
-                Snackbar.make(view, "Top button clicked", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (topButtonAction == TopButtonAction.TriggerBackButton) {
+                    ((MainActivity)getActivity()).onBackPressed();
+                } else if (topButtonAction == TopButtonAction.DisplayFragment) {
+                    PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Add a New Found Pet");
+                    ((MainActivity)getActivity()).displayFragment(petDetailFragment);
+                }
             }
         });
-
     }
 
     private void hideAddButtonDuringScroll() {
@@ -164,9 +153,8 @@ public class ShowPetsFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Add code to handle add button clicks here.
-                Snackbar.make(view, "Add button clicked", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Add a New Pet");
+                ((MainActivity)getActivity()).displayFragment(petDetailFragment);
             }
         });
     }

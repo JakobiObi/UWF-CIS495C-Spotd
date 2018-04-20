@@ -194,9 +194,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.log:
                 signOut();
                 break;
-            case R.id.quit:
-                finish();
-                System.exit(0);
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

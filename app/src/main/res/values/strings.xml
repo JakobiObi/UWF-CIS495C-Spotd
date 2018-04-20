@@ -23,9 +23,8 @@
     <string name="profile_fragment_profile_photo_desc">Profile photo</string>
     <string name="profile_fragment_editName_hint">First Last</string>
     <string name="profile_fragment_editEmail_hint">address@example.com</string>
-    <string name="profile_fragment_btnShowMyPets_text">Show My Pets</string>
+    <string name="profile_fragment_btnShowMyPets_text">My Pets</string>
     <string name="profile_fragment_btnSaveProfile_text">Save Profile</string>
-    <string name="profile_fragment_btnAddAPet_text">Add a Pet</string>
 
     <string name="about_app_description">A lost and found pet registry.</string>
     <string name="about_authors">Jakob Suell \n Spencer AskFeldt \n Anthony Dwyer</string>
@@ -74,8 +73,5 @@
     <string name="myProfileFragment">This is the "My Profile" fragment</string>
     <string name="lostAPetFragment">This is the "Lost a Pet" fragment</string>
     <string name="foundAPetFragment">This is the "Found a Pet" fragment</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-
 
 </resources>

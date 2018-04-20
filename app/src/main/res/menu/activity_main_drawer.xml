@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/nav_top">
         <item
             android:id="@+id/home"
             android:title="@string/nav_home" />
@@ -11,17 +12,24 @@
             android:id="@+id/profile"
             android:title="@string/nav_profile" />
         <item
+            android:id="@+id/mypets"
+            android:title="My Pets" />
+    </group>
+
+    <group android:checkableBehavior="none"
+        android:id="@+id/nav_middle">
+        <item
             android:id="@+id/found"
             android:title="@string/nav_found" />
         <item
             android:id="@+id/lost"
             android:title="@string/nav_lost" />
+    </group>
+
+    <group android:checkableBehavior="none"
+        android:id="@+id/nav_bottom">
         <item
             android:id="@+id/log"
             android:title="@string/nav_log" />
-        <item
-            android:id="@+id/quit"
-            android:title="@string/nav_quit" />
     </group>
-
 </menu>
