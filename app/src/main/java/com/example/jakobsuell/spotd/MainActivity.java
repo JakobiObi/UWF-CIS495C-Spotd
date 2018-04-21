@@ -183,6 +183,14 @@ public class MainActivity extends AppCompatActivity
                 Log.d(TAG, "profile clicked on nav menu");
                 displayFragment(new ProfileFragment());
                 break;
+            case R.id.mypets:
+                Log.d(TAG, "found clicked on nav menu");
+                Log.d(TAG, "Nav Menus:  btnSMyPets clicked");
+                // TODO: change this so that it sends the appropriate query results
+                MockDataGenerator mockDataGenerator = MockDataGenerator.make();
+                ShowPetsFragment listFragment = ShowPetsFragment.newInstance(mockDataGenerator.pets, ShowPetsFragment.PetListOptions.AddButtonOnly,null, "My Pets" );
+                displayFragment(listFragment);
+                break;
             case R.id.found:
                 Log.d(TAG, "found clicked on nav menu");
                 displayFragment(new FoundAPetFragment());
