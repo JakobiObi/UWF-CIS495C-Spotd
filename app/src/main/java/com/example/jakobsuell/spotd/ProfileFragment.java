@@ -19,16 +19,11 @@ import com.squareup.picasso.Picasso;
 import controllers.LoginController;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ProfileFragment extends Fragment implements View.OnClickListener {
-
 
     private final String TAG = "ProfileFragment";
     private Button showMyPets;
     private Button saveProfile;
-    private Button addAPet;
 
 
     @Override
@@ -37,21 +32,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         getActivity().setTitle("My Profile");
 
-        // find views for buttons
         saveProfile = getView().findViewById(R.id.profileFragment_btnSaveProfile);
         showMyPets = getView().findViewById(R.id.profileFragment_btnShowMyPets);
-        addAPet = getView().findViewById(R.id.profileFragment_btnAddAPet);
 
-        // set click listeners
         saveProfile.setOnClickListener(this);
         showMyPets.setOnClickListener(this);
-        addAPet.setOnClickListener(this);
 
         setProfileInfo();
     }
 
     private void setProfileInfo() {
-
         TextView userName = getActivity().findViewById(R.id.profileFragment_editName);
         TextView emailAccount = getActivity().findViewById(R.id.profileFragment_editEmail);
         ImageView profileImageView = getActivity().findViewById(R.id.profileFragment_profilePicture);
@@ -78,7 +68,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -92,14 +81,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.profileFragment_btnShowMyPets:
                 Log.d(TAG, "profileFragment_btnShowMyPets clicked");
                 // TODO: change this so that it sends the appropriate query results
-                ShowPetsFragment listFragment = new ShowPetsFragment();
                 MockDataGenerator mockDataGenerator = MockDataGenerator.make();
-                listFragment.setPetList(mockDataGenerator.pets);
+                ShowPetsFragment listFragment = ShowPetsFragment.newInstance(mockDataGenerator.pets, ShowPetsFragment.PetListOptions.AddButtonOnly,null, "My Pets" );
                 ((MainActivity) getActivity()).displayFragment(listFragment);
-                break;
-            case R.id.profileFragment_btnAddAPet:
-                Log.d(TAG, "profileFragment_btnAddAPet clicked");
-                ((MainActivity) getActivity()).displayFragment(new AddAPetFragment());
                 break;
         }
     }

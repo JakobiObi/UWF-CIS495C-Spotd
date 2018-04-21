@@ -4,15 +4,34 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
-public class HomeFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
 
-    private String TAG = "Home Fragment";
+import controllers.FirestoreController;
+import enums.AnimalStatus;
+import enums.AnimalType;
+import models.Pet;
+
+
+public class HomeFragment extends Fragment implements View.OnClickListener {
+
+    private final String TAG = "Home Fragment";
+    private Button lostPetButton;
+    private Button foundPetButton;
+    private Button lostPetsNotifierButton;
+    private ArrayList<Pet> lostPets;
 
 
     @Override
@@ -21,40 +40,77 @@ public class HomeFragment extends Fragment {
 
         getActivity().setTitle("Home");
 
-        setupLostMyPetButton();
-        setupFoundAPetButton();
+        lostPetButton = getView().findViewById(R.id.btn_home_lost_pet);
+        foundPetButton = getView().findViewById(R.id.btn_home_found_pet);
+        lostPetsNotifierButton = getView().findViewById(R.id.btn_home_browse_lost_pets);
+
+        setupButtonListeners();
+        queryForLostPets();
     }
 
-    //Do something when "Lost My Pet" button is clicked
-    private void setupLostMyPetButton() {
-        Button btn = getView().findViewById(R.id.lostPetButton);
-        btn.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        queryForLostPets();
+    }
+
+    private void setupButtonListeners() {
+        lostPetButton.setOnClickListener(this);
+        foundPetButton.setOnClickListener(this);
+        lostPetsNotifierButton.setOnClickListener(this);
+    }
+
+    private void queryForLostPets() {
+        FirestoreController.readPets(
+                FirebaseFirestore.getInstance(),
+                "status",
+                AnimalStatus.Lost.name()
+        ).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).displayFragment(new LostAPetFragment());
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                lostPets = queryResultToPetList(task.getResult());
+                if (lostPets.size() == 0) {
+                    lostPetsNotifierButton.setVisibility(View.INVISIBLE);
+                } else {
+                    lostPetsNotifierButton.setVisibility(View.VISIBLE);
+                    lostPetsNotifierButton.setText(lostPets.size() + " pets reported missing");
+                }
+
             }
         });
     }
 
-    //Do something when "Found a Pet" button is clicked
-    private void setupFoundAPetButton() {
-        Button btn = getView().findViewById(R.id.foundPetButton);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).displayFragment(new FoundAPetFragment());
-            }
-        });
-
+    private ArrayList<Pet> queryResultToPetList(QuerySnapshot snapshot) {
+        ArrayList<Pet> pets = new ArrayList<>();
+        for (DocumentSnapshot document : snapshot) {
+            pets.add(document.toObject(Pet.class));
+        }
+        return pets;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-
-
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case (R.id.btn_home_lost_pet):
+                ((MainActivity)getActivity()).displayFragment(new LostAPetFragment());
+                break;
+            case (R.id.btn_home_found_pet):
+                ((MainActivity)getActivity()).displayFragment(new FoundAPetFragment());
+                break;
+            case (R.id.btn_home_browse_lost_pets):
+                if (lostPets == null) {
+                    return;
+                } else {
+                    ShowPetsFragment listFragment = ShowPetsFragment.newInstance(lostPets, ShowPetsFragment.PetListOptions.NoButtons,null, "Pets Reported Missing");
+                    ((MainActivity) getActivity()).displayFragment(listFragment);
+                }
+                break;
+        }
+    }
 }

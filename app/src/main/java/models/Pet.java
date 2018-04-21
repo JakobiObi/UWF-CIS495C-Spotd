@@ -1,5 +1,7 @@
 package models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -13,20 +15,37 @@ import enums.AnimalType;
  * Note:  This class must have a public default constructor and public getters for each property
  * in order to work with Firestore.
  */
-public class Pet {
+public class Pet implements Parcelable {
 
     private String name;
     private AnimalType animalType;
     private List<String> keywords;
     private AnimalStatus status;
     private String petID;
-    private String ownerID; // if known
-    private String finderID; // if ownerID is blank
+    private String ownerID;
+    private String finderID;
 
-    // default constructor (required)
+    public static final Creator<Pet> CREATOR = new Creator<Pet>() {
+        @Override
+        public Pet createFromParcel(Parcel in) {
+            return new Pet(in);
+        }
+
+        @Override
+        public Pet[] newArray(int size) {
+            return new Pet[size];
+        }
+    };
+    private final String charset = "abcdefghijklmnopqrstuvwxyz123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private final int idSize = 20;
+
+    // default constructor is required
     public Pet() {
-        this.petID = getUniqueID(20, "abcdefghijklmnopqrstuvwxyz123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        this.petID = getUniqueID(idSize, charset);
     }
+
+
+    // getters & setters
 
     public Pet(String name, AnimalType animalType, List<String> keywords, AnimalStatus status, String ownerID, String finderID) {
         this.name = name;
@@ -35,10 +54,16 @@ public class Pet {
         this.status = status;
         this.ownerID = ownerID;
         this.finderID = finderID;
+        this.petID = getUniqueID(idSize, charset);
     }
 
-
-    // getters & setters
+    protected Pet(Parcel in) {
+        name = in.readString();
+        keywords = in.createStringArrayList();
+        petID = in.readString();
+        ownerID = in.readString();
+        finderID = in.readString();
+    }
 
     public String getName() {
         return name;
@@ -82,6 +107,14 @@ public class Pet {
         this.petID = petID;
     }
 
+    public String getFinderID() {
+        return finderID;
+    }
+
+    public void setFinderID(String finderID) {
+        this.finderID = finderID;
+    }
+
     // Other stuff
 
     public Pet belongsTo(User user) {
@@ -115,4 +148,17 @@ public class Pet {
         return uniqueID.toString();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeStringList(keywords);
+        parcel.writeString(petID);
+        parcel.writeString(ownerID);
+        parcel.writeString(finderID);
+    }
 }
