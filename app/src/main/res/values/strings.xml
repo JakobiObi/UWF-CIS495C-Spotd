@@ -22,7 +22,7 @@
 
     <string name="profile_fragment_profile_photo_desc">Profile photo</string>
     <string name="profile_fragment_editName_hint">First Last</string>
-    <string name="profile_fragment_editEmail_hint">address@example.com</string>
+    <string name="profile_fragment_editEmail_hint">email@address.com</string>
     <string name="profile_fragment_btnShowMyPets_text">My Pets</string>
     <string name="profile_fragment_btnSaveProfile_text">Save Profile</string>
 

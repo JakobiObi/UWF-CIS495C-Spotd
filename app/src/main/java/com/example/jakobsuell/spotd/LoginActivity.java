@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 
         tvMessage = findViewById(R.id.txtMessage);
         btSignIn = findViewById(R.id.btnSignIn);
+        btSignIn.setVisibility(View.INVISIBLE);
 
         globals = (Globals) this.getApplication();
         if (!globals.isPicassoSingletonAssigned) {
@@ -78,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "launching sign-in UI");
 
         tvMessage.setText("Signing in...");
-        btSignIn.setVisibility(View.INVISIBLE);
 
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.GoogleBuilder().build(),
@@ -144,6 +144,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void fetchCurrentUser() {
         Log.d(TAG, "pulling user info from Firestore...");
+        tvMessage.setText("Hunting for your info...");
         FirestoreController.getUserByEmail(FirebaseFirestore.getInstance(), auth.getCurrentUser().getEmail())
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -162,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void saveCurrentUser() {
         Log.d(TAG, "saving new user to Firestore");
+        tvMessage.setText("Welcome! Saving your info for the first time...");
         user = new User().fromAuth();
         FirestoreController.saveUser(FirebaseFirestore.getInstance(), user).addOnSuccessListener(new OnSuccessListener() {
             @Override

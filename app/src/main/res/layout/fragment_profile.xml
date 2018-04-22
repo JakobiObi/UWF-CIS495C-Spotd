@@ -29,6 +29,7 @@
                 android:layout_marginTop="40dp"
                 android:ems="10"
                 android:hint="@string/profile_fragment_editName_hint"
+                android:textAlignment="center"
                 android:inputType="textPersonName" />
 
             <EditText
@@ -39,6 +40,7 @@
                 android:layout_marginTop="10dp"
                 android:ems="10"
                 android:hint="@string/profile_fragment_editEmail_hint"
+                android:textAlignment="center"
                 android:inputType="textEmailAddress" />
 
             <Button
