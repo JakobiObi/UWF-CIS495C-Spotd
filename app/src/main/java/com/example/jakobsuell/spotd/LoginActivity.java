@@ -59,6 +59,10 @@ public class LoginActivity extends AppCompatActivity {
         btSignIn = findViewById(R.id.btnSignIn);
 
         globals = (Globals) this.getApplication();
+        if (!globals.isPicassoSingletonAssigned) {
+            createPicassoSingleton();
+            globals.isPicassoSingletonAssigned = true;
+        }
 
         auth = FirebaseAuth.getInstance();
         if (LoginController.isUserSignedIn(auth)) {
@@ -67,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             Log.d(TAG, "no signed in user.");
             signUserIn();
         }
+
     }
 
     private void signUserIn() {
@@ -225,4 +230,12 @@ public class LoginActivity extends AppCompatActivity {
     public void signInUser_click(View view) {
         signUserIn();
     }
+
+    public void createPicassoSingleton() {
+        Picasso picassoInstance = new Picasso.Builder(this.getApplicationContext())
+                .addRequestHandler(new FirebaseRequestHandler())
+                .build();
+        Picasso.setSingletonInstance(picassoInstance);
+    }
+
 }
