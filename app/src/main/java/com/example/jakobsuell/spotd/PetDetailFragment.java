@@ -2,7 +2,6 @@ package com.example.jakobsuell.spotd;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,11 +23,11 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import controllers.ImageController;
 import enums.AnimalStatus;
@@ -44,7 +42,9 @@ public class PetDetailFragment extends Fragment {
     private final int REQUEST_IMAGE_CAPTURE = 1313;
     private static final String PET_KEY = "pet";
     private final static String TITLE_KEY = "title";
+
     private Globals globals;
+
     private ImageView petPhoto;
     private EditText petName;
     private Spinner type;
@@ -85,20 +85,30 @@ public class PetDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         globals = (Globals)getActivity().getApplication();
-        getAllViews();
 
+        getActivity().setTitle(title);
+        getAllViews();
         setupSpinners();
-        if (pet != null) {
-            setFieldValues();
-            if (isThisUserOwnerOrFinder(FirebaseAuth.getInstance(), pet)) {
-                setFieldEditing(true);
-                setPhotoClickListener();
-            } else {
-                setFieldEditing(false);
-            }
+        populateFieldValues();
+
+        // determine editing state
+        setEditingState();
+
+        // determine what actions are available
+
+    }
+
+    private void setEditingState() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (isOwner(firebaseUser, pet)) {
+            setEditable(true);
         } else {
-            setFieldEditing(true);
-            setPhotoClickListener();
+            if (isFinder(firebaseUser, pet) && pet.getStatus() == AnimalStatus.Found) {
+                setEditable(true);
+            } else {
+                setEditable(false);
+            }
         }
     }
 
@@ -110,7 +120,7 @@ public class PetDetailFragment extends Fragment {
         saveInfo = getActivity().findViewById(R.id.btn_savePetInfo);
     }
 
-    private void setFieldValues() {
+    private void populateFieldValues() {
         if (pet == null) {
             return;
         }
@@ -130,15 +140,17 @@ public class PetDetailFragment extends Fragment {
         type.setAdapter(typeSpinnerAdapter);
     }
 
-    private boolean isThisUserOwnerOrFinder(FirebaseAuth firebaseAuth, Pet pet) {
-        if (firebaseAuth == null) {
-            return false;
-        }
-        String userID = firebaseAuth.getCurrentUser().getUid();
-        return (userID.equals(pet.getOwnerID()) || userID.equals(pet.getFinderID()));
+    private boolean isOwner(@NonNull FirebaseUser user, Pet pet) {
+        String userID = user.getUid();
+        return (userID.equals(pet.getFinderID()));
     }
 
-    private void setFieldEditing(boolean enabled) {
+    private boolean isFinder(@NonNull FirebaseUser user, Pet pet) {
+        String userID = user.getUid();
+        return (userID.equals(pet.getOwnerID()));
+    }
+
+    private void setEditable(boolean enabled) {
         petName.setEnabled(enabled);
         status.setEnabled(enabled);
         type.setEnabled(enabled);
@@ -150,6 +162,7 @@ public class PetDetailFragment extends Fragment {
                     saveData();
                 }
             });
+            setPhotoClickListener();
         } else {
             saveInfo.setVisibility(View.INVISIBLE);
         }
@@ -159,14 +172,22 @@ public class PetDetailFragment extends Fragment {
         petPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    invokeCamera();
-                } else {
-                    String[] permissionRequested = {android.Manifest.permission.CAMERA};
-                    requestPermissions(permissionRequested, REQUEST_IMAGE_CAPTURE);
-                }
+               if (isPermissionGivenForCamera()) {
+                   invokeCamera();
+               } else {
+                   askForCameraPermission();
+               }
             }
         });
+    }
+
+    private boolean isPermissionGivenForCamera() {
+        return (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void askForCameraPermission() {
+        String[] permissionRequested = {android.Manifest.permission.CAMERA};
+        requestPermissions(permissionRequested, REQUEST_IMAGE_CAPTURE);
     }
 
     @Override
@@ -181,29 +202,25 @@ public class PetDetailFragment extends Fragment {
 
     private void invokeCamera() {
         Log.d(TAG, "invoking camera");
+
         Intent cameraTakePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (cameraTakePicture.resolveActivity(getActivity().getPackageManager()) != null) {
-            File photoFile = null;
-
+            File photoFile;
             try {
                 photoFile = createImageFile();
             } catch (IOException e) {
                 Log.e(TAG, "could not create photo file: " + e);
+                return;
             }
-
-            if (photoFile != null) {
-                Log.d(TAG, "temp file created");
-                cameraPhotoURI = FileProvider.getUriForFile(getContext(),
-                        "com.example.android.fileprovider",
-                        photoFile);
-                cameraTakePicture.putExtra(MediaStore.EXTRA_OUTPUT, cameraPhotoURI);
-                startActivityForResult(cameraTakePicture, REQUEST_TAKE_PHOTO);
-            }
+            cameraPhotoURI = FileProvider.getUriForFile(getContext(),
+                    "com.example.android.fileprovider",
+                    photoFile);
+            cameraTakePicture.putExtra(MediaStore.EXTRA_OUTPUT, cameraPhotoURI);
+            startActivityForResult(cameraTakePicture, REQUEST_TAKE_PHOTO);
         } else {
             Log.e(TAG, "no app available to handle camera intent");
         }
-
     }
 
     private File createImageFile() throws IOException {
