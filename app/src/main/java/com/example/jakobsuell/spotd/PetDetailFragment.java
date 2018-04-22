@@ -2,6 +2,8 @@ package com.example.jakobsuell.spotd;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -61,9 +65,11 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
 
     private String title;
     private Pet pet;
+    private Bitmap petBitmap;
     private Uri cameraPhotoURI;
 
     private boolean searchMode;
+    private static int returnCount = 0;
 
     public PetDetailFragment() {
     }
@@ -181,7 +187,8 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 saveInfo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        searchPet();
+                        savePetDataToInstance();
+                        searchLostPets();
                     }
                 });
 
@@ -190,6 +197,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 saveInfo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        savePetDataToInstance();
                         saveData();
                     }
                 });
@@ -271,14 +279,49 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 .into(petPhoto);
     }
 
-    private void saveData() {
-        Log.d(TAG, "saved");
-        Snackbar.make(getView(), "Save!", Snackbar.LENGTH_SHORT)
-                .setAction("Action", null).show();
+    private void savePetDataToInstance() {
+        petBitmap = ((BitmapDrawable)petPhoto.getDrawable()).getBitmap();
+        if (searchMode) {
+            pet = new Pet(
+                    "",
+                    AnimalType.valueOf(type.getSelectedItem().toString()),
+                    new ArrayList<String>(),
+                    AnimalStatus.Found,
+                    null,
+                    globals.currentUser.getUserID());
+        } else {
+            pet = new Pet(
+                    "",
+                    AnimalType.valueOf(type.getSelectedItem().toString()),
+                    new ArrayList<String>(),
+                    AnimalStatus.valueOf(status.getSelectedItem().toString()),
+                    globals.currentUser.getUserID(),
+                    null);
+        }
     }
 
-    private void searchPet() {
-        Log.d(TAG, "searchPet: entered");
+    private void saveData() {
+        Log.d(TAG, "saveData: entered");
+        FirestoreController.savePet(FirebaseFirestore.getInstance(), pet).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                Log.d(TAG, "pet stored successfully");
+                ImageController.storeImage(pet.getPetID(), petBitmap).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.d(TAG, "pet image stored successfully");
+                        Snackbar.make(getView(), "This pet is now on the FOUND list", Snackbar.LENGTH_SHORT)
+                                .setAction("Action", null).show();
+                        ((MainActivity)getActivity()).onBackPressed();
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void searchLostPets() {
+        Log.d(TAG, "searchLostPets: entered");
         final PetPickerReturnHandler petPickerReturnHandler = this;
         AnimalType animalType = AnimalType.valueOf(type.getSelectedItem().toString());
         FirestoreController.readPets(
@@ -288,13 +331,37 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         ).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                Log.d(TAG, "searchPet: query succeeded");
+                Log.d(TAG, "searchLostPets: query succeeded");
                 ArrayList<Pet> pets = FirestoreController.processPetsQuery(queryDocumentSnapshots);
-                Log.d(TAG, "searchPet: found " + pets.size() + " pets");
+                Log.d(TAG, "searchLostPets: found " + pets.size() + " pets");
                 if (pets.size() == 0) {
                     OnPetPickResult(null);
                 }
-                ShowPetsFragment showLostPetsFragment = ShowPetsFragment.newInstance(pets, ShowPetsFragment.PetListOptions.TopButtonOnly, null,"Matching Lost Pets");
+                ShowPetsFragment showLostPetsFragment = ShowPetsFragment.newInstance(pets, ShowPetsFragment.PetListOptions.TopButtonOnly, null,"Searching Pets");
+                showLostPetsFragment.setPetPickerReturnHandler(petPickerReturnHandler);
+                ((MainActivity)getActivity()).displayFragment(showLostPetsFragment);
+            }
+        });
+    }
+
+    private void searchHomePets() {
+        Log.d(TAG, "searchHomePets: entered");
+        final PetPickerReturnHandler petPickerReturnHandler = this;
+        AnimalType animalType = AnimalType.valueOf(type.getSelectedItem().toString());
+        FirestoreController.readPets(
+                FirebaseFirestore.getInstance(),
+                "animalType", animalType.name(),
+                "status", AnimalStatus.Home.name()
+        ).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Log.d(TAG, "searchHomePets: query succeeded");
+                ArrayList<Pet> pets = FirestoreController.processPetsQuery(queryDocumentSnapshots);
+                Log.d(TAG, "searchHomePets: found " + pets.size() + " pets");
+                if (pets.size() == 0) {
+                    OnPetPickResult(null);
+                }
+                ShowPetsFragment showLostPetsFragment = ShowPetsFragment.newInstance(pets, ShowPetsFragment.PetListOptions.TopButtonOnly, null,"Searching Pets");
                 showLostPetsFragment.setPetPickerReturnHandler(petPickerReturnHandler);
                 ((MainActivity)getActivity()).displayFragment(showLostPetsFragment);
             }
@@ -303,13 +370,22 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
 
     @Override
     public void OnPetPickResult(Pet pet) {
-        // if result is null, user selected not in this list
-        // otherwise, user clicked on a specific pet
         if (pet == null) {
             Log.d(TAG, "OnPetPickResult: called with null pet");
+            returnCount += 1;
+            Log.d(TAG, "OnPetPickResult: count is " + returnCount);
+            if (returnCount == 1) {
+                Log.d(TAG, "OnPetPickResult: searching home pets");
+                searchHomePets();
+            } else if (returnCount == 2) {
+                status.setSelection(AnimalStatus.Found.ordinal());
+                saveData();
+            }
         } else {
             Log.d(TAG, "OnPetPickResult: called with pet:");
             pet.show();
+            PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(pet, "Pet Detail", false);
+            ((MainActivity)getContext()).displayFragment(petDetailFragment);
         }
 
 
