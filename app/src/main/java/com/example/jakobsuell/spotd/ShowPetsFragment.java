@@ -23,7 +23,7 @@ import models.Pet;
 public class ShowPetsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private PetsRecyclerAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private Globals globals;
     private FloatingActionButton floatingActionButton;
@@ -89,6 +89,7 @@ public class ShowPetsFragment extends Fragment {
         topButton = getView().findViewById(R.id.show_pets_top_button);
         layoutManager = new LinearLayoutManager(getContext());
         adapter = new PetsRecyclerAdapter(globals.firebaseURI, pets, getContext());
+        adapter.setPetPickerReturnHandler(petPickerReturnHandler);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
