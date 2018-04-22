@@ -42,6 +42,7 @@ public class PetDetailFragment extends Fragment {
     private final int REQUEST_IMAGE_CAPTURE = 1313;
     private static final String PET_KEY = "pet";
     private final static String TITLE_KEY = "title";
+    private final static String DISPLAY_MODE = "mode";
 
     private Globals globals;
 
@@ -55,6 +56,8 @@ public class PetDetailFragment extends Fragment {
     private Pet pet;
     private Uri cameraPhotoURI;
 
+    private boolean searchMode;
+
     public PetDetailFragment() {
     }
 
@@ -64,11 +67,12 @@ public class PetDetailFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_pet_detail, container, false);
     }
 
-    public static PetDetailFragment newInstance(Pet pet, String title) {
+    public static PetDetailFragment newInstance(Pet pet, String title, boolean searchMode) {
         PetDetailFragment petDetail = new PetDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(PET_KEY, pet);
         bundle.putString(TITLE_KEY, title);
+        bundle.putBoolean(DISPLAY_MODE, searchMode);
         petDetail.setArguments(bundle);
         return petDetail;
     }
@@ -77,7 +81,8 @@ public class PetDetailFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pet = getArguments().getParcelable(PET_KEY);
-        title = getArguments().getParcelable(TITLE_KEY);
+        title = getArguments().getString(TITLE_KEY);
+        searchMode = getArguments().getBoolean(DISPLAY_MODE);
     }
 
     @Override
@@ -91,7 +96,6 @@ public class PetDetailFragment extends Fragment {
         setupSpinners();
         populateFieldValues();
 
-        // determine editing state
         setEditingState();
 
         // determine what actions are available
@@ -133,9 +137,14 @@ public class PetDetailFragment extends Fragment {
     }
 
     private void setupSpinners() {
-        ArrayAdapter<String> statusSpinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, AnimalStatus.getDescriptions());
-        statusSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        status.setAdapter(statusSpinnerAdapter);
+
+        if (searchMode) {
+            status.setVisibility(View.INVISIBLE);
+        } else {
+            ArrayAdapter<String> statusSpinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, AnimalStatus.getDescriptions());
+            statusSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            status.setAdapter(statusSpinnerAdapter);
+        }
 
         ArrayAdapter<String> typeSpinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, AnimalType.getDescriptions());
         typeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -159,6 +168,16 @@ public class PetDetailFragment extends Fragment {
         status.setEnabled(enabled);
         type.setEnabled(enabled);
         if (enabled) {
+            if (searchMode) {
+                saveInfo.setVisibility(View.VISIBLE);
+                saveInfo.setText("Search...");
+                saveInfo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        searchPet();
+                    }
+                });
+            }
             saveInfo.setVisibility(View.VISIBLE);
             saveInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -249,5 +268,8 @@ public class PetDetailFragment extends Fragment {
                 .setAction("Action", null).show();
     }
 
+    private void searchPet() {
+
+    }
 
 }

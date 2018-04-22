@@ -124,7 +124,7 @@ public class ShowPetsFragment extends Fragment {
                 if (topButtonAction == TopButtonAction.TriggerBackButton) {
                     ((MainActivity)getActivity()).onBackPressed();
                 } else if (topButtonAction == TopButtonAction.DisplayFragment) {
-                    PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Add a New Found Pet");
+                    PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Add a New Found Pet", true);
                     ((MainActivity)getActivity()).displayFragment(petDetailFragment);
                 }
             }
@@ -153,7 +153,7 @@ public class ShowPetsFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Add a New Pet");
+                PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Add a New Pet", false);
                 ((MainActivity)getActivity()).displayFragment(petDetailFragment);
             }
         });
