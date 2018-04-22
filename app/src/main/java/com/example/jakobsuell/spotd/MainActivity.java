@@ -56,10 +56,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         globals = (Globals)this.getApplication();
-        if (!globals.isPicassoSingletonAssigned) {
-            createPicassoSingleton();
-            globals.isPicassoSingletonAssigned = true;
-        }
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -89,13 +85,6 @@ public class MainActivity extends AppCompatActivity
         });
 
         displayFragment(new HomeFragment());
-    }
-
-    public void createPicassoSingleton() {
-        Picasso picassoInstance = new Picasso.Builder(this.getApplicationContext())
-                .addRequestHandler(new FirebaseRequestHandler())
-                .build();
-        Picasso.setSingletonInstance(picassoInstance);
     }
 
     public void setHeaderViewOnNavDrawer() {

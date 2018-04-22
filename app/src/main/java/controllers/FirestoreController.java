@@ -1,5 +1,6 @@
 package controllers;
 
+import android.support.v4.util.Pair;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
@@ -12,6 +13,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.List;
 
 import models.Pet;
@@ -149,6 +151,24 @@ public class FirestoreController {
         return query.get();
     }
 
+    public static Task<QuerySnapshot> readPets(FirebaseFirestore fb, String firstField, String firstValue, String secondField, String secondValue) {
+        Log.d(TAG, "Reading pets with " + firstField + "=" + firstValue + " and " + secondField + "=" + secondValue);
+        if (fb == null) {
+            throw new InvalidParameterException("firestore reference cannot be null");
+        }
+        CollectionReference petsRef = fb.collection(petDirectory);
+        Query query = petsRef.whereEqualTo(firstField, firstValue).whereEqualTo(secondField, secondValue);
+        return query.get();
+    }
+
+
+    public static ArrayList<Pet> processPetsQuery(QuerySnapshot queryDocumentSnapshots) {
+        ArrayList<Pet> pets = new ArrayList<>();
+        for (DocumentSnapshot document : queryDocumentSnapshots) {
+            pets.add(document.toObject(Pet.class));
+        }
+        return pets;
+    }
     // TODO: Change User accounts so they are saved by an accountID rather than email.
     /*
         There should be a look-up table that maps email addresses to a accountID.

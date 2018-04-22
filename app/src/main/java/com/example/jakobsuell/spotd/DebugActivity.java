@@ -63,7 +63,6 @@ public class DebugActivity extends AppCompatActivity {
         setContentView(R.layout.activity_debug);
 
         LoginController.enforceSignIn(this);
-        createPicassoSingleton();
 
         profile_pic = findViewById(R.id.iv_user_profile_picture);
         auth = FirebaseAuth.getInstance();
@@ -229,15 +228,4 @@ public class DebugActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * This also exists in MainActivity, and runs when OnCreate is called.  When debugging is on,
-     * MainActivity is bypassed and this does not get run, therefore it is here also.  Please ensure
-     * changes to the other instance of this method propagate to this method also.
-     */
-    public void createPicassoSingleton() {
-        Picasso picassoInstance = new Picasso.Builder(this.getApplicationContext())
-                .addRequestHandler(new FirebaseRequestHandler())
-                .build();
-        Picasso.setSingletonInstance(picassoInstance);
-    }
 }

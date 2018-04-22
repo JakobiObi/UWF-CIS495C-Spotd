@@ -23,7 +23,7 @@ import models.Pet;
 public class ShowPetsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private PetsRecyclerAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private Globals globals;
     private FloatingActionButton floatingActionButton;
@@ -36,6 +36,7 @@ public class ShowPetsFragment extends Fragment {
 
     private PetListOptions petListOptions;
     private TopButtonAction topButtonAction;
+    private PetPickerReturnHandler petPickerReturnHandler;
 
     private List<Pet> pets;
     private String title = "Pets List";
@@ -88,6 +89,7 @@ public class ShowPetsFragment extends Fragment {
         topButton = getView().findViewById(R.id.show_pets_top_button);
         layoutManager = new LinearLayoutManager(getContext());
         adapter = new PetsRecyclerAdapter(globals.firebaseURI, pets, getContext());
+        adapter.setPetPickerReturnHandler(petPickerReturnHandler);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
@@ -95,6 +97,10 @@ public class ShowPetsFragment extends Fragment {
 
         setupTopButton();
         setupFloatingAddButton();
+    }
+
+    public void setPetPickerReturnHandler(PetPickerReturnHandler petPickerReturnHandler) {
+        this.petPickerReturnHandler = petPickerReturnHandler;
     }
 
     private void setupFloatingAddButton() {
@@ -121,12 +127,16 @@ public class ShowPetsFragment extends Fragment {
         topButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (topButtonAction == TopButtonAction.TriggerBackButton) {
+                if (petPickerReturnHandler != null) {
+                    petPickerReturnHandler.OnPetPickResult(null);
+                }
+
+/*                if (topButtonAction == TopButtonAction.TriggerBackButton) {
                     ((MainActivity)getActivity()).onBackPressed();
                 } else if (topButtonAction == TopButtonAction.DisplayFragment) {
-                    PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Add a New Found Pet");
+                    PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Add a New Found Pet", true);
                     ((MainActivity)getActivity()).displayFragment(petDetailFragment);
-                }
+                }*/
             }
         });
     }
@@ -153,7 +163,7 @@ public class ShowPetsFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Add a New Pet");
+                PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Add a New Pet", false);
                 ((MainActivity)getActivity()).displayFragment(petDetailFragment);
             }
         });

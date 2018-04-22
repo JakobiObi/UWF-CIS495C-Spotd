@@ -61,7 +61,7 @@ public class ImageController {
     }
 
 
-    public static UploadTask storeImage(String id, Bitmap image) {
+     /*public static UploadTask storeImage(String id, Bitmap image) {
 
         initialize();
 
@@ -85,7 +85,28 @@ public class ImageController {
         // Create storage reference and uploading task
         StorageReference fileReference = firebaseStorage.getReference(fileName);
         return fileReference.putBytes(byteArrayFromBitmap(compressedImage));
+    }
+*/
 
+    public static UploadTask storeImage(String id, Bitmap image) {
+
+        initialize();
+
+        if (id == null || id.equals(""))
+            throw new InvalidParameterException("id can't be null");
+        if (image == null)
+            throw new InvalidParameterException("file can't be null");
+
+        Log.d(TAG, "storing image with id: [" + id + "] from bitmap");
+
+        String fileName = id + imageFileExtension;
+        Log.d(TAG, "new image name: " + fileName);
+
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG,100, outStream);
+
+        StorageReference fileReference = firebaseStorage.getReference(fileName);
+        return fileReference.putBytes(outStream.toByteArray());
     }
 
 
@@ -102,13 +123,10 @@ public class ImageController {
 
         int imageSize = image.getRowBytes() * image.getHeight();
         ByteBuffer b = ByteBuffer.allocate(imageSize);
-
         image.copyPixelsToBuffer(b);
         b.rewind(); // failure to do this will cause an underflow exception
-
         byte[] bytes = new byte[imageSize];
         b.get(bytes, 0, bytes.length);
-
         return bytes;
 
     }

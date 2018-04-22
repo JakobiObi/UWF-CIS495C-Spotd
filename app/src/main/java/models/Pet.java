@@ -130,8 +130,10 @@ public class Pet implements Parcelable {
                 + " " + "ownerID: " + this.ownerID
                 + " " + "keywords:");
 
-        for (String keyword : keywords) {
-            logMsg.append(" ").append(keyword);
+        if (keywords != null) {
+            for (String keyword : keywords) {
+                logMsg.append(" ").append(keyword);
+            }
         }
         Log.d("Pet", logMsg.toString());
     }
