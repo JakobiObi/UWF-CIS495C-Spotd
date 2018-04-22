@@ -99,6 +99,10 @@ public class PetDetailFragment extends Fragment {
     }
 
     private void setEditingState() {
+        if (pet == null) {
+            setEditable(true);
+            return;
+        }
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (isOwner(firebaseUser, pet)) {
