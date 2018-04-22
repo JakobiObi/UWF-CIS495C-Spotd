@@ -128,6 +128,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void goNextActivity() {
+        globals.currentUser = user;
+
         if (auth.getCurrentUser() != null) {
             Log.d(TAG, "user signed in: " + auth.getCurrentUser().getDisplayName());
             logUserInfo();

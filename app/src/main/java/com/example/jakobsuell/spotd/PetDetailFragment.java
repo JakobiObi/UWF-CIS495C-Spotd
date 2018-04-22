@@ -103,12 +103,10 @@ public class PetDetailFragment extends Fragment {
             setEditable(true);
             return;
         }
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if (isOwner(firebaseUser, pet)) {
+        if (isOwner(pet)) {
             setEditable(true);
         } else {
-            if (isFinder(firebaseUser, pet) && pet.getStatus() == AnimalStatus.Found) {
+            if (isFinder(pet) && pet.getStatus() == AnimalStatus.Found) {
                 setEditable(true);
             } else {
                 setEditable(false);
@@ -144,15 +142,16 @@ public class PetDetailFragment extends Fragment {
         type.setAdapter(typeSpinnerAdapter);
     }
 
-    // TODO: This needs to be fixed to use actual user email, not the userID from auth
-    private boolean isOwner(@NonNull FirebaseUser user, Pet pet) {
-        String userID = user.getUid();
-        return (userID.equals(pet.getFinderID()));
+    private boolean isFinder(Pet pet) {
+        String userID = globals.currentUser.getUserID();
+        String finderID = pet.getFinderID();
+        return (userID.equals(finderID));
     }
 
-    private boolean isFinder(@NonNull FirebaseUser user, Pet pet) {
-        String userID = user.getUid();
-        return (userID.equals(pet.getOwnerID()));
+    private boolean isOwner(Pet pet) {
+        String userID = globals.currentUser.getUserID();
+        String ownerID = pet.getOwnerID();
+        return (userID.equals(ownerID));
     }
 
     private void setEditable(boolean enabled) {
