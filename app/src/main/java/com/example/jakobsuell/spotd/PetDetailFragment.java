@@ -144,6 +144,7 @@ public class PetDetailFragment extends Fragment {
         type.setAdapter(typeSpinnerAdapter);
     }
 
+    // TODO: This needs to be fixed to use actual user email, not the userID from auth
     private boolean isOwner(@NonNull FirebaseUser user, Pet pet) {
         String userID = user.getUid();
         return (userID.equals(pet.getFinderID()));
