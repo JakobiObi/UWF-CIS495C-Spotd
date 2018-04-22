@@ -59,7 +59,7 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
                 Log.d(TAG, "pet " + position + "clicked");
                 Pet pet = pets.get(position);
                 pet.show();
-                PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(pet, "Pet Detail");
+                PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(pet, "Pet Detail", false);
                 ((MainActivity)context).displayFragment(petDetailFragment);
             }
         });

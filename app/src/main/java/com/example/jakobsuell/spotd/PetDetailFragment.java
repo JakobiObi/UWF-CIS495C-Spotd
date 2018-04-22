@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceActivity;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,20 +23,26 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
+import controllers.FirestoreController;
 import controllers.ImageController;
 import enums.AnimalStatus;
 import enums.AnimalType;
 import models.Pet;
 
 
-public class PetDetailFragment extends Fragment {
+public class PetDetailFragment extends Fragment implements PetPickerReturnHandler {
 
     private static final String TAG = "PetDetailFragment";
     private static final int REQUEST_TAKE_PHOTO = 1;
@@ -137,7 +144,6 @@ public class PetDetailFragment extends Fragment {
     }
 
     private void setupSpinners() {
-
         if (searchMode) {
             status.setVisibility(View.INVISIBLE);
         } else {
@@ -170,6 +176,7 @@ public class PetDetailFragment extends Fragment {
         if (enabled) {
             if (searchMode) {
                 saveInfo.setVisibility(View.VISIBLE);
+                petName.setVisibility(View.INVISIBLE);
                 saveInfo.setText("Search...");
                 saveInfo.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -177,14 +184,16 @@ public class PetDetailFragment extends Fragment {
                         searchPet();
                     }
                 });
+
+            } else {
+                saveInfo.setVisibility(View.VISIBLE);
+                saveInfo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        saveData();
+                    }
+                });
             }
-            saveInfo.setVisibility(View.VISIBLE);
-            saveInfo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    saveData();
-                }
-            });
             setPhotoClickListener();
         } else {
             saveInfo.setVisibility(View.INVISIBLE);
@@ -269,7 +278,40 @@ public class PetDetailFragment extends Fragment {
     }
 
     private void searchPet() {
-
+        Log.d(TAG, "searchPet: entered");
+        final PetPickerReturnHandler petPickerReturnHandler = this;
+        AnimalType animalType = AnimalType.valueOf(type.getSelectedItem().toString());
+        FirestoreController.readPets(
+                FirebaseFirestore.getInstance(),
+                "animalType", animalType.name(),
+                "status", AnimalStatus.Lost.name()
+        ).addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                Log.d(TAG, "searchPet: query succeeded");
+                ArrayList<Pet> pets = FirestoreController.processPetsQuery(queryDocumentSnapshots);
+                Log.d(TAG, "searchPet: found " + pets.size() + " pets");
+                if (pets.size() == 0) {
+                    OnPetPickResult(null);
+                }
+                ShowPetsFragment showLostPetsFragment = ShowPetsFragment.newInstance(pets, ShowPetsFragment.PetListOptions.TopButtonOnly, null,"Matching Lost Pets");
+                showLostPetsFragment.setPetPickerReturnHandler(petPickerReturnHandler);
+                ((MainActivity)getActivity()).displayFragment(showLostPetsFragment);
+            }
+        });
     }
 
+    @Override
+    public void OnPetPickResult(Pet pet) {
+        // if result is null, user selected not in this list
+        // otherwise, user clicked on a specific pet
+        if (pet == null) {
+            Log.d(TAG, "OnPetPickResult: called with null pet");
+        } else {
+            Log.d(TAG, "OnPetPickResult: called with pet:");
+            pet.show();
+        }
+
+
+    }
 }

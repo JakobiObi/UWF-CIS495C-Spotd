@@ -101,7 +101,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 ((MainActivity)getActivity()).displayFragment(new LostAPetFragment());
                 break;
             case (R.id.btn_home_found_pet):
-                ((MainActivity)getActivity()).displayFragment(new FoundAPetFragment());
+                PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Found a Pet", true);
+                ((MainActivity)getActivity()).displayFragment(petDetailFragment);
                 break;
             case (R.id.btn_home_browse_lost_pets):
                 if (lostPets == null) {

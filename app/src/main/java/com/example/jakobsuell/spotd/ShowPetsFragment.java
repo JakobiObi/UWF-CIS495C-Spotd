@@ -36,6 +36,7 @@ public class ShowPetsFragment extends Fragment {
 
     private PetListOptions petListOptions;
     private TopButtonAction topButtonAction;
+    private PetPickerReturnHandler petPickerReturnHandler;
 
     private List<Pet> pets;
     private String title = "Pets List";
@@ -97,6 +98,10 @@ public class ShowPetsFragment extends Fragment {
         setupFloatingAddButton();
     }
 
+    public void setPetPickerReturnHandler(PetPickerReturnHandler petPickerReturnHandler) {
+        this.petPickerReturnHandler = petPickerReturnHandler;
+    }
+
     private void setupFloatingAddButton() {
         if (petListOptions == PetListOptions.AddButtonOnly) {
             hideAddButtonDuringScroll();
@@ -121,12 +126,16 @@ public class ShowPetsFragment extends Fragment {
         topButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (topButtonAction == TopButtonAction.TriggerBackButton) {
+                if (petPickerReturnHandler != null) {
+                    petPickerReturnHandler.OnPetPickResult(null);
+                }
+
+/*                if (topButtonAction == TopButtonAction.TriggerBackButton) {
                     ((MainActivity)getActivity()).onBackPressed();
                 } else if (topButtonAction == TopButtonAction.DisplayFragment) {
                     PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Add a New Found Pet", true);
                     ((MainActivity)getActivity()).displayFragment(petDetailFragment);
-                }
+                }*/
             }
         });
     }
