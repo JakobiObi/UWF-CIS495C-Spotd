@@ -310,7 +310,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Log.d(TAG, "pet image stored successfully");
-                        Snackbar.make(getView(), "This pet is now on the FOUND list", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(getView(), "Pet has been saved.", Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
                         ((MainActivity)getActivity()).onBackPressed();
                     }
