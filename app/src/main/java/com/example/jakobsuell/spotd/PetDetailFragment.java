@@ -42,6 +42,7 @@ import java.util.ArrayList;
 
 import controllers.FirestoreController;
 import controllers.ImageController;
+import controllers.PetController;
 import enums.AnimalStatus;
 import enums.AnimalType;
 import models.Pet;
@@ -439,12 +440,18 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 break;
             case R.id.pet_detail_bottom_sheet_report_found:
                 Log.d(TAG, "report found");
+                pet = PetController.makePetFound(pet, globals.currentUser);
+                populateFieldValues();
                 break;
             case R.id.pet_detail_bottom_sheet_report_lost:
                 Log.d(TAG, "report lost");
+                pet = PetController.makePetLost(pet);
+                populateFieldValues();
                 break;
             case R.id.pet_detail_bottom_sheet_return_home:
                 Log.d(TAG, "return home");
+                pet = PetController.makePetHome(pet);
+                populateFieldValues();
                 break;
         }
 
