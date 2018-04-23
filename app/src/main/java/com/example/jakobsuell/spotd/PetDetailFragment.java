@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,12 +42,13 @@ import java.util.ArrayList;
 
 import controllers.FirestoreController;
 import controllers.ImageController;
+import controllers.PetController;
 import enums.AnimalStatus;
 import enums.AnimalType;
 import models.Pet;
 
 
-public class PetDetailFragment extends Fragment implements PetPickerReturnHandler {
+public class PetDetailFragment extends Fragment implements PetPickerReturnHandler, PetDetailBottomSheetDialog.BottomSheetListener {
 
     private static final String TAG = "PetDetailFragment";
     private static final int REQUEST_TAKE_PHOTO = 1;
@@ -62,6 +64,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
     private Spinner type;
     private Spinner status;
     private Button saveInfo;
+    private Button showActions;
 
     private String title;
     private Pet pet;
@@ -110,8 +113,42 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         populateFieldValues();
 
         setEditingState();
+        if (!searchMode) {
+            setActionButtonListener();
+        }
 
-        // determine what actions are available
+    }
+
+    private void setActionButtonListener() {
+        showActions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PetDetailBottomSheetDialog petDetailBottomSheetDialog = configureContextButtonSheet();
+                petDetailBottomSheetDialog.show(getActivity().getSupportFragmentManager(), "bottomSheet");
+            }
+        });
+    }
+
+    private PetDetailBottomSheetDialog configureContextButtonSheet() {
+
+        PetDetailBottomSheetDialog petDetailBottomSheetDialog = new PetDetailBottomSheetDialog();
+        AnimalStatus petStatus = pet.getStatus();
+        if (isUserTheOwner(pet)) {
+            petDetailBottomSheetDialog
+                    .setDeletePetEnabled(true)
+                    .setReportLostEnabled(petStatus == AnimalStatus.Home)
+                    .setReturnHomeEnabled(petStatus == AnimalStatus.Found || petStatus == AnimalStatus.Lost);
+        } else if (isUserTheFinder(pet)) {
+            petDetailBottomSheetDialog
+                    .setDeletePetEnabled(petStatus == AnimalStatus.Found);
+        } else {
+            petDetailBottomSheetDialog
+                    .setReportFoundEnabled(petStatus == AnimalStatus.Home)
+                    .setClaimPetEnabled(petStatus == AnimalStatus.Found)
+                    .setReportFoundEnabled(petStatus == AnimalStatus.Lost);
+        }
+        petDetailBottomSheetDialog.setBottomSheetListener(this);
+        return petDetailBottomSheetDialog;
 
     }
 
@@ -120,10 +157,10 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
             setEditable(true);
             return;
         }
-        if (isOwner(pet)) {
+        if (isUserTheOwner(pet)) {
             setEditable(true);
         } else {
-            if (isFinder(pet) && pet.getStatus() == AnimalStatus.Found) {
+            if (isUserTheFinder(pet) && pet.getStatus() == AnimalStatus.Found) {
                 setEditable(true);
             } else {
                 setEditable(false);
@@ -137,6 +174,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         status  = getActivity().findViewById(R.id.pet_detail_status_spinner);
         type = getActivity().findViewById(R.id.pet_detail_animaltype_spinner);
         saveInfo = getActivity().findViewById(R.id.btn_savePetInfo);
+        showActions = getActivity().findViewById(R.id.pet_detail_btn_show_actions);
     }
 
     private void populateFieldValues() {
@@ -163,13 +201,13 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         type.setAdapter(typeSpinnerAdapter);
     }
 
-    private boolean isFinder(Pet pet) {
+    private boolean isUserTheFinder(Pet pet) {
         String userID = globals.currentUser.getUserID();
         String finderID = pet.getFinderID();
         return (userID.equals(finderID));
     }
 
-    private boolean isOwner(Pet pet) {
+    private boolean isUserTheOwner(Pet pet) {
         String userID = globals.currentUser.getUserID();
         String ownerID = pet.getOwnerID();
         return (userID.equals(ownerID));
@@ -317,7 +355,6 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 });
             }
         });
-
     }
 
     private void searchLostPets() {
@@ -387,7 +424,36 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
             PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(pet, "Pet Detail", false);
             ((MainActivity)getContext()).displayFragment(petDetailFragment);
         }
+    }
 
+    @Override
+    public void OnBottomSheetButtonClick(int id) {
+        Log.d(TAG, "OnBottomSheetButtonClick: got click with id " + id);
+        switch (id){
+            case R.id.pet_detail_bottom_sheet_claim_pet:
+                Log.d(TAG, "claim pet");
+                break;
+            case R.id.pet_detail_bottom_sheet_delete_pet:
+                Log.d(TAG, "delete pet");
+                FirestoreController.deletePet(FirebaseFirestore.getInstance(), pet.getPetID());
+                ((MainActivity)getActivity()).onBackPressed();
+                break;
+            case R.id.pet_detail_bottom_sheet_report_found:
+                Log.d(TAG, "report found");
+                pet = PetController.makePetFound(pet, globals.currentUser);
+                populateFieldValues();
+                break;
+            case R.id.pet_detail_bottom_sheet_report_lost:
+                Log.d(TAG, "report lost");
+                pet = PetController.makePetLost(pet);
+                populateFieldValues();
+                break;
+            case R.id.pet_detail_bottom_sheet_return_home:
+                Log.d(TAG, "return home");
+                pet = PetController.makePetHome(pet);
+                populateFieldValues();
+                break;
+        }
 
     }
 }

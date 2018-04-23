@@ -15,6 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_horizontal"
         >
 
         <ImageView
@@ -22,7 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="200dp"
             android:layout_marginTop="40dp"
-            android:layout_gravity="center"
             android:src="@mipmap/camera"
             />
 
@@ -33,7 +33,6 @@
             android:layout_marginTop="40dp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
-            android:layout_gravity="center"
             android:inputType="textPersonName"
             android:textAlignment="center"
             android:hint="Pet name"
@@ -46,7 +45,6 @@
             android:layout_marginTop="15dp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
-            android:layout_gravity="center"
             />
 
         <Spinner
@@ -56,7 +54,6 @@
             android:layout_marginTop="15dp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
-            android:layout_gravity="center"
             />
 
         <Button
@@ -65,8 +62,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Save Pet Info"
-            android:layout_gravity="center"
             />
+        <Button
+            android:id="@+id/pet_detail_btn_show_actions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Actions..."
+            />
+
 
     </LinearLayout>
 

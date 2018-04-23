@@ -32,6 +32,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Button foundPetButton;
     private Button lostPetsNotifierButton;
     private ArrayList<Pet> lostPets;
+    private boolean isQueryStagnant;
 
 
     @Override
@@ -46,12 +47,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         setupButtonListeners();
         queryForLostPets();
+        isQueryStagnant = false;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        queryForLostPets();
+        if (isQueryStagnant) {
+            queryForLostPets();
+            isQueryStagnant = false;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isQueryStagnant = true;
     }
 
     private void setupButtonListeners() {
@@ -68,7 +79,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         ).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                lostPets = queryResultToPetList(task.getResult());
+                lostPets = FirestoreController.processPetsQuery(task.getResult());
                 if (lostPets.size() == 0) {
                     lostPetsNotifierButton.setVisibility(View.INVISIBLE);
                 } else {
@@ -78,14 +89,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-    }
-
-    private ArrayList<Pet> queryResultToPetList(QuerySnapshot snapshot) {
-        ArrayList<Pet> pets = new ArrayList<>();
-        for (DocumentSnapshot document : snapshot) {
-            pets.add(document.toObject(Pet.class));
-        }
-        return pets;
     }
 
     @Override
@@ -98,7 +101,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case (R.id.btn_home_lost_pet):
-                ((MainActivity)getActivity()).displayFragment(new LostAPetFragment());
+                ((MainActivity)getActivity()).showMyPetsList();
                 break;
             case (R.id.btn_home_found_pet):
                 PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Found a Pet", true);
