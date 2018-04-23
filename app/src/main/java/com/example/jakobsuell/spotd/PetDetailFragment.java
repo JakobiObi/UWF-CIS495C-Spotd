@@ -112,21 +112,43 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         populateFieldValues();
 
         setEditingState();
-
-        setActionButtonListener();
+        if (!searchMode) {
+            setActionButtonListener();
+        }
 
     }
 
     private void setActionButtonListener() {
-        final PetDetailBottomSheetDialog.BottomSheetListener bottomSheetListener = this;
         showActions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PetDetailBottomSheetDialog petDetailBottomSheetDialog = new PetDetailBottomSheetDialog();
-                petDetailBottomSheetDialog.setBottomSheetListener(bottomSheetListener);
+                PetDetailBottomSheetDialog petDetailBottomSheetDialog = configureContextButtonSheet();
                 petDetailBottomSheetDialog.show(getActivity().getSupportFragmentManager(), "bottomSheet");
             }
         });
+    }
+
+    private PetDetailBottomSheetDialog configureContextButtonSheet() {
+
+        PetDetailBottomSheetDialog petDetailBottomSheetDialog = new PetDetailBottomSheetDialog();
+        AnimalStatus petStatus = pet.getStatus();
+        if (isOwner(pet)) {
+            petDetailBottomSheetDialog
+                    .setDeletePetEnabled(true)
+                    .setReportLostEnabled(petStatus == AnimalStatus.Home)
+                    .setReturnHomeEnabled(petStatus == AnimalStatus.Found || petStatus == AnimalStatus.Lost);
+        } else if (isFinder(pet)) {
+            petDetailBottomSheetDialog
+                    .setDeletePetEnabled(petStatus == AnimalStatus.Found);
+        } else {
+            petDetailBottomSheetDialog
+                    .setReportFoundEnabled(petStatus == AnimalStatus.Home)
+                    .setClaimPetEnabled(petStatus == AnimalStatus.Found)
+                    .setReportFoundEnabled(petStatus == AnimalStatus.Lost);
+        }
+        petDetailBottomSheetDialog.setBottomSheetListener(this);
+        return petDetailBottomSheetDialog;
+
     }
 
     private void setEditingState() {
@@ -406,21 +428,22 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
 
     @Override
     public void OnBottomSheetButtonClick(int id) {
+        Log.d(TAG, "OnBottomSheetButtonClick: got click with id " + id);
         switch (id){
             case R.id.pet_detail_bottom_sheet_claim_pet:
-                Toast.makeText(getContext(),"claim pet", Toast.LENGTH_SHORT);
+                Log.d(TAG, "claim pet");
                 break;
             case R.id.pet_detail_bottom_sheet_delete_pet:
-                Toast.makeText(getContext(),"delete pet", Toast.LENGTH_SHORT);
+                Log.d(TAG, "delete pet");
                 break;
             case R.id.pet_detail_bottom_sheet_report_found:
-                Toast.makeText(getContext(),"report found", Toast.LENGTH_SHORT);
+                Log.d(TAG, "report found");
                 break;
             case R.id.pet_detail_bottom_sheet_report_lost:
-                Toast.makeText(getContext(),"report lost", Toast.LENGTH_SHORT);
+                Log.d(TAG, "report lost");
                 break;
             case R.id.pet_detail_bottom_sheet_return_home:
-                Toast.makeText(getContext(),"return home", Toast.LENGTH_SHORT);
+                Log.d(TAG, "return home");
                 break;
         }
 
