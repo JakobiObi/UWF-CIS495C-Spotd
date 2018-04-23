@@ -132,12 +132,12 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
 
         PetDetailBottomSheetDialog petDetailBottomSheetDialog = new PetDetailBottomSheetDialog();
         AnimalStatus petStatus = pet.getStatus();
-        if (isOwner(pet)) {
+        if (isUserTheOwner(pet)) {
             petDetailBottomSheetDialog
                     .setDeletePetEnabled(true)
                     .setReportLostEnabled(petStatus == AnimalStatus.Home)
                     .setReturnHomeEnabled(petStatus == AnimalStatus.Found || petStatus == AnimalStatus.Lost);
-        } else if (isFinder(pet)) {
+        } else if (isUserTheFinder(pet)) {
             petDetailBottomSheetDialog
                     .setDeletePetEnabled(petStatus == AnimalStatus.Found);
         } else {
@@ -156,10 +156,10 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
             setEditable(true);
             return;
         }
-        if (isOwner(pet)) {
+        if (isUserTheOwner(pet)) {
             setEditable(true);
         } else {
-            if (isFinder(pet) && pet.getStatus() == AnimalStatus.Found) {
+            if (isUserTheFinder(pet) && pet.getStatus() == AnimalStatus.Found) {
                 setEditable(true);
             } else {
                 setEditable(false);
@@ -200,13 +200,13 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         type.setAdapter(typeSpinnerAdapter);
     }
 
-    private boolean isFinder(Pet pet) {
+    private boolean isUserTheFinder(Pet pet) {
         String userID = globals.currentUser.getUserID();
         String finderID = pet.getFinderID();
         return (userID.equals(finderID));
     }
 
-    private boolean isOwner(Pet pet) {
+    private boolean isUserTheOwner(Pet pet) {
         String userID = globals.currentUser.getUserID();
         String ownerID = pet.getOwnerID();
         return (userID.equals(ownerID));
@@ -354,7 +354,6 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 });
             }
         });
-
     }
 
     private void searchLostPets() {
@@ -435,6 +434,8 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 break;
             case R.id.pet_detail_bottom_sheet_delete_pet:
                 Log.d(TAG, "delete pet");
+                FirestoreController.deletePet(FirebaseFirestore.getInstance(), pet.getPetID());
+                ((MainActivity)getActivity()).onBackPressed();
                 break;
             case R.id.pet_detail_bottom_sheet_report_found:
                 Log.d(TAG, "report found");
