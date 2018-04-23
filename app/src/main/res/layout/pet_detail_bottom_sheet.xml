@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/pet_detail_bottom_sheet_report_lost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Report Lost"
+        />
+    <Button
+        android:id="@+id/pet_detail_bottom_sheet_report_found"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Report Found"
+        />
+    <Button
+        android:id="@+id/pet_detail_bottom_sheet_return_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Return Home"
+        />
+    <Button
+        android:id="@+id/pet_detail_bottom_sheet_claim_pet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Claim"
+        />
+    <Button
+        android:id="@+id/pet_detail_bottom_sheet_delete_pet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        />
+
+</LinearLayout>

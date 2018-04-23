@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,7 +47,7 @@ import enums.AnimalType;
 import models.Pet;
 
 
-public class PetDetailFragment extends Fragment implements PetPickerReturnHandler {
+public class PetDetailFragment extends Fragment implements PetPickerReturnHandler, PetDetailBottomSheetDialog.BottomSheetListener {
 
     private static final String TAG = "PetDetailFragment";
     private static final int REQUEST_TAKE_PHOTO = 1;
@@ -62,6 +63,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
     private Spinner type;
     private Spinner status;
     private Button saveInfo;
+    private Button showActions;
 
     private String title;
     private Pet pet;
@@ -111,8 +113,20 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
 
         setEditingState();
 
-        // determine what actions are available
+        setActionButtonListener();
 
+    }
+
+    private void setActionButtonListener() {
+        final PetDetailBottomSheetDialog.BottomSheetListener bottomSheetListener = this;
+        showActions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PetDetailBottomSheetDialog petDetailBottomSheetDialog = new PetDetailBottomSheetDialog();
+                petDetailBottomSheetDialog.setBottomSheetListener(bottomSheetListener);
+                petDetailBottomSheetDialog.show(getActivity().getSupportFragmentManager(), "bottomSheet");
+            }
+        });
     }
 
     private void setEditingState() {
@@ -137,6 +151,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         status  = getActivity().findViewById(R.id.pet_detail_status_spinner);
         type = getActivity().findViewById(R.id.pet_detail_animaltype_spinner);
         saveInfo = getActivity().findViewById(R.id.btn_savePetInfo);
+        showActions = getActivity().findViewById(R.id.pet_detail_btn_show_actions);
     }
 
     private void populateFieldValues() {
@@ -387,7 +402,27 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
             PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(pet, "Pet Detail", false);
             ((MainActivity)getContext()).displayFragment(petDetailFragment);
         }
+    }
 
+    @Override
+    public void OnBottomSheetButtonClick(int id) {
+        switch (id){
+            case R.id.pet_detail_bottom_sheet_claim_pet:
+                Toast.makeText(getContext(),"claim pet", Toast.LENGTH_SHORT);
+                break;
+            case R.id.pet_detail_bottom_sheet_delete_pet:
+                Toast.makeText(getContext(),"delete pet", Toast.LENGTH_SHORT);
+                break;
+            case R.id.pet_detail_bottom_sheet_report_found:
+                Toast.makeText(getContext(),"report found", Toast.LENGTH_SHORT);
+                break;
+            case R.id.pet_detail_bottom_sheet_report_lost:
+                Toast.makeText(getContext(),"report lost", Toast.LENGTH_SHORT);
+                break;
+            case R.id.pet_detail_bottom_sheet_return_home:
+                Toast.makeText(getContext(),"return home", Toast.LENGTH_SHORT);
+                break;
+        }
 
     }
 }
