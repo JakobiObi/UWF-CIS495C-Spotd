@@ -32,6 +32,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Button foundPetButton;
     private Button lostPetsNotifierButton;
     private ArrayList<Pet> lostPets;
+    private boolean isQueryStagnant;
 
 
     @Override
@@ -46,12 +47,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         setupButtonListeners();
         queryForLostPets();
+        isQueryStagnant = false;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        queryForLostPets();
+        if (isQueryStagnant) {
+            queryForLostPets();
+            isQueryStagnant = false;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isQueryStagnant = true;
     }
 
     private void setupButtonListeners() {
