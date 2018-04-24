@@ -20,13 +20,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import controllers.FirestoreController;
 import controllers.LoginController;
+import enums.AnimalStatus;
+import models.Pet;
 
 
 public class MainActivity extends AppCompatActivity
@@ -56,10 +64,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         globals = (Globals)this.getApplication();
-        if (!globals.isPicassoSingletonAssigned) {
-            createPicassoSingleton();
-            globals.isPicassoSingletonAssigned = true;
-        }
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -89,13 +93,6 @@ public class MainActivity extends AppCompatActivity
         });
 
         displayFragment(new HomeFragment());
-    }
-
-    public void createPicassoSingleton() {
-        Picasso picassoInstance = new Picasso.Builder(this.getApplicationContext())
-                .addRequestHandler(new FirebaseRequestHandler())
-                .build();
-        Picasso.setSingletonInstance(picassoInstance);
     }
 
     public void setHeaderViewOnNavDrawer() {
@@ -176,28 +173,25 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.home:
-                Log.d(TAG, "home clicked on nav menu");
+                Log.d(TAG, "nav menu: R.id.home clicked");
                 displayFragment(new HomeFragment());
                 break;
             case R.id.profile:
-                Log.d(TAG, "profile clicked on nav menu");
+                Log.d(TAG, "nav menu: R.id.profile clicked");
                 displayFragment(new ProfileFragment());
                 break;
             case R.id.mypets:
-                Log.d(TAG, "found clicked on nav menu");
-                Log.d(TAG, "Nav Menus:  btnSMyPets clicked");
-                // TODO: change this so that it sends the appropriate query results
-                MockDataGenerator mockDataGenerator = MockDataGenerator.make();
-                ShowPetsFragment listFragment = ShowPetsFragment.newInstance(mockDataGenerator.pets, ShowPetsFragment.PetListOptions.AddButtonOnly,null, "My Pets" );
-                displayFragment(listFragment);
+                Log.d(TAG, "nav menu: R.id.mypets clicked");
+                showMyPetsList();
                 break;
             case R.id.found:
-                Log.d(TAG, "found clicked on nav menu");
-                displayFragment(new FoundAPetFragment());
+                Log.d(TAG, "nav menu: R.id.found clicked");
+                PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(null, "Found a Pet", true);
+                displayFragment(petDetailFragment);
                 break;
             case R.id.lost:
-                Log.d(TAG, "lost clicked on nav menu");
-                displayFragment(new LostAPetFragment());
+                Log.d(TAG, "nav menu: R.id.lost clicked");
+                showMyPetsList();
                 break;
             case R.id.log:
                 signOut();
@@ -235,6 +229,22 @@ public class MainActivity extends AppCompatActivity
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         this.startActivity(nextActivity);
+    }
+
+    public void showMyPetsList() {
+        FirestoreController.readPets(
+                FirebaseFirestore.getInstance(),
+                "ownerID",
+                globals.currentUser.getUserID()
+        ).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                ArrayList<Pet> myPets;
+                myPets = FirestoreController.processPetsQuery(task.getResult());
+                ShowPetsFragment listFragment = ShowPetsFragment.newInstance(myPets, ShowPetsFragment.PetListOptions.AddButtonOnly,null, "My Pets");
+                displayFragment(listFragment);
+            }
+        });
     }
 
 

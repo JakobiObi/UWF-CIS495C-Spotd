@@ -1,7 +1,11 @@
 package controllers;
 
+import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -12,6 +16,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.List;
 
 import models.Pet;
@@ -28,8 +33,9 @@ public class FirestoreController {
      * Writes a user object to the firestore, using the email address as a key.
      * The method will return a task object which can be attached with observers to detect
      * success or failure of the write operation.
-     * @param fb    A reference to the Firestore instance.
-     * @param user  The user object to store.
+     *
+     * @param fb   A reference to the Firestore instance.
+     * @param user The user object to store.
      * @return A Task object, onto which you may attach observer methods.
      */
     public static Task saveUser(FirebaseFirestore fb, User user) {
@@ -62,6 +68,7 @@ public class FirestoreController {
      * A documentSnapshot is returned, which you MUST test with the .exists() method prior
      * to casting the object to a user class object. If the .exists() method returns
      * false, this means that the user's information could not be found in firestore.
+     *
      * @param fb    A reference to the Firestore instance.
      * @param email String. The email of the user whose data to retrieve.
      * @return A Task object, onto which you may attach observer methods.
@@ -77,13 +84,11 @@ public class FirestoreController {
     }
 
 
-
-
-
     /**
      * Saves a pet object to Firestore
-     * @param fb    A reference to the Firestore instance.
-     * @param pet   The pet object to store.
+     *
+     * @param fb  A reference to the Firestore instance.
+     * @param pet The pet object to store.
      * @return A Task object, onto which you may attach observer methods.
      */
     public static Task savePet(FirebaseFirestore fb, Pet pet) {
@@ -101,6 +106,7 @@ public class FirestoreController {
      * Saves a list of pets to Firestore. This method will enumerate through each pet in the list,
      * saving each one to Firestore. A batch write is used for performance, and to minimize the
      * number of network calls to the database (a batch write only uses one)
+     *
      * @param fb   A reference to the Firestore instance.
      * @param pets A List of pets to be stored.
      * @return A Task object, onto which you may attach observer methods.
@@ -149,6 +155,44 @@ public class FirestoreController {
         return query.get();
     }
 
+    public static Task<QuerySnapshot> readPets(FirebaseFirestore fb, String firstField, String firstValue, String secondField, String secondValue) {
+        Log.d(TAG, "Reading pets with " + firstField + "=" + firstValue + " and " + secondField + "=" + secondValue);
+        if (fb == null) {
+            throw new InvalidParameterException("firestore reference cannot be null");
+        }
+        CollectionReference petsRef = fb.collection(petDirectory);
+        Query query = petsRef.whereEqualTo(firstField, firstValue).whereEqualTo(secondField, secondValue);
+        return query.get();
+    }
+
+    public static void deletePet(FirebaseFirestore fb, String petID) {
+        Log.d(TAG, "deletePet: deleting pet with id " + petID);
+        if (fb == null || petID == null || petID.equals("")) {
+            String err = (fb == null) ? "firestore reference cannot be null" : "petID cannot be null or empty";
+            throw new InvalidParameterException(err);
+        }
+        fb.collection(petDirectory).document(petID).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "deletePet: ...successful deletion");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "deletePet: ...deletion failed: " + e);
+                    }
+                });
+    }
+
+    public static ArrayList<Pet> processPetsQuery(QuerySnapshot queryDocumentSnapshots) {
+        ArrayList<Pet> pets = new ArrayList<>();
+        for (DocumentSnapshot document : queryDocumentSnapshots) {
+            pets.add(document.toObject(Pet.class));
+        }
+        return pets;
+    }
     // TODO: Change User accounts so they are saved by an accountID rather than email.
     /*
         There should be a look-up table that maps email addresses to a accountID.

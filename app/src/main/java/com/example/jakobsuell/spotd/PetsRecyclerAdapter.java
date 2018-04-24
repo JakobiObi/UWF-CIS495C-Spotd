@@ -22,6 +22,7 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
     private final String storageURI;
     private List<Pet> pets;
     private Context context;
+    private PetPickerReturnHandler petPickerReturnHandler;
 
 
     public PetsRecyclerAdapter(String storageURI, List<Pet> petsToShow, Context context) {
@@ -38,6 +39,10 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
     public void remove(int position) {
         pets.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public void setPetPickerReturnHandler(PetPickerReturnHandler petPickerReturnHandler) {
+        this.petPickerReturnHandler = petPickerReturnHandler;
     }
 
     @NonNull
@@ -58,9 +63,12 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
             public void onClick(View view) {
                 Log.d(TAG, "pet " + position + "clicked");
                 Pet pet = pets.get(position);
-                pet.show();
-                PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(pet, "Pet Detail");
-                ((MainActivity)context).displayFragment(petDetailFragment);
+                if (petPickerReturnHandler == null) {
+                    PetDetailFragment petDetailFragment = PetDetailFragment.newInstance(pet, "Pet Detail", false);
+                    ((MainActivity)context).displayFragment(petDetailFragment);
+                } else {
+                    petPickerReturnHandler.OnPetPickResult(pet);
+                }
             }
         });
         holder.txtFooter.setText(getPetInfoLine(pet));
