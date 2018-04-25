@@ -244,7 +244,6 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         saveInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (petName.getText().toString().equals("") || petName.getText().toString() == null) {
                     Toast.makeText(getContext(), "A pet name is required.",  Toast.LENGTH_LONG);
                     return;
@@ -259,11 +258,11 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         petPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if (isPermissionGivenForCamera()) {
-                   invokeCamera();
-               } else {
-                   askForCameraPermission();
-               }
+                if (isPermissionGivenForCamera()) {
+                    invokeCamera();
+                } else {
+                    askForCameraPermission();
+                }
             }
         });
     }
@@ -359,11 +358,28 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                         Log.d(TAG, "pet image stored successfully");
                         Snackbar.make(getView(), "Pet has been saved.", Snackbar.LENGTH_SHORT)
                                 .setAction("Action", null).show();
-                        ((MainActivity)getActivity()).onBackPressed();
                     }
                 });
             }
         });
+    }
+
+    private void saveDataThenGoBack() {
+        Log.d(TAG, "saveDataThenGoBack: entered");
+        FirestoreController.savePet(FirebaseFirestore.getInstance(), pet).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                Log.d(TAG, "saveDataThenGoBack: pet stored successfully");
+                ImageController.storeImage(pet.getPetID(), petBitmap).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.d(TAG, "saveDataThenGoBack: pet image stored successfully");
+                    }
+                });
+            }
+        });
+        ((MainActivity)getActivity()).clearFragmentBackstack();
+        ((MainActivity)getActivity()).displayFragment(new HomeFragment());
     }
 
     private void searchLostPets() {
@@ -425,7 +441,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 searchHomePets();
             } else if (returnCount == 2) {
                 status.setSelection(AnimalStatus.Found.ordinal());
-                saveData();
+                saveDataThenGoBack();
             }
         } else {
             Log.d(TAG, "OnPetPickResult: called with pet:");
