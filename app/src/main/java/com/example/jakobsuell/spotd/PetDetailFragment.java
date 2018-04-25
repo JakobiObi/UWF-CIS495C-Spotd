@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceActivity;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,13 +22,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.UploadTask;
@@ -37,7 +33,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import controllers.FirestoreController;
@@ -130,8 +125,10 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
     }
 
     private PetDetailBottomSheetDialog configureContextButtonSheet() {
-
         PetDetailBottomSheetDialog petDetailBottomSheetDialog = new PetDetailBottomSheetDialog();
+        if (pet == null) {
+            return null;
+        }
         AnimalStatus petStatus = pet.getStatus();
         if (isUserTheOwner(pet)) {
             petDetailBottomSheetDialog
@@ -149,12 +146,12 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         }
         petDetailBottomSheetDialog.setBottomSheetListener(this);
         return petDetailBottomSheetDialog;
-
     }
 
     private void setEditingState() {
         if (pet == null) {
             setEditable(true);
+            showActions.setVisibility(View.INVISIBLE);
             return;
         }
         if (isUserTheOwner(pet)) {
@@ -219,31 +216,43 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         type.setEnabled(enabled);
         if (enabled) {
             if (searchMode) {
-                saveInfo.setVisibility(View.VISIBLE);
-                petName.setVisibility(View.INVISIBLE);
-                saveInfo.setText("Search...");
-                saveInfo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        savePetDataToInstance();
-                        searchLostPets();
-                    }
-                });
-
+                setSearchButtonListener();
             } else {
-                saveInfo.setVisibility(View.VISIBLE);
-                saveInfo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        savePetDataToInstance();
-                        saveData();
-                    }
-                });
+                setSaveButtonListener();
             }
             setPhotoClickListener();
         } else {
             saveInfo.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private void setSearchButtonListener() {
+        saveInfo.setVisibility(View.VISIBLE);
+        petName.setVisibility(View.INVISIBLE);
+        saveInfo.setText("Search...");
+        saveInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                savePetDataToInstance();
+                searchLostPets();
+            }
+        });
+    }
+
+    private void setSaveButtonListener() {
+        saveInfo.setVisibility(View.VISIBLE);
+        saveInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (petName.getText().toString().equals("") || petName.getText().toString() == null) {
+                    Toast.makeText(getContext(), "A pet name is required.",  Toast.LENGTH_LONG);
+                    return;
+                }
+                savePetDataToInstance();
+                saveData();
+            }
+        });
     }
 
     private void setPhotoClickListener() {
