@@ -33,7 +33,6 @@ import java.util.List;
 
 import controllers.FirestoreController;
 import controllers.LoginController;
-import enums.AnimalStatus;
 import models.Pet;
 
 
@@ -167,6 +166,12 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.addToBackStack(null);
         }
         fragmentTransaction.commit();
+    }
+
+    public void clearFragmentBackstack() {
+        Log.d(TAG, "clearFragmentBackstack: removing all fragaments");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override

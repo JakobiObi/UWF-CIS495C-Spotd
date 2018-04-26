@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceActivity;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,17 +18,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.UploadTask;
@@ -37,7 +35,6 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import controllers.FirestoreController;
@@ -46,6 +43,9 @@ import controllers.PetController;
 import enums.AnimalStatus;
 import enums.AnimalType;
 import models.Pet;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 
 public class PetDetailFragment extends Fragment implements PetPickerReturnHandler, PetDetailBottomSheetDialog.BottomSheetListener {
@@ -73,6 +73,12 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
 
     private boolean searchMode;
     private static int returnCount = 0;
+
+    private AlphaAnimation inAnimation;
+    private AlphaAnimation outAnimation;
+
+    FrameLayout progressBarHolder;
+
 
     public PetDetailFragment() {
     }
@@ -130,8 +136,10 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
     }
 
     private PetDetailBottomSheetDialog configureContextButtonSheet() {
-
         PetDetailBottomSheetDialog petDetailBottomSheetDialog = new PetDetailBottomSheetDialog();
+        if (pet == null) {
+            return null;
+        }
         AnimalStatus petStatus = pet.getStatus();
         if (isUserTheOwner(pet)) {
             petDetailBottomSheetDialog
@@ -143,18 +151,17 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                     .setDeletePetEnabled(petStatus == AnimalStatus.Found);
         } else {
             petDetailBottomSheetDialog
-                    .setReportFoundEnabled(petStatus == AnimalStatus.Home)
-                    .setClaimPetEnabled(petStatus == AnimalStatus.Found)
-                    .setReportFoundEnabled(petStatus == AnimalStatus.Lost);
+                    .setReportFoundEnabled(petStatus == AnimalStatus.Home || petStatus == AnimalStatus.Lost)
+                    .setClaimPetEnabled(petStatus == AnimalStatus.Found);
         }
         petDetailBottomSheetDialog.setBottomSheetListener(this);
         return petDetailBottomSheetDialog;
-
     }
 
     private void setEditingState() {
         if (pet == null) {
             setEditable(true);
+            showActions.setVisibility(View.INVISIBLE);
             return;
         }
         if (isUserTheOwner(pet)) {
@@ -175,13 +182,14 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         type = getActivity().findViewById(R.id.pet_detail_animaltype_spinner);
         saveInfo = getActivity().findViewById(R.id.btn_savePetInfo);
         showActions = getActivity().findViewById(R.id.pet_detail_btn_show_actions);
+        progressBarHolder = getActivity().findViewById(R.id.progressBarHolder);
     }
 
     private void populateFieldValues() {
         if (pet == null) {
             return;
         }
-        ImageController.putImageIntoView(globals.firebaseURI, petPhoto, pet.getPetID());
+        ImageController.putImageIntoView(globals.firebaseURI, petPhoto, pet.getPetID(), R.drawable.pet_placeholder);
         petName.setText(pet.getName());
         status.setSelection(pet.getStatus().ordinal());
         type.setSelection(pet.getAnimalType().ordinal());
@@ -219,26 +227,9 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         type.setEnabled(enabled);
         if (enabled) {
             if (searchMode) {
-                saveInfo.setVisibility(View.VISIBLE);
-                petName.setVisibility(View.INVISIBLE);
-                saveInfo.setText("Search...");
-                saveInfo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        savePetDataToInstance();
-                        searchLostPets();
-                    }
-                });
-
+                setSearchButtonListener();
             } else {
-                saveInfo.setVisibility(View.VISIBLE);
-                saveInfo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        savePetDataToInstance();
-                        saveData();
-                    }
-                });
+                setSaveButtonListener();
             }
             setPhotoClickListener();
         } else {
@@ -246,15 +237,43 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         }
     }
 
+    private void setSearchButtonListener() {
+        saveInfo.setVisibility(View.VISIBLE);
+        petName.setVisibility(View.INVISIBLE);
+        saveInfo.setText("Search...");
+        saveInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                savePetDataToInstance();
+                searchLostPets();
+            }
+        });
+    }
+
+    private void setSaveButtonListener() {
+        saveInfo.setVisibility(View.VISIBLE);
+        saveInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (petName.getText().toString().equals("") || petName.getText().toString() == null) {
+                    Toast.makeText(getContext(), "A pet name is required.",  Toast.LENGTH_LONG);
+                    return;
+                }
+                savePetDataToInstance();
+                saveData();
+            }
+        });
+    }
+
     private void setPhotoClickListener() {
         petPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if (isPermissionGivenForCamera()) {
-                   invokeCamera();
-               } else {
-                   askForCameraPermission();
-               }
+                if (isPermissionGivenForCamera()) {
+                    invokeCamera();
+                } else {
+                    askForCameraPermission();
+                }
             }
         });
     }
@@ -312,9 +331,21 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Picasso.get()
-                .load(cameraPhotoURI)
-                .into(petPhoto);
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                Log.d(TAG, "camera capture successful, placing image");
+                Picasso.get()
+                        .load(cameraPhotoURI)
+                        .fit().centerInside()
+                        .rotate(90)
+                        .into(petPhoto);
+            } else if (resultCode == RESULT_CANCELED) {
+                Log.d(TAG, "user cancelled camera intent");
+            } else {
+                Log.e(TAG, "camera error: " + resultCode);
+                Snackbar.make(getView(),"An unknown error with the camera occured.",Snackbar.LENGTH_LONG);
+            }
+        }
     }
 
     private void savePetDataToInstance() {
@@ -328,18 +359,25 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                     null,
                     globals.currentUser.getUserID());
         } else {
-            pet = new Pet(
-                    "",
-                    AnimalType.valueOf(type.getSelectedItem().toString()),
-                    new ArrayList<String>(),
-                    AnimalStatus.valueOf(status.getSelectedItem().toString()),
-                    globals.currentUser.getUserID(),
-                    null);
+            if (pet == null) {
+                pet = new Pet(
+                        petName.getText().toString(),
+                        AnimalType.valueOf(type.getSelectedItem().toString()),
+                        new ArrayList<String>(),
+                        AnimalStatus.valueOf(status.getSelectedItem().toString()),
+                        globals.currentUser.getUserID(),
+                        null);
+            } else {
+                pet.setName(petName.getText().toString());
+                pet.setStatus(AnimalStatus.valueOf(status.getSelectedItem().toString()));
+                pet.setAnimalType(AnimalType.valueOf(type.getSelectedItem().toString()));
+            }
         }
     }
 
     private void saveData() {
         Log.d(TAG, "saveData: entered");
+        showProgressBar();
         FirestoreController.savePet(FirebaseFirestore.getInstance(), pet).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
@@ -347,10 +385,27 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 ImageController.storeImage(pet.getPetID(), petBitmap).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        hideProgressBar();
                         Log.d(TAG, "pet image stored successfully");
-                        Snackbar.make(getView(), "Pet has been saved.", Snackbar.LENGTH_SHORT)
-                                .setAction("Action", null).show();
-                        ((MainActivity)getActivity()).onBackPressed();
+                        showSnackBar("Pet has been saved.");
+                    }
+                });
+            }
+        });
+    }
+
+    private void saveDataThenGoBack() {
+        Log.d(TAG, "saveDataThenGoBack: entered");
+        FirestoreController.savePet(FirebaseFirestore.getInstance(), pet).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                Log.d(TAG, "saveDataThenGoBack: pet stored successfully");
+                ImageController.storeImage(pet.getPetID(), petBitmap).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.d(TAG, "saveDataThenGoBack: pet image stored successfully");
+                        ((MainActivity)getActivity()).clearFragmentBackstack();
+                        ((MainActivity)getActivity()).displayFragment(new HomeFragment());
                     }
                 });
             }
@@ -373,6 +428,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 Log.d(TAG, "searchLostPets: found " + pets.size() + " pets");
                 if (pets.size() == 0) {
                     OnPetPickResult(null);
+                    return;
                 }
                 ShowPetsFragment showLostPetsFragment = ShowPetsFragment.newInstance(pets, ShowPetsFragment.PetListOptions.TopButtonOnly, null,"Searching Pets");
                 showLostPetsFragment.setPetPickerReturnHandler(petPickerReturnHandler);
@@ -416,7 +472,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 searchHomePets();
             } else if (returnCount == 2) {
                 status.setSelection(AnimalStatus.Found.ordinal());
-                saveData();
+                saveDataThenGoBack();
             }
         } else {
             Log.d(TAG, "OnPetPickResult: called with pet:");
@@ -436,24 +492,47 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
             case R.id.pet_detail_bottom_sheet_delete_pet:
                 Log.d(TAG, "delete pet");
                 FirestoreController.deletePet(FirebaseFirestore.getInstance(), pet.getPetID());
+                ImageController.deleteImage(pet.getPetID());
                 ((MainActivity)getActivity()).onBackPressed();
                 break;
             case R.id.pet_detail_bottom_sheet_report_found:
                 Log.d(TAG, "report found");
                 pet = PetController.makePetFound(pet, globals.currentUser);
+                showSnackBar("Pet reported as found!");
                 populateFieldValues();
                 break;
             case R.id.pet_detail_bottom_sheet_report_lost:
                 Log.d(TAG, "report lost");
                 pet = PetController.makePetLost(pet);
+                showSnackBar("Pet reported as lost!");
                 populateFieldValues();
                 break;
             case R.id.pet_detail_bottom_sheet_return_home:
                 Log.d(TAG, "return home");
                 pet = PetController.makePetHome(pet);
+                showSnackBar("Pet returned home.");
                 populateFieldValues();
                 break;
         }
 
+    }
+
+    public void showProgressBar() {
+        inAnimation = new AlphaAnimation(0f, 1f);
+        inAnimation.setDuration(200);
+        progressBarHolder.setAnimation(inAnimation);
+        progressBarHolder.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgressBar() {
+        outAnimation = new AlphaAnimation(1f, 0f);
+        outAnimation.setDuration(200);
+        progressBarHolder.setAnimation(outAnimation);
+        progressBarHolder.setVisibility(View.GONE);
+    }
+
+    public void showSnackBar(String message) {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show();
     }
 }
