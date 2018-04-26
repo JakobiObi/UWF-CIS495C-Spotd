@@ -23,7 +23,7 @@
 ## 7. Logout
 ![image](https://user-images.githubusercontent.com/8855794/39326668-600c0672-495b-11e8-91e2-f7dcf67edef5.png)
 
-# II. Instructions (Reference use only)
+# II. Instructions for Navigating
   1. Accessing Navigation Menu
   2. Navigate to Home Screen
   3. Navigate to My Profile
