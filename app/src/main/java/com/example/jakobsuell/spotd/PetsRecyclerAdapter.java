@@ -72,7 +72,7 @@ public class PetsRecyclerAdapter extends RecyclerView.Adapter<PetsRecyclerAdapte
             }
         });
         holder.txtFooter.setText(getPetInfoLine(pet));
-        ImageController.putImageIntoView(storageURI, holder.image, pet.getPetID());
+        ImageController.putImageIntoView(storageURI, holder.image, pet.getPetID(), R.drawable.pet_placeholder);
     }
 
     // Return the size of the dataset (this method is invoked by the layout manager)

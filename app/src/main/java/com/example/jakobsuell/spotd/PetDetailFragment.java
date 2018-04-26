@@ -186,7 +186,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         if (pet == null) {
             return;
         }
-        ImageController.putImageIntoView(globals.firebaseURI, petPhoto, pet.getPetID());
+        ImageController.putImageIntoView(globals.firebaseURI, petPhoto, pet.getPetID(), R.drawable.pet_placeholder);
         petName.setText(pet.getName());
         status.setSelection(pet.getStatus().ordinal());
         type.setSelection(pet.getAnimalType().ordinal());

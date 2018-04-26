@@ -42,13 +42,20 @@ public class ImageController {
      * @param imageView The imageView to load the image into.
      * @param id  The id of the file to load.
      */
-    public static void putImageIntoView(String firebaseURI, ImageView imageView, String id) {
+    public static void putImageIntoView(String firebaseURI, ImageView imageView, String id, int errorID) {
         initialize();
         String filePath = firebaseURI + id + imageFileExtension;
         Log.d(TAG, "loading image (" + filePath + ") into (" + imageView.toString() + ")");
-        Picasso.get()
-                .load(filePath)
-                .into(imageView);
+        if (errorID == 0) {
+            Picasso.get()
+                    .load(filePath)
+                    .into(imageView);
+        } else {
+            Picasso.get()
+                    .load(filePath)
+                    .error(errorID)
+                    .into(imageView);
+        }
     }
 
     public static UploadTask storeImage(String id, ImageView imageView) {
