@@ -17,35 +17,28 @@
 
         <Button
             android:id="@+id/btn_home_browse_found_pets"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="463dp"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:backgroundTint="@color/lostPetsNotifierButton"
+            android:textColor="@android:color/background_light"
             android:backgroundTintMode="src_over"
+            android:text="Loading..."
+            app:layout_constraintTop_toBottomOf="@+id/btn_home_browse_lost_pets"
             android:drawableLeft="@drawable/image_notification"
             android:drawableRight="@drawable/image_right_arrow"
-            android:text="Loading..."
-            android:textColor="@android:color/background_light"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_home_browse_lost_pets" />
+            tools:ignore="RtlHardcoded" />
 
         <Button
             android:id="@+id/btn_home_browse_lost_pets"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:backgroundTint="@color/lostPetsNotifierButton"
+            android:textColor="@android:color/background_light"
             android:backgroundTintMode="src_over"
+            android:text="Loading..."
             android:drawableLeft="@drawable/image_notification"
             android:drawableRight="@drawable/image_right_arrow"
-            android:text="Loading..."
-            android:textColor="@android:color/background_light"
-            app:layout_constraintBottom_toTopOf="@+id/btn_home_browse_found_pets"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:ignore="RtlHardcoded" />
 
         <Button
             android:id="@+id/btn_home_lost_pet"
