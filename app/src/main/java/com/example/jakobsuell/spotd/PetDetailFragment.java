@@ -331,7 +331,13 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         super.onActivityResult(requestCode, resultCode, data);
         Picasso.get()
                 .load(cameraPhotoURI)
+                .fit().centerInside()
+                .rotate(90)
                 .into(petPhoto);
+        /*Picasso.get()
+                .load(cameraPhotoURI)
+                .into(petPhoto);
+                */
     }
 
     private void savePetDataToInstance() {
@@ -382,7 +388,6 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
 
     private void saveDataThenGoBack() {
         Log.d(TAG, "saveDataThenGoBack: entered");
-        showProgressBar();
         FirestoreController.savePet(FirebaseFirestore.getInstance(), pet).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
@@ -391,7 +396,6 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Log.d(TAG, "saveDataThenGoBack: pet image stored successfully");
-                        hideProgressBar();
                         ((MainActivity)getActivity()).clearFragmentBackstack();
                         ((MainActivity)getActivity()).displayFragment(new HomeFragment());
                     }
@@ -479,6 +483,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
             case R.id.pet_detail_bottom_sheet_delete_pet:
                 Log.d(TAG, "delete pet");
                 FirestoreController.deletePet(FirebaseFirestore.getInstance(), pet.getPetID());
+                ImageController.deleteImage(pet.getPetID());
                 ((MainActivity)getActivity()).onBackPressed();
                 break;
             case R.id.pet_detail_bottom_sheet_report_found:

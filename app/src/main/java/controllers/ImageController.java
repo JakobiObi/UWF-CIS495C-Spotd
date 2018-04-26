@@ -1,17 +1,18 @@
 package controllers;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.security.InvalidParameterException;
@@ -60,34 +61,6 @@ public class ImageController {
 
     }
 
-
-     /*public static UploadTask storeImage(String id, Bitmap image) {
-
-        initialize();
-
-        if (id == null || id.equals(""))
-            throw new InvalidParameterException("id can't be null");
-        if (image == null)
-            throw new InvalidParameterException("file can't be null");
-
-        Log.d(TAG, "storing image with id: [" + id + "] from bitmap");
-
-        // build new file name for storing in Firebase storage
-        String fileName = id + imageFileExtension;
-        Log.d(TAG, "new image name: " + fileName);
-
-        // convert image to compressed png
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG,100, outStream);
-
-        Bitmap compressedImage = BitmapFactory.decodeStream(new ByteArrayInputStream(outStream.toByteArray()));
-
-        // Create storage reference and uploading task
-        StorageReference fileReference = firebaseStorage.getReference(fileName);
-        return fileReference.putBytes(byteArrayFromBitmap(compressedImage));
-    }
-*/
-
     public static UploadTask storeImage(String id, Bitmap image) {
 
         initialize();
@@ -109,6 +82,21 @@ public class ImageController {
         return fileReference.putBytes(outStream.toByteArray());
     }
 
+    public static void deleteImage(final String id) {
+        String fileName = id + imageFileExtension;
+        StorageReference fileReference = firebaseStorage.getReference(fileName);
+        fileReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "deleted image [" + id + "] successfully");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "error deleting image [" + id + "]:" + e);
+            }
+        });
+    }
 
     /**
      * Creates a byte array from a bitmap. Uses a byte buffer.
