@@ -148,9 +148,8 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                     .setDeletePetEnabled(petStatus == AnimalStatus.Found);
         } else {
             petDetailBottomSheetDialog
-                    .setReportFoundEnabled(petStatus == AnimalStatus.Home)
-                    .setClaimPetEnabled(petStatus == AnimalStatus.Found)
-                    .setReportFoundEnabled(petStatus == AnimalStatus.Lost);
+                    .setReportFoundEnabled(petStatus == AnimalStatus.Home || petStatus == AnimalStatus.Lost)
+                    .setClaimPetEnabled(petStatus == AnimalStatus.Found);
         }
         petDetailBottomSheetDialog.setBottomSheetListener(this);
         return petDetailBottomSheetDialog;
@@ -420,6 +419,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 Log.d(TAG, "searchLostPets: found " + pets.size() + " pets");
                 if (pets.size() == 0) {
                     OnPetPickResult(null);
+                    return;
                 }
                 ShowPetsFragment showLostPetsFragment = ShowPetsFragment.newInstance(pets, ShowPetsFragment.PetListOptions.TopButtonOnly, null,"Searching Pets");
                 showLostPetsFragment.setPetPickerReturnHandler(petPickerReturnHandler);
