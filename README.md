@@ -1,14 +1,27 @@
 # UWF-CIS495C-Spotd
 
-I. Terms (Placeholder)
-## Starting Configuration
-
-## Home Page for Adding a Recipe
-
-## List View
-
-## Calendar Area
-
+I. Terms
+  1. Navigation Menu
+  2. Home Screen
+  3. My Profile
+  4. My Pets
+  5. Report Found
+  6. Report Lost
+  7. Logout
+## 1. Navigation Menu
+![image](https://user-images.githubusercontent.com/8855794/39326496-cbe44388-495a-11e8-9601-eb05df2d88d0.png)
+## Home (Starting Configuration)
+![homescreen](https://user-images.githubusercontent.com/8855794/39325919-1407f698-4959-11e8-9faa-761a9f62b373.png)
+## My Profile 
+![image](https://user-images.githubusercontent.com/8855794/39326139-b05e7ae4-4959-11e8-8197-6af195d55671.png)
+## My Pets
+![image](https://user-images.githubusercontent.com/8855794/39326317-32314d94-495a-11e8-9885-040d424a3ff5.png)
+## Report Found
+![image](https://user-images.githubusercontent.com/8855794/39326603-2de0253e-495b-11e8-8b41-1012e863b728.png)
+## Report Lost
+![image](https://user-images.githubusercontent.com/8855794/39326317-32314d94-495a-11e8-9885-040d424a3ff5.png)
+## Logout
+![image](https://user-images.githubusercontent.com/8855794/39326668-600c0672-495b-11e8-91e2-f7dcf67edef5.png)
 II. Instructions (Reference use only)
 ## a. Adding a Recipe
 
