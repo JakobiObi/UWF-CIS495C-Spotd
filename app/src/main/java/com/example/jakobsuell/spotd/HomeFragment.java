@@ -32,6 +32,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Button foundPetButton;
     private Button lostPetsNotifierButton;
     private ArrayList<Pet> lostPets;
+    private Button foundPetsNotifierButton;
+    private ArrayList<Pet> foundPets;
     private boolean isQueryStagnant;
 
 
@@ -44,9 +46,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         lostPetButton = getView().findViewById(R.id.btn_home_lost_pet);
         foundPetButton = getView().findViewById(R.id.btn_home_found_pet);
         lostPetsNotifierButton = getView().findViewById(R.id.btn_home_browse_lost_pets);
+        foundPetsNotifierButton = getView().findViewById(R.id.btn_home_browse_found_pets);
 
         setupButtonListeners();
         queryForLostPets();
+        queryForFoundPets();
         isQueryStagnant = false;
     }
 
@@ -69,6 +73,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         lostPetButton.setOnClickListener(this);
         foundPetButton.setOnClickListener(this);
         lostPetsNotifierButton.setOnClickListener(this);
+        foundPetsNotifierButton.setOnClickListener(this);
     }
 
     private void queryForLostPets() {
@@ -85,6 +90,26 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 } else {
                     lostPetsNotifierButton.setVisibility(View.VISIBLE);
                     lostPetsNotifierButton.setText(lostPets.size() + " pets reported missing");
+                }
+
+            }
+        });
+    }
+
+    private void queryForFoundPets() {
+        FirestoreController.readPets(
+                FirebaseFirestore.getInstance(),
+                "status",
+                AnimalStatus.Found.name()
+        ).addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                foundPets = FirestoreController.processPetsQuery(task.getResult());
+                if (foundPets.size() == 0) {
+                    foundPetsNotifierButton.setVisibility(View.INVISIBLE);
+                } else {
+                    foundPetsNotifierButton.setVisibility(View.VISIBLE);
+                    foundPetsNotifierButton.setText(foundPets.size() + " pets reported found");
                 }
 
             }
@@ -112,6 +137,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     return;
                 } else {
                     ShowPetsFragment listFragment = ShowPetsFragment.newInstance(lostPets, ShowPetsFragment.PetListOptions.NoButtons,null, "Pets Reported Missing");
+                    ((MainActivity) getActivity()).displayFragment(listFragment);
+                }
+                break;
+            case (R.id.btn_home_browse_found_pets):
+                if (foundPets == null) {
+                    return;
+                } else {
+                    ShowPetsFragment listFragment = ShowPetsFragment.newInstance(foundPets, ShowPetsFragment.PetListOptions.NoButtons,null, "Pets Reported Found");
                     ((MainActivity) getActivity()).displayFragment(listFragment);
                 }
                 break;
