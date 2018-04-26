@@ -25,10 +25,15 @@ I. Terms
 
 II. Instructions (Reference use only)
 ## 1. Accessing Navigation Menu
-      a. Tap 3 horizontal lines icon in upper left of screen ![image](https://user-images.githubusercontent.com/8855794/39327162-d59cac1a-495c-11e8-8bd5-288d8b443fa3.png)
+a. Tap 3 horizontal lines icon in upper left of screen
 
-      
-### 1. Begin in starting configuration.
+![image](https://user-images.githubusercontent.com/8855794/39327162-d59cac1a-495c-11e8-8bd5-288d8b443fa3.png)
+
+## 2. Navigate to Home Screen
+a. Access Navigation Menu
+b. Tap "Home"
+
+![image](https://user-images.githubusercontent.com/8855794/39327331-543edf7a-495d-11e8-9956-593c8a99a5c5.png)
 
 ### 2. Click on "Add Recipe" icon (as shown below).
 
