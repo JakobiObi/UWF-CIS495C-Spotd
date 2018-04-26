@@ -36,4 +36,5 @@ a. Tap 3 horizontal lines icon in upper left of screen
 ## 2. Navigate to Home Screen
 a. Access Navigation Menu
 b. Tap "Home"
+
 ![image](https://user-images.githubusercontent.com/8855794/39327331-543edf7a-495d-11e8-9956-593c8a99a5c5.png)
