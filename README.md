@@ -22,9 +22,12 @@ I. Terms
 ![image](https://user-images.githubusercontent.com/8855794/39326317-32314d94-495a-11e8-9885-040d424a3ff5.png)
 ## Logout
 ![image](https://user-images.githubusercontent.com/8855794/39326668-600c0672-495b-11e8-91e2-f7dcf67edef5.png)
-II. Instructions (Reference use only)
-## a. Adding a Recipe
 
+II. Instructions (Reference use only)
+## 1. Accessing Navigation Menu
+      a. Tap 3 horizontal lines icon in upper left of screen ![image](https://user-images.githubusercontent.com/8855794/39327162-d59cac1a-495c-11e8-8bd5-288d8b443fa3.png)
+
+      
 ### 1. Begin in starting configuration.
 
 ### 2. Click on "Add Recipe" icon (as shown below).
