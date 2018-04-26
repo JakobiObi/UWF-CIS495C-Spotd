@@ -44,6 +44,9 @@ import enums.AnimalStatus;
 import enums.AnimalType;
 import models.Pet;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 
 public class PetDetailFragment extends Fragment implements PetPickerReturnHandler, PetDetailBottomSheetDialog.BottomSheetListener {
 
@@ -328,15 +331,21 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Picasso.get()
-                .load(cameraPhotoURI)
-                .fit().centerInside()
-                .rotate(90)
-                .into(petPhoto);
-        /*Picasso.get()
-                .load(cameraPhotoURI)
-                .into(petPhoto);
-                */
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            if (resultCode == RESULT_OK) {
+                Log.d(TAG, "camera capture successful, placing image");
+                Picasso.get()
+                        .load(cameraPhotoURI)
+                        .fit().centerInside()
+                        .rotate(90)
+                        .into(petPhoto);
+            } else if (resultCode == RESULT_CANCELED) {
+                Log.d(TAG, "user cancelled camera intent");
+            } else {
+                Log.e(TAG, "camera error: " + resultCode);
+                Snackbar.make(getView(),"An unknown error with the camera occured.",Snackbar.LENGTH_LONG);
+            }
+        }
     }
 
     private void savePetDataToInstance() {
