@@ -18,9 +18,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -68,6 +70,12 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
 
     private boolean searchMode;
     private static int returnCount = 0;
+
+    private AlphaAnimation inAnimation;
+    private AlphaAnimation outAnimation;
+
+    FrameLayout progressBarHolder;
+
 
     public PetDetailFragment() {
     }
@@ -172,6 +180,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
         type = getActivity().findViewById(R.id.pet_detail_animaltype_spinner);
         saveInfo = getActivity().findViewById(R.id.btn_savePetInfo);
         showActions = getActivity().findViewById(R.id.pet_detail_btn_show_actions);
+        progressBarHolder = getActivity().findViewById(R.id.progressBarHolder);
     }
 
     private void populateFieldValues() {
@@ -336,18 +345,25 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                     null,
                     globals.currentUser.getUserID());
         } else {
-            pet = new Pet(
-                    petName.getText().toString(),
-                    AnimalType.valueOf(type.getSelectedItem().toString()),
-                    new ArrayList<String>(),
-                    AnimalStatus.valueOf(status.getSelectedItem().toString()),
-                    globals.currentUser.getUserID(),
-                    null);
+            if (pet == null) {
+                pet = new Pet(
+                        petName.getText().toString(),
+                        AnimalType.valueOf(type.getSelectedItem().toString()),
+                        new ArrayList<String>(),
+                        AnimalStatus.valueOf(status.getSelectedItem().toString()),
+                        globals.currentUser.getUserID(),
+                        null);
+            } else {
+                pet.setName(petName.getText().toString());
+                pet.setStatus(AnimalStatus.valueOf(status.getSelectedItem().toString()));
+                pet.setAnimalType(AnimalType.valueOf(type.getSelectedItem().toString()));
+            }
         }
     }
 
     private void saveData() {
         Log.d(TAG, "saveData: entered");
+        showProgressBar();
         FirestoreController.savePet(FirebaseFirestore.getInstance(), pet).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
@@ -355,9 +371,9 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                 ImageController.storeImage(pet.getPetID(), petBitmap).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        hideProgressBar();
                         Log.d(TAG, "pet image stored successfully");
-                        Snackbar.make(getView(), "Pet has been saved.", Snackbar.LENGTH_SHORT)
-                                .setAction("Action", null).show();
+                        showSnackBar("Pet has been saved.");
                     }
                 });
             }
@@ -366,6 +382,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
 
     private void saveDataThenGoBack() {
         Log.d(TAG, "saveDataThenGoBack: entered");
+        showProgressBar();
         FirestoreController.savePet(FirebaseFirestore.getInstance(), pet).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
@@ -374,12 +391,13 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Log.d(TAG, "saveDataThenGoBack: pet image stored successfully");
+                        hideProgressBar();
+                        ((MainActivity)getActivity()).clearFragmentBackstack();
+                        ((MainActivity)getActivity()).displayFragment(new HomeFragment());
                     }
                 });
             }
         });
-        ((MainActivity)getActivity()).clearFragmentBackstack();
-        ((MainActivity)getActivity()).displayFragment(new HomeFragment());
     }
 
     private void searchLostPets() {
@@ -466,19 +484,41 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
             case R.id.pet_detail_bottom_sheet_report_found:
                 Log.d(TAG, "report found");
                 pet = PetController.makePetFound(pet, globals.currentUser);
+                showSnackBar("Pet reported as found!");
                 populateFieldValues();
                 break;
             case R.id.pet_detail_bottom_sheet_report_lost:
                 Log.d(TAG, "report lost");
                 pet = PetController.makePetLost(pet);
+                showSnackBar("Pet reported as lost!");
                 populateFieldValues();
                 break;
             case R.id.pet_detail_bottom_sheet_return_home:
                 Log.d(TAG, "return home");
                 pet = PetController.makePetHome(pet);
+                showSnackBar("Pet returned home.");
                 populateFieldValues();
                 break;
         }
 
+    }
+
+    public void showProgressBar() {
+        inAnimation = new AlphaAnimation(0f, 1f);
+        inAnimation.setDuration(200);
+        progressBarHolder.setAnimation(inAnimation);
+        progressBarHolder.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgressBar() {
+        outAnimation = new AlphaAnimation(1f, 0f);
+        outAnimation.setDuration(200);
+        progressBarHolder.setAnimation(outAnimation);
+        progressBarHolder.setVisibility(View.GONE);
+    }
+
+    public void showSnackBar(String message) {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT)
+                .setAction("Action", null).show();
     }
 }
