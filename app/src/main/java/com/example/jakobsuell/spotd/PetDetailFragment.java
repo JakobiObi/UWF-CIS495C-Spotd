@@ -337,7 +337,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
                     globals.currentUser.getUserID());
         } else {
             pet = new Pet(
-                    "",
+                    petName.getText().toString(),
                     AnimalType.valueOf(type.getSelectedItem().toString()),
                     new ArrayList<String>(),
                     AnimalStatus.valueOf(status.getSelectedItem().toString()),
