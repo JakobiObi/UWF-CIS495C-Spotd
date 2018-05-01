@@ -299,7 +299,6 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
 
     private void invokeCamera() {
         Log.d(TAG, "invoking camera");
-
         Intent cameraTakePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (cameraTakePicture.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -331,7 +330,7 @@ public class PetDetailFragment extends Fragment implements PetPickerReturnHandle
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+        if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 Log.d(TAG, "camera capture successful, placing image");
                 Picasso.get()
